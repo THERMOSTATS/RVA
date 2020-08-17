@@ -224,12 +224,22 @@ plot.heatmap.expr <- function(data = count,
     dplyr::select(-geneid) %>%
     as.matrix
 
+  #new code - if cpm then do z-score transofrm
+  if (fill == "CPM"){
+    wide = t(scale(t(wide)))
+  }
+  #change anoot flags into factors
+  annot[,annot.flags] = data.frame(lapply(annot[,annot.flags], as.factor))
+
+  #new code - change color scale to adjust for z - score
+  range_cpm =c(wide)
+
   colors <- switch(fill,
                    CFB = colorRamp2(c(-2, 0, 2), c("blue", "grey", "red")),
-                   CPM = get.cpm.colors(long$cpm))
+                   CPM = get.cpm.colors(range_cpm))# use to be long$cpm inside
   title <- switch(fill,
-                  CFB = "log2(CFB)",
-                  CPM = "log2(CPM)")
+                  CFB = "CFB - log2CPM",# originally "log2(CFB)",
+                  CPM = "z-score (log2CPM)") # use to be log2 (CPM)
   colnames(wide) <- NULL
   gene.display <- transform.geneid(wide.df$geneid,
                                      from = ct.table.id.type,
