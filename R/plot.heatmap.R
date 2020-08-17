@@ -148,6 +148,8 @@ plot.heatmap.expr <- function(data = count,
   validate.data(data)
   validate.data.annot(data, annot, sample.id)
 
+  user.title = title
+
   if(input.type == "count") {
       data <- cpm(data, log = TRUE) %>%
           as_tibble(rownames = "geneid")
@@ -238,7 +240,7 @@ plot.heatmap.expr <- function(data = count,
                    CFB = colorRamp2(c(-2, 0, 2), c("blue", "grey", "red")),
                    CPM = get.cpm.colors(range_cpm))# use to be long$cpm inside
   title <- switch(fill,
-                  CFB = "CFB - log2CPM",# originally "log2(CFB)",
+                  CFB = "CFB (log2CPM)",# originally "log2(CFB)",
                   CPM = "z-score (log2CPM)") # use to be log2 (CPM)
   colnames(wide) <- NULL
   gene.display <- transform.geneid(wide.df$geneid,
@@ -256,7 +258,7 @@ plot.heatmap.expr <- function(data = count,
                 na_col = "black",
                 cluster_columns = F,
                 heatmap_legend_param = list(title = title),
-                column_title = title,
+                column_title = user.title,
                 row_title = "Genes",
                 bottom_annotation = columnAnnotation(df=annot))
   gp
