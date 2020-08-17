@@ -1,13 +1,5 @@
----
-title: "RNAseq Visualization Automation"
-output: 
-  html_document:
-    keep_md: true
-    theme: flatly
-    highlight: tango
----
 
-
+# RNAseq Visualization Automation
 
 
 
