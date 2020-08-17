@@ -1,11 +1,28 @@
+---
+output: 
+  html_document:
+    keep_md: true
+    theme: flatly
+    highlight: tango
+---
+
 
 # RNAseq Visualization Automation
+&nbsp;
 
+Install RVA from GitHub
 
+```r
+devtools::install_github("THERMOSTATS/RVA_prod")
+```
+&nbsp;
+
+Load package for use
 
 ```r
 library(RVA)
 ```
+&nbsp;
 
 
 
@@ -124,7 +141,7 @@ cutoff.result[[2]]
 cutoff.result[[3]]
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 &nbsp;
 
 
@@ -201,7 +218,7 @@ head(cutoff.result.list[[1]])
 cutoff.result.list
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -252,7 +269,7 @@ qq.result <- plot.qq(df)
 qq.result
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -294,7 +311,7 @@ qq.list.result <- plot.qq(data = d1,
 qq.list.result
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -370,7 +387,7 @@ plot.volcano(
 plot.volcano(data = df)
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 &nbsp;
 
 ### 3.2 Volcano Plot - Input: a list.
@@ -385,7 +402,7 @@ plot.volcano(data = d1,
              comp.names = c('a', 'b', 'c'))
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
 &nbsp;
 
 ### 3.3 Highlight genes of interest in the volcano plot
@@ -450,7 +467,7 @@ plot.volcano(data = df,
  Running plot volcano... Please make sure gene id type(rownames) of `data` consistent to that of `geneset` (if provided). 
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-30-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
 &nbsp;
 
 By default, the genes which have positive fold change in the provided **geneset** parameter will be colored yellow, and negative fold will be colored  purple, this also can be changed by specifying *upcolor* and *downcolor*:
@@ -477,7 +494,7 @@ Checking gene sets for listof data frames
  Provided input list had a total of 12045 in common, non-common gene id will not be considered. 
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
 &nbsp;
 
 **Example with option 2**
@@ -506,7 +523,7 @@ volcano.result <- plot.volcano(data = df,
 volcano.result
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-33-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -627,7 +644,7 @@ head(pathway.result[[2]])
 pathway.result[[3]]
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-41-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-42-1.png)<!-- -->
 &nbsp;
 
 **4.** Pathway analysis plot with non-directional result.
@@ -638,7 +655,7 @@ pathway.result[[3]]
 pathway.result[[4]]
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-42-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-43-1.png)<!-- -->
 &nbsp;
 
 **5.** Pathway analysis plot with combined direaction and non-directional result.
@@ -649,7 +666,7 @@ pathway.result[[4]]
 pathway.result[[5]]
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-43-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-44-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -723,7 +740,7 @@ head(list.pathway.result[[2]])
 list.pathway.result[[3]]
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-50-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-51-1.png)<!-- -->
 &nbsp;
 
 **4.** Pathway analysis plot with non directional result for list of summary tables.
@@ -734,7 +751,7 @@ list.pathway.result[[3]]
 list.pathway.result[[4]]
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-51-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-52-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -773,7 +790,7 @@ kegg.pathway.result <- plot.pathway(data = list(df,df1),
 kegg.pathway.result[[3]]
 ```
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-54-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-55-1.png)<!-- -->
 
 
 &nbsp;
@@ -881,7 +898,7 @@ The result of **plot.heatmap.expr** with **fill = CPM** contains 2 objects:
 **1.** Heat map 
 &nbsp;
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-62-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-63-1.png)<!-- -->
 &nbsp;
 
 **2.** A data frame of CPM values (fill = CPM in this example) for each geneid split by treatment group and time point.
@@ -955,7 +972,7 @@ The result of **plot.heatmap.expr** with **fill = CFB** contains 2 objects:
 **1.** Heat map 
 &nbsp;
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-67-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-68-1.png)<!-- -->
 &nbsp;
 
 **2.** A data frame of change from baselines values (fill = CFB in this example) for each geneid split by treatment group and time point.
@@ -1088,7 +1105,7 @@ The result of **plot.gene** contains 2 objects:
 **1.** A gene expression plot that distinguishes log cpm gene expression for each geneid across the treatment groups and time points.
 &nbsp;
 
-![](RVA_user_manual_files/figure-html/unnamed-chunk-78-1.png)<!-- -->
+![](RVA_user_manual_files/figure-html/unnamed-chunk-79-1.png)<!-- -->
 &nbsp;
 
 **2.** A table that shows gene expression values by gene id, treatment group and time point with both sample ids and gene symbols.

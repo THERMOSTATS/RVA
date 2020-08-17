@@ -1,5 +1,4 @@
 ---
-title: "RNAseq Visualization Automation"
 output: 
   html_document:
     keep_md: true
@@ -8,11 +7,20 @@ output:
 ---
 
 
+# RNAseq Visualization Automation
+&nbsp;
 
+Install RVA from GitHub
+```{r eval=F}
+devtools::install_github("THERMOSTATS/RVA_prod")
+```
+&nbsp;
 
+Load package for use
 ```{r message=F, warning=F}
 library(RVA)
 ```
+&nbsp;
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, rows.print=25, comment = "")

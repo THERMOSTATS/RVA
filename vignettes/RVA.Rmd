@@ -156,7 +156,7 @@ plot.cutoff(data = data,
 &nbsp;
 
 
-### 1.1 Cutoff Plot - Input: a data frame.
+### 1.1 Cutoff Plot - Input: a data frame
 ```{r}
 cutoff.result <- plot.cutoff(data = df,
                        gen.plot = T,
@@ -222,7 +222,7 @@ ggsave("~/cut_off_selection_plot.png", cutoff.result[[3]], width = 5, height = 5
 &nbsp;
 
 
-### 1.2 Cutoff Plot - Input: a list.
+### 1.2 Cutoff Plot - Input: a list
 &nbsp;
 
 ```{r, message=FALSE}
@@ -291,7 +291,7 @@ This is the function to generate a qqplot object with confidence interval from t
 &nbsp;
 
 
-### 2.1 QQ Plot - Input: a data frame.
+### 2.1 QQ Plot - Input: a data frame
 &nbsp;
 
 ```{r, results='hide'}
@@ -324,7 +324,7 @@ ggsave("~/qq_plot.png", qq.result, width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
-### 2.2 QQ Plot - Input: a list.
+### 2.2 QQ Plot - Input: a list
 &nbsp;
 
 **Plot.qq** function can also take a list as an input data, but requires *comp.names* to be specified. The result object is a set of qq plots for each of the data frames in the list.
@@ -399,7 +399,7 @@ plot.volcano(
 ```
 &nbsp;
 
-### 3.1 Volcano Plot - Input: a data frame. 
+### 3.1 Volcano Plot - Input: a data frame
 &nbsp;
 
 ```{r message=F, results='hide', warning=F}
@@ -407,7 +407,7 @@ plot.volcano(data = df)
 ```
 &nbsp;
 
-### 3.2 Volcano Plot - Input: a list.
+### 3.2 Volcano Plot - Input: a list
 &nbsp;
 
 Volcano Plot can also take a list as an input data with specified **comp.name** for each data frame.
@@ -563,7 +563,10 @@ pathway.result <- plot.pathway(data = df, pathway.db = "rWikiPathways", gene.id.
 ```
 &nbsp;
 
-### 4.1 Pathway analysis result is a list that contains 5 objects:
+### 4.1 Pathway Analysis - Input: a data frame 
+&nbsp;
+
+Pathway analysis result is a list that contains 5 objects:
 &nbsp;
 
 **1.** Pathway analysis table with directional result (test up-regulated gene set and down-regulated gene set respectively).
@@ -626,7 +629,10 @@ ggsave("joint_plot.png",pathway.result[[5]], width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
-### 4.2 Pathway analysis for the list of summary tables will result in a list that contains 4 objects:
+### 4.2 Pathway Analysis - Input:  a list
+&nbsp;
+
+Pathway analysis for the list of summary tables will result in a list that contains 4 objects:
 &nbsp;
 
 Pathways with list of data as input, the list can be replaced with `d1` from the top. When list inputs are given `comp.names` should be speicified in order to identify the comparison groups.
