@@ -1,21 +1,11 @@
----
-output: 
-  html_document:
-    keep_md: true
-    theme: flatly
-    highlight: tango
----
-
-
 # RNAseq Visualization Automation
-&nbsp;
 
 Install RVA from GitHub
 
 ```r
 devtools::install_github("THERMOSTATS/RVA_prod")
 ```
-&nbsp;
+
 
 Load package for use
 
