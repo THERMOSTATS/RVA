@@ -21,7 +21,7 @@
 #' @return The function returns a ggplot object.
 #'
 #' @import data.table
-#' @importFrom dplyr left_join mutate n_distinct filter
+#' @importFrom dplyr left_join mutate n_distinct filter select
 #' @importFrom tidyr pivot_longer
 #' @importFrom stringr word
 #' @importFrom tibble as_tibble
@@ -52,7 +52,7 @@
 
 plot.gene <- function(data = dat,
                       anno = meta,
-                      gene.names = c("AAAS", "A2ML1", "AADACL3", "AARS"),
+                      gene.names = c("AAAS", "A2ML1", "AADACL3"),
                       ct.table.id.type = "ENSEMBL",
                       gene.id.type = "SYMBOL",
                       treatment = "Treatment",
@@ -106,9 +106,12 @@ plot.gene <- function(data = dat,
         #convert the gene names back to gene symbol for the plot
         lib <- transform.geneid(pd.dat$geneid,
                                 from = ct.table.id.type,
-                                to = "SYMBOL")
-        colnames(lib)[1] <- "geneid"
-        pd.dat <- pd.dat %>% left_join(lib)
+                                to = gene.id.type)
+
+        pd.dat <- pd.dat %>% left_join(lib, by = c("geneid" = ct.table.id.type))
+        pd.dat$new.geneid <- pd.dat[[gene.id.type]]
+
+
 
         #ggplot
         pgene <- ggplot(pd.dat, aes_(x=as.name(time),
@@ -121,7 +124,7 @@ plot.gene <- function(data = dat,
 
         #check if there is only 1 gene input
         if(n_distinct(pd.dat$geneid) > 1){
-                pgene <- pgene + facet_wrap(~geneid)
+                pgene <- pgene + facet_wrap(~new.geneid)
         }
         #check if y-axis log transformed
         if(log.option){
@@ -141,6 +144,7 @@ plot.gene <- function(data = dat,
                        device='png')
         }
         pgene
+        pd.dat <- pd.dat %>% dplyr::select(-new.geneid)
         return(list(pgene, pd.dat))
 
         })
