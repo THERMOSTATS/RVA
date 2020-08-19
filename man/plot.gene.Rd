@@ -7,7 +7,7 @@
 \method{plot}{gene}(
   data = dat,
   anno = meta,
-  gene.names = c("AAAS", "A2ML1", "AADACL3", "AARS"),
+  gene.names = c("AAAS", "A2ML1", "AADACL3"),
   ct.table.id.type = "ENSEMBL",
   gene.id.type = "SYMBOL",
   treatment = "Treatment",

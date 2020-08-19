@@ -1,11 +1,21 @@
+---
+output: 
+  html_document:
+    keep_md: true
+    theme: flatly
+    highlight: tango
+---
+
+
 # RNAseq Visualization Automation
+&nbsp;
 
 Install RVA from GitHub
 
 ```r
 devtools::install_github("THERMOSTATS/RVA_prod")
 ```
-
+&nbsp;
 
 Load package for use
 
@@ -802,7 +812,7 @@ confounding factors - they should not be used as statistical analyses but as
 data overviews.
 &nbsp;
 
-For this, you need a data table and annotation table. The data table should
+For this, you need a count table and annotation table. The count table should
 have the geneid as row names and the samples as column names. These column
 names must match the `sample.id` column in your annotation file:
 &nbsp;
@@ -1011,7 +1021,7 @@ dev.off()
 &nbsp;
 
 
-Let's load in the sample data provided in this package. Note that the table containing data must have the
+Let's load in the sample data provided in this package. Note that the count table containing data must have the
 geneid set as the rownames and must have column names which match the
 `sample.id` column of the annotation file.
 &nbsp;
@@ -1040,7 +1050,7 @@ head(anno)
 
 
 ```r
-ct <- RVA::count_table
+ct <- RVA::sample_count_cpm
 ```
 &nbsp;
 
@@ -1050,19 +1060,19 @@ ct[1:6,1:5]
 ```
 
 
-|                   |  A1| A10| A11| A12| A13|
-|:------------------|---:|---:|---:|---:|---:|
-|ENSG00000121410.11 |   2|   5|   4|   2|   2|
-|ENSG00000166535.19 |   0|   0|   0|   0|   0|
-|ENSG00000094914.12 | 405| 493| 422| 346| 260|
-|ENSG00000188984.11 |   0|   0|   0|   0|   0|
-|ENSG00000204518.2  |   0|   0|   0|   0|   0|
-|ENSG00000090861.15 | 555| 782| 674| 435| 268|
+|                   |     A1|    A10|    A11|    A12|    A13|
+|:------------------|------:|------:|------:|------:|------:|
+|ENSG00000121410.11 | 8.9672| 7.0303| 8.2396| 7.9871| 8.3253|
+|ENSG00000166535.19 | 8.5629| 7.6227| 7.7743| 7.6845| 8.5539|
+|ENSG00000094914.12 | 3.1405| 8.2261| 7.9616| 8.1047| 7.8747|
+|ENSG00000188984.11 | 5.7477| 7.7889| 8.0268| 7.8954| 8.0294|
+|ENSG00000204518.2  | 9.0742| 8.7547| 8.5676| 7.9980| 7.6943|
+|ENSG00000090861.15 | 8.2753| 8.1688| 8.6159| 7.3708| 7.7271|
 &nbsp;
 
 Below is a simple plot using the defaults. Further parameter changes can allow
-you to change the log scaling, the input type to cpm, and the genes selected
-for plotting.
+you to change the log scaling, the input type to either cpm or count, and the genes selected
+for plotting. The sample table we are using already has data points as CPM, so we will use CPM as our `input.type`. 
 &nbsp;
 
 
@@ -1081,7 +1091,7 @@ gene.result <- plot.gene(ct,
                time = "day",
                log.option = T,
                plot.save.to = NULL,
-               input.type = "count")
+               input.type = "cpm")
 ```
 
 ```
@@ -1107,14 +1117,14 @@ head(gene.result[[2]])
 ```
 
 
-|geneid          |sample_id |      exprs|Treatment   |day |SYMBOL |
-|:---------------|:---------|----------:|:-----------|:---|:------|
-|ENSG00000166535 |A1        | -0.0980936|Treatment_1 |0   |A2ML1  |
-|ENSG00000166535 |A10       | -0.0980936|Placebo     |14  |A2ML1  |
-|ENSG00000166535 |A11       | -0.0980936|Placebo     |28  |A2ML1  |
-|ENSG00000166535 |A12       | -0.0980936|Placebo     |0   |A2ML1  |
-|ENSG00000166535 |A13       | -0.0980936|Placebo     |14  |A2ML1  |
-|ENSG00000166535 |A14       | -0.0980936|Placebo     |28  |A2ML1  |
+|geneid          |sample_id |  exprs|Treatment   |day |SYMBOL |
+|:---------------|:---------|------:|:-----------|:---|:------|
+|ENSG00000166535 |A1        | 8.5629|Treatment_1 |0   |A2ML1  |
+|ENSG00000166535 |A10       | 7.6227|Placebo     |14  |A2ML1  |
+|ENSG00000166535 |A11       | 7.7743|Placebo     |28  |A2ML1  |
+|ENSG00000166535 |A12       | 7.6845|Placebo     |0   |A2ML1  |
+|ENSG00000166535 |A13       | 8.5539|Placebo     |14  |A2ML1  |
+|ENSG00000166535 |A14       | 7.9185|Placebo     |28  |A2ML1  |
 &nbsp;
 
 **Customize the plot & Save the figure**

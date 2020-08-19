@@ -736,7 +736,7 @@ confounding factors - they should not be used as statistical analyses but as
 data overviews.
 &nbsp;
 
-For this, you need a data table and annotation table. The data table should
+For this, you need a count table and annotation table. The count table should
 have the geneid as row names and the samples as column names. These column
 names must match the `sample.id` column in your annotation file:
 &nbsp;
@@ -909,7 +909,7 @@ dev.off()
 &nbsp;
 
 
-Let's load in the sample data provided in this package. Note that the table containing data must have the
+Let's load in the sample data provided in this package. Note that the count table containing data must have the
 geneid set as the rownames and must have column names which match the
 `sample.id` column of the annotation file.
 &nbsp;
@@ -929,7 +929,7 @@ knitr::kable(head(anno))
 &nbsp;
 
 ```{r }
-ct <- RVA::count_table
+ct <- RVA::sample_count_cpm
 ```
 &nbsp;
 
@@ -943,8 +943,8 @@ knitr::kable(ct[1:6,1:5])
 &nbsp;
 
 Below is a simple plot using the defaults. Further parameter changes can allow
-you to change the log scaling, the input type to cpm, and the genes selected
-for plotting.
+you to change the log scaling, the input type to either cpm or count, and the genes selected
+for plotting. The sample table we are using already has data points as CPM, so we will use CPM as our `input.type`. 
 &nbsp;
 
 
@@ -962,7 +962,7 @@ gene.result <- plot.gene(ct,
                time = "day",
                log.option = T,
                plot.save.to = NULL,
-               input.type = "count")
+               input.type = "cpm")
 ```
 &nbsp;
 
