@@ -93,7 +93,7 @@ plot.pathway <- function(data = df,
                         mutate(Description = factor(Description,levels = unique(Description)))
 
         }else{
-                path.res <- cal.pathway.scores(data, pathway.db, gene.id.type, FCflag, FDRflag)
+                path.res <- cal.pathway.scores(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff)
                 out.d.sig <- path.res[[1]]
                 out.nd.sig <- path.res[[2]]
                 nd.res <- path.res[[3]]
@@ -664,6 +664,8 @@ dlPathwaysDB <- function(pathway.db, ...){
 #' @param gene.id.type gene.id.type
 #' @param FCflag The column name (character) of fold change information, assuming the FC is log2 transformed. Default = "logFC".
 #' @param FDRflag The column name (character) of adjusted p value or FDR. Default = "adj.P.Val".
+#' @param FC.cutoff The fold change cutoff (numeric) selected to subset summary statistics table. Default = 1.5.
+#' @param FDR.cutoff The FDR cutoff selected (numeric) to subset summary statistics table. Default = 0.05.
 #' @param OUT.Directional logical, whether output directional or non-directional pathway analysis result, default: NULL.
 #' @param IS.list logical, whether the input is a list, default: NULL
 #'
@@ -678,7 +680,7 @@ dlPathwaysDB <- function(pathway.db, ...){
 #' @references Xingpeng Li & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 #'
 
-cal.pathway.scores <- function(data, pathway.db, gene.id.type,FCflag,FDRflag, OUT.Directional = NULL , IS.list = FALSE, ...){
+cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = NULL , IS.list = FALSE, ...){
   #supress warnings
   options(warn=-1)
   suppressWarnings({
