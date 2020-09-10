@@ -69,7 +69,7 @@ plot.gene <- function(data = dat,
         validate.geneid.flag(ct.table.id.type, "ct.table.id.type")
         validate.geneid.flag(gene.id.type, "gene.id.type")
         validate.flag(input.type, "input.type", c("count", "cpm"))
-        validate.annot(anno, c(time, treatment, sample.id), sample.id)
+        validate.annot(data, anno, c(time, treatment, sample.id), sample.id)
         validate.data(data)
         validate.data.annot(data, anno, sample.id)
 

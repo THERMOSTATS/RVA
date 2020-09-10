@@ -379,6 +379,7 @@ validate.numeric <- function(datin,
 #' @title Validate Annotation Table
 #' @description Ensure that an annotation has all of the required columns.
 #'
+#' @param data The input count data.
 #' @param annot The annotation dataframe.
 #' @param annot.flags The vector of annotation flags passed by the user.
 #' @param fill The fill value indicated by the user.
