@@ -140,7 +140,7 @@ plot.heatmap.expr <- function(data = count,
   validate.geneid.flag(gene.id.type, "gene.id.type")
   validate.flag(fill, "fill", c("CFB", "CPM"))
   validate.flag(input.type, "input.type", c("count", "cpm"))
-  validate.annot(annot, annot.flags, sample.id, fill, baseline.flag, baseline.val)
+  validate.annot(data, annot, annot.flags, sample.id, fill, baseline.flag, baseline.val)
   validate.data(data)
   validate.data.annot(data, annot, sample.id)
 

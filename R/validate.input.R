@@ -393,7 +393,7 @@ validate.numeric <- function(datin,
 #'                 \item `sample.id` is a column in `annot`.
 #'         }
 #' @references Xingpeng Li, Tatiana Gelaf Romer & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
-validate.annot <- function(annot, annot.flags, sample.id,
+validate.annot <- function(data, annot, annot.flags, sample.id,
                            fill = "CPM",
                            baseline.flag = NULL,
                            baseline.val = NULL) {
@@ -410,6 +410,11 @@ validate.annot <- function(annot, annot.flags, sample.id,
                             "].")
                 )
         }
+
+        if(!all(colnames(data) == annot[,sample.id])) {
+          stop("Please make sure the column names of count data matched \'sample.id\' in sample annotation file, they need to be in the same length and order.")
+        }
+
         if(fill == "CFB") {
                 validate.baseline(annot, baseline.val, baseline.flag)
         }
