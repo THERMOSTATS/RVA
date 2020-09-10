@@ -115,11 +115,7 @@ plot.heatmap.cfb <- function(cpm,
 #' draw(hm.expr$gp)
 #' dev.off()
 #'
-#'
-#'
-#'
-#'
-#'
+
 
 plot.heatmap.expr <- function(data = count,
                               annot = meta,
@@ -253,7 +249,7 @@ plot.heatmap.expr <- function(data = count,
   colnames(gene.display)[1] = ct.table.id.type
 
   rownames(wide) <- gene.display[,2]
-
+  set.seed(200) #fix the color scheme
   gp <- Heatmap(wide, col = colors, name = "Heatmap",
                 na_col = "black",
                 cluster_columns = F,

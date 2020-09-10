@@ -46,3 +46,4 @@ Imports:
   XML
 Depends: 
     R (>= 2.10)
+biocViews:
