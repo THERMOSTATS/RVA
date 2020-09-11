@@ -82,12 +82,12 @@ plot.pathway <- function(data = df,
 
         if(inherits(data, "list")){
                 cat ("\n Executing list of data \n")
-                out.d.sig <- map2(data, T, cal.pathway.scores, IS.list = TRUE) %>%
+                out.d.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = T , IS.list = T) %>%
                         set_names(comp.names) %>%
                         bind_rows(, .id = "Comparisons.ID") %>%
                         mutate(Description = factor(Description,levels = unique(Description)))
 
-                out.nd.sig <- map2(data, F, cal.pathway.scores, IS.list = TRUE) %>%
+                out.nd.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = F , IS.list = T) %>%
                         set_names(comp.names) %>%
                         bind_rows(, .id = "Comparisons.ID") %>%
                         mutate(Description = factor(Description,levels = unique(Description)))
