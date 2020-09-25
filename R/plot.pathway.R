@@ -18,7 +18,7 @@
 #' @param Fisher.down.cutoff The FDR cutoff selected (numeric) for the pathway enrichment analysis' Fisher's exact test with the downregulated gene set.
 #' @param plot.save.to The address to save the plot from simplified cutoff combination with FDR of 0.01, 0.05, 0.1, and 0.2.
 #' @param pathway.db The databse to be used for encrichment analysis. Can be one of the following, "rWikiPathways", "KEGG", "REACTOME", "Hallmark","rWikiPathways_aug_2020".
-#'
+#' @param customized.pathways the customized pathways in the format of two column dataframe (column name as "gs_name" and "entrez_gene") to be used in analysis
 #'
 #' @return The function returns a list of 5 objects:
 #' \item{1}{result table from directional pathway enrichment analysis}
@@ -55,6 +55,13 @@
 #'ggsave("~/pathways_non_directional_plot.png", plot = result[[3]],plot = plot.output[[3]],
 #'        width = 600, height = 600, dpi = 300))
 #' @export plot.pathway
+#'
+#'
+
+# test.pathway <- readRDS("C:\\Users\\lix410\\OneDrive\ -\ Pfizer\\Desktop\\test.pathway.rds")
+# plot.pathway(data = df, pathway.db = "KEGG", customized.pathways = test.pathway)
+#
+
 plot.pathway <- function(data = df,
                          comp.names = NULL,
                          gene.id.type = "ENSEMBL",
@@ -66,7 +73,9 @@ plot.pathway <- function(data = df,
                         Fisher.up.cutoff = 0.1,
                         Fisher.down.cutoff = 0.1,
                         plot.save.to = NULL,
-                        pathway.db = "rWikiPathways", ...){
+                        pathway.db = "rWikiPathways",
+                        customized.pathways = NULL,
+                        ...){
 
         # Gene set enrichment test (Fisher) in FC positive and FC negative group separately.
         # the p.adjust value will be compared from + and - group and choose the smaller one and assign the +/- value.
@@ -76,24 +85,23 @@ plot.pathway <- function(data = df,
 
         validate.single.table.isnotlist(data)
         validate.comp.names(comp.names,data)
-        validate.pathways.db(pathway.db)
-
+        validate.pathways.db(pathway.db, customized.pathways)
 
 
         if(inherits(data, "list")){
                 cat ("\n Executing list of data \n")
-                out.d.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = T , IS.list = T) %>%
+                out.d.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = T , IS.list = T, customized.pathways) %>%
                         set_names(comp.names) %>%
                         bind_rows(, .id = "Comparisons.ID") %>%
                         mutate(Description = factor(Description,levels = unique(Description)))
 
-                out.nd.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = F , IS.list = T) %>%
+                out.nd.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = F , IS.list = T, customized.pathways) %>%
                         set_names(comp.names) %>%
                         bind_rows(, .id = "Comparisons.ID") %>%
                         mutate(Description = factor(Description,levels = unique(Description)))
 
         }else{
-                path.res <- cal.pathway.scores(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff)
+                path.res <- cal.pathway.scores(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = NULL , IS.list = F, customized.pathways)
                 out.d.sig <- path.res[[1]]
                 out.nd.sig <- path.res[[2]]
                 nd.res <- path.res[[3]]
@@ -272,7 +280,7 @@ plot.pathway <- function(data = df,
                           xlab("Pathway") +
                           theme_minimal()
 
-                  #make sure returned dataset has only signals
+                  #make sure returned dataset has signals
                   out.nd.sig <- sav.out.nd.sig[sav.out.nd.sig$ID != "",]
 
                   if(inherits(data, "list")){
@@ -352,7 +360,6 @@ plot.pathway <- function(data = df,
 
 
 
-
 #' @title Null Return
 #' @description The function takes in a boolean value and a numeric value, which it uses to decide what to output.
 #'
@@ -366,8 +373,6 @@ plot.pathway <- function(data = df,
 #' @details nullreturn is a function that returns NULL for single df inputs that don't hold true for threshold values. It returns an empty dataframe for
 #' list inputs which don't satisfy the cutoff's
 #'
-
-
 
 nullreturn <- function(IS.list,type=1){
   if (IS.list) {
@@ -539,6 +544,7 @@ multiPlot <- function(allID, backup.d.sig, nd.res, ...){
 #' @description Download gene database for enrichment.
 #'
 #' @param pathway.db The databse to be used for encrichment analysis. Can be one of the following, "rWikiPathways", "KEGG", "REACTOME", "Hallmark","rWikiPathways_aug_2020"
+#' @param customized.pathways the user provided pathway added for analysis.
 #'
 #' @return Returns a dataframe.
 #'
@@ -549,109 +555,115 @@ multiPlot <- function(allID, backup.d.sig, nd.res, ...){
 #' @importFrom tidyr separate
 #' @importFrom dplyr %>% select pull as_tibble filter mutate left_join bind_rows
 #' @import org.Hs.eg.db
-#' @importFrom purrr set_names map2
+#' @importFrom purrr set_names map2 map
 #' @importFrom msigdbr msigdbr
 #'
 #' @references Xingpeng Li & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 #'
 
-dlPathwaysDB <- function(pathway.db, ...){
+dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
 
   bsetfunc <- function(data){
     return (data.frame(cbind(setName(data),geneIds(data))))
   }
 
-  if (pathway.db == "rWikiPathways"){
+  if(!is.null(pathway.db)){
+    if(pathway.db == "rWikiPathways"){
 
-    gene.dl <- rWikiPathways::downloadPathwayArchive(organism="Homo sapiens", format = "gmt") %>%
-      clusterProfiler::read.gmt()
+      gene.dl <- rWikiPathways::downloadPathwayArchive(organism="Homo sapiens", format = "gmt") %>%
+        clusterProfiler::read.gmt()
 
-    names(gene.dl)[1] <- "ont"
-    gene.dl <- gene.dl %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
+      names(gene.dl)[1] <- "ont"
+      gene.dl <- gene.dl %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
 
-    #from the overall data, extract pathways id and gene number
-    wpid2gene <- gene.dl %>% dplyr::select(wpid,gene) #TERM2GENE
+      #from the overall data, extract pathways id and gene number
+      wpid2gene <- gene.dl %>% dplyr::select(wpid,gene) #TERM2GENE
 
-    #for the same pathways id's get the full descriptive name
-    wpid2name <- gene.dl %>% dplyr::select(wpid,name) #TERM2NAME
+      #for the same pathways id's get the full descriptive name
+      wpid2name <- gene.dl %>% dplyr::select(wpid,name) #TERM2NAME
 
+    }else if(pathway.db == "KEGG"){
+      #data(GSVAdata::c2BroadSets)
 
-    return (list(gene.dl,wpid2gene, wpid2name))
+      c2Bsets <- c2BroadSets
 
+      KEGG <- c2Bsets[c(grep("^KEGG", names(c2Bsets)))]
+      gene.dl <- map(KEGG, bsetfunc) %>% bind_rows() %>% set_names(c("gs_name","entrez_gene"))
+
+      #from the overall data, extract pathways id and gene number
+      wpid2gene <- gene.dl
+
+      #for the same pathways id's get the full descriptive name
+      wpid2name <- NULL
+    }else if (pathway.db == "REACTOME"){
+
+      #data(c2BroadSets)
+
+      c2Bsets <- c2BroadSets
+
+      REAC <- c2Bsets[c(grep("^REACTOME", names(c2Bsets)))]
+      gene.dl <- map(REAC, bsetfunc) %>% bind_rows() %>% set_names(c("gs_name","entrez_gene"))
+
+      #from the overall data, extract pathways id and gene number
+      wpid2gene <- gene.dl
+
+      #for the same pathways id's get the full descriptive name
+      wpid2name <- NULL
+    }else if (pathway.db == "Hallmark"){
+
+      gene.dl <- msigdbr::msigdbr(species = "Homo sapiens",category = c("H")) %>%
+        dplyr::select(gs_name, entrez_gene)
+
+      #from the overall data, extract pathways id and gene number
+      wpid2gene <- gene.dl
+
+      #for the same pathways id's get the full descriptive name
+      wpid2name <- NULL
+
+    }else if (pathway.db == "rWikiPathways_aug_2020"){
+      #throw warning about timestamp
+      #gene.dl <- clusterProfiler::read.gmt('wikipathways-20200710-gmt-Homo_sapiens.gmt')
+      #gene.dl <- gene.dl %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
+      gene.dl <- wpA2020
+
+      #from the overall data, extract pathways id and gene number
+      wpid2gene <- gene.dl %>% dplyr::select(wpid,gene) #TERM2GENE
+
+      #for the same pathways id's get the full descriptive name
+      wpid2name <- gene.dl %>% dplyr::select(wpid,name) #TERM2NAME
+    }
   }
 
-  else if (pathway.db == "KEGG"){
 
-    #data(GSVAdata::c2BroadSets)
+  if(!is.null(customized.pathways)){
+    if(is.null(pathway.db)){
 
-    c2Bsets <- c2BroadSets
+      if(nrow(customized.pathways) < 100){
+        cat(paste0("\n\n!! Customized pathway information alone will be used for analysis without any additional database,",
+                       " if accumulated number of genes in pathway is too small compared to all genes provided in summary statistics table,",
+                       " the result may not be applicable !!\n\n"))
+      }
 
-    KEGG <- c2Bsets[c(grep("^KEGG", names(c2Bsets)))]
-    gene.dl <- map(KEGG, bsetfunc) %>% bind_rows() %>% set_names(c("gs_name","entrez_gene"))
+      wpid2gene <- customized.pathways
+      wpid2name <- NULL
 
-    #from the overall data, extract pathways id and gene number
-    wpid2gene <- gene.dl
+    }else{
 
-    #for the same pathways id's get the full descriptive name
-    wpid2name <- NULL
+      if(pathway.db %in% c("rWikiPathways","rWikiPathways_aug_2020")){
 
+        colnames(customized.pathways) <- c("wpid","gene")
+        customized.pathways$gene <- as.character(customized.pathways$gene)
 
-    return (list(gene.dl,wpid2gene, wpid2name))
+        wpid2gene <- wpid2gene %>% bind_rows(customized.pathways)
+        wpid2name <- wpid2name %>% bind_rows(customized.pathways %>% select(wpid = wpid, name = wpid))
+      }else{
+        wpid2gene <- wpid2gene %>% bind_rows(customized.pathways)
+      }
+
+    }
   }
 
-  else if (pathway.db == "REACTOME"){
-
-    #data(c2BroadSets)
-
-    c2Bsets <- c2BroadSets
-
-    REAC <- c2Bsets[c(grep("^REACTOME", names(c2Bsets)))]
-    gene.dl <- map(REAC, bsetfunc) %>% bind_rows() %>% set_names(c("gs_name","entrez_gene"))
-
-    #from the overall data, extract pathways id and gene number
-    wpid2gene <- gene.dl
-
-    #for the same pathways id's get the full descriptive name
-    wpid2name <- NULL
-
-
-    return (list(gene.dl,wpid2gene, wpid2name))
-  }
-
-  else if (pathway.db == "Hallmark"){
-
-    gene.dl <- msigdbr::msigdbr(species = "Homo sapiens",category = c("H")) %>%
-      dplyr::select(gs_name, entrez_gene)
-
-    #from the overall data, extract pathways id and gene number
-    wpid2gene <- gene.dl
-
-    #for the same pathways id's get the full descriptive name
-    wpid2name <- NULL
-
-
-    return (list(gene.dl,wpid2gene, wpid2name))
-
-
-  }
-
-  else if (pathway.db == "rWikiPathways_aug_2020"){
-    #throw warning about timestamp
-    #gene.dl <- clusterProfiler::read.gmt('wikipathways-20200710-gmt-Homo_sapiens.gmt')
-    #gene.dl <- gene.dl %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
-
-    gene.dl <- wpA2020
-
-    #from the overall data, extract pathways id and gene number
-    wpid2gene <- gene.dl %>% dplyr::select(wpid,gene) #TERM2GENE
-
-    #for the same pathways id's get the full descriptive name
-    wpid2name <- gene.dl %>% dplyr::select(wpid,name) #TERM2NAME
-
-
-    return (list(gene.dl,wpid2gene, wpid2name))
-
-  }
+  return (list(wpid2gene, wpid2name))
 }
 
 
@@ -668,6 +680,7 @@ dlPathwaysDB <- function(pathway.db, ...){
 #' @param FDR.cutoff The FDR cutoff selected (numeric) to subset summary statistics table. Default = 0.05.
 #' @param OUT.Directional logical, whether output directional or non-directional pathway analysis result, default: NULL.
 #' @param IS.list logical, whether the input is a list, default: NULL
+#' @param customized.pathways the customized pathways in the format of two column dataframe to be used in analysis
 #'
 #' @return Returns a dataframe.
 #'
@@ -680,7 +693,7 @@ dlPathwaysDB <- function(pathway.db, ...){
 #' @references Xingpeng Li & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 #'
 
-cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = NULL , IS.list = FALSE, ...){
+cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = NULL , IS.list = FALSE,customized.pathways, ...){
   #supress warnings
   options(warn=-1)
   suppressWarnings({
@@ -690,17 +703,15 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
       #wp2gene <- rWikiPathways::downloadPathwayArchive(organism="Homo sapiens", format = "gmt") %>%
       #  clusterProfiler::read.gmt() %>%
       #  tidyr::separate(ont, c("name","version","wpid","org"), "%")
-      collection_0 <- dlPathwaysDB(pathway.db)
-
-      wp2gene <- collection_0[[1]]
+      collection_0 <- dlPathwaysDB(pathway.db, customized.pathways)
 
       #from the overall data, extract pathways id and gene number
       #wpid2gene <- wp2gene %>% dplyr::select(wpid,gene) #TERM2GENE
-      wpid2gene <- collection_0[[2]]
+      wpid2gene <- collection_0[[1]]
 
       #for the same pathways id's get the full descriptive name
       #wpid2name <- wp2gene %>% dplyr::select(wpid,name) #TERM2NAME
-      wpid2name <- collection_0[[3]]
+      wpid2name <- collection_0[[2]]
 
       #Get background gene list (from all the genes available for the statistical test)
       #Conversion from ENSEMBL to ENTREZID
@@ -710,14 +721,12 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
         clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db) %>%
         pull(ENTREZID)
 
-
       data.subset <- data[,c(FCflag, FDRflag)]
       colnames(data.subset) <- c("FC","FDR")
 
       data <- data.subset %>%
         as_tibble(rownames = "gene") %>%
         filter(abs(FC) >= log2(FC.cutoff), FDR <= FDR.cutoff) #apply filter
-
 
       #processing pathway analysis
       if(nrow(data) < 10){

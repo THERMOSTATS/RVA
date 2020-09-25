@@ -1,20 +1,37 @@
 #' @title Validate Pathways DB
 #' @description To ensure selected db name is correct.
 #' @param pathway.db The databse to be used for encrichment analysis. Can be one of the following, "rWikiPathways", "KEGG", "REACTOME", "Hallmark","rWikiPathways_aug_2020"
+#' @param customized.pathways the customized pathways in the format of two column dataframe (column name as "gs_name" and "entrez_gene") to be used in analysis
 #' @importFrom stringr str_c
 #' @references Xingpeng Li, Tatiana Gelaf Romer & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
-validate.pathways.db <- function(pathway.db){
+validate.pathways.db <- function(pathway.db, customized.pathways){
   valid.db <- c("rWikiPathways", "KEGG", "REACTOME", "Hallmark","rWikiPathways_aug_2020")
-  if (!pathway.db %in% valid.db){
-    stop(paste0("The DB name you have entered is cannot be used please select one of the follwing",
-                str_c(valid.db, collapse = " , " )))
-  }
-  if (pathway.db == "rWikiPathways_aug_2020"){
-    warning(paste0("\n\n Using rWikiPathways from August 2020, please use",
-                   " pathway.db = rWikiPathways for latest version \n\n" ))
-  }
-  cat(paste0("\n\n Currently using the ", pathway.db ," database for enrichment \n\n"))
 
+  if(is.null(pathway.db) & is.null(customized.pathways)){
+    stop(paste0("\nPlease specify either the customized pathway as dataframe by using 'customized.pathways' parameter or use one of the follwing db with pathway.db parameter: ",
+                str_c(valid.db, collapse = " , " )))
+  }else if(!is.null(pathway.db) & is.null(customized.pathways)){
+    if (!pathway.db %in% valid.db){
+      stop(paste0("\nThe DB name you have entered is cannot be used please select one of the follwing",
+                  str_c(valid.db, collapse = " , " )))
+    }
+
+    if (pathway.db == "rWikiPathways_aug_2020"){
+      cat(paste0("\n\n Using rWikiPathways from August 2020, please use",
+                 " pathway.db = rWikiPathways for latest version \n\n" ))
+    }
+
+    cat(paste0("\n Currently using the ", pathway.db ," database for enrichment \n\n"))
+
+  }else if(is.null(pathway.db) & !is.null(customized.pathways)){
+    cat("\n\nNo pathway database specified, will use customized pathway data for analysis.\n\n")
+    if(!all(colnames(customized.pathways) == c("gs_name","entrez_gene"))){
+      stop(paste0("\nPlease check the input customized.pathways with with input has two columns with gene set name and entrez gene name,\n",
+                  "column names as 'gs_name' for geneset and 'entrez_gene' for gene in that geneset.\n\n"))
+    }
+  }else if(!is.null(pathway.db) & !is.null(customized.pathways)){
+   cat("\nBoth database and customized pathway information are provided, the customized pathway information will be appended to the database selected.\n\n")
+  }
 }
 
 
