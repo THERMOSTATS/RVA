@@ -34,7 +34,9 @@
 #'
 #' @importFrom ggplot2 ggsave ggplot geom_point geom_vline xlim ylim labs theme geom_hline xlab ylab ggtitle
 #' @importFrom dplyr %>%
+#' @importFrom tibble as_tibble
 #' @importFrom tidyr separate
+#' @importFrom purrr map
 #'
 #' @export plot.volcano
 #'
@@ -131,11 +133,9 @@ plot.volcano <- function(data=data,
 
                 data.n <- set_names(data,comp.names)
 
-                data.p <- do.call(rbind, data.n) %>%
-                        as_tibble(rownames = "Comparisons.ID_gene") %>%
-                        separate(Comparisons.ID_gene, c("Comparisons.ID", "gene"),".ENSG") %>%
-                        mutate(gene = paste0("ENSG",gene),
-                               Comparisons.ID = factor(Comparisons.ID,levels = comp.names) )
+                data.p <- map(data.n, as_tibble, rownames = "gene") %>%
+                  bind_rows(.id = "Comparisons.ID") %>%
+                  mutate(Comparisons.ID = factor(Comparisons.ID,levels = comp.names))
 
 
         }else{
