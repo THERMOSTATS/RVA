@@ -32,7 +32,7 @@
 #'
 #' @return The function return a volcano plot as a ggplot object.
 #'
-#' @importFrom ggplot2 ggsave ggplot geom_point geom_vline xlim ylim labs theme geom_hline xlab ylab ggtitle
+#' @importFrom ggplot2 ggsave ggplot geom_point geom_vline xlim ylim labs theme geom_hline xlab ylab ggtitle facet_wrap
 #' @importFrom dplyr %>%
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr separate
