@@ -1,6 +1,6 @@
 Package: RVA
 Title: RNAseq Visualization Automation
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: 
     person(given = "Xingpeng",
            family = "Li",
@@ -8,6 +8,7 @@ Authors@R:
            email = "xingpeng.li@pfizer.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Automate downstream visualization & pathway analysis in RNAseq analysis.
+Maintainer: Xingpeng Li <xingpeng.li@pfizer.com>
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
 Encoding: UTF-8
@@ -18,6 +19,7 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+biocViews:
 Imports:
   GSVAdata (>= 1.22.0),
   clusterProfiler (>= 3.14.3),
@@ -46,4 +48,3 @@ Imports:
   XML
 Depends: 
     R (>= 2.10)
-biocViews:
