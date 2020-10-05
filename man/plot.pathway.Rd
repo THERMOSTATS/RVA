@@ -67,15 +67,19 @@ differential expression analysis like \code{limma} or \code{DESeq2}.
 The function takes the summary statistics table and use user selected parameter based on check.cutoff to do pathway enrichment analysis
 }
 \examples{
-result <- plot.pathway(data = summary.table, gene.id.type = "ENSEMBL", FC.cutoff = 1.5, p.cutoff = 0.05,  plot.save.to = "~/address_to_folder/pathway_plot.png")
+result <- plot.pathway(data = summary.table,
+gene.id.type = "ENSEMBL",
+FC.cutoff = 1.5,
+p.cutoff = 0.05,
+plot.save.to = "~/address_to_folder/pathway_plot.png")
 result <- plot.pathway(data = list(summary.table.a, summary.table.b), comp.names = c("A","B"))
-
 
 #Save figures using ggplot2
 library(ggplot2)
 result <- plot.pathway(data = list(summary.table.a, summary.table.b), comp.names = c("A","B"))
-ggsave("~/pathways_non_directional_plot.png", plot = result[[3]],plot = plot.output[[3]],
-       width = 600, height = 600, dpi = 300))
+ggsave("~/pathways_non_directional_plot.png",
+plot = result[[3]],
+width = 600, height = 600, dpi = 300))
 }
 \references{
 Xingpeng Li & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.

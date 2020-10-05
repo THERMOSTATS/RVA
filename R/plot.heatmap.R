@@ -355,7 +355,7 @@ calc.cfb <- function(data, annot, baseline.flag, baseline.val) {
     dcast(cast.formula, value.var = "cpm", fun.aggregate = mean) %>%
     melt(value.name = "cpm", variable.name = "variable",
          measure.vars = relevant.vars) %>%
-    filter(!is.na(UQ(as.name(baseline.var))) && !is.na(variable)) %>%
+    filter(!is.na(UQ(as.name(baseline.var))) & !is.na(variable)) %>%
     separate(variable, into = baseline.flag, sep = "_") %>%
     dplyr::mutate(cpm = as.numeric(cpm),
                   !!baseline.var := as.numeric(UQ(as.name(baseline.var)))) %>%

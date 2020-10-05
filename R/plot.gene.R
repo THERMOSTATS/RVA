@@ -38,16 +38,19 @@
 #'
 #'
 #' @examples
-#' plot.gene(data = example_count_table,
+#' plot <- plot.gene(data = example_count_table,
 #' anno = sample_annotation_table,
 #' plot.save.to = "~/address_to_folder/gene_plot.png")
 #'
 #' #Save figures using ggplot2
 #' library(ggplot2)
-#' ggsave("gene_plot_name.png", device = "png", width = 100, height = 100, dpi = 200, limitsize = FALSE)
-#'
-#'
-#'
+#' ggsave(plot,
+#' "gene_plot_name.png",
+#' device = "png",
+#' width = 100,
+#' height = 100,
+#' dpi = 200,
+#' limitsize = FALSE)
 #'
 
 plot.gene <- function(data = dat,

@@ -46,8 +46,7 @@
 #'
 #'
 #' @examples
-#' plot.cutoff(data = example_summary_statistics_table,
-#'             plot.save.to = "~/cut_off_selection_plot.png")
+#' plot.cutoff(data, plot.save.to = "~/cut_off_selection_plot.png")
 #'
 #'plot.cutoff(data = list(summary.table.a, summary.table.b),
 #'            comp.names = c("A", "B"),
@@ -57,17 +56,17 @@
 #' #Save figures using ggplot2
 #' library(ggplot2)
 #'
-#' plot.cutoff(data = example_summary_statistics_table)
+#' gp <- plot.cutoff(data)
 #' ggsave(filename = "~/cut_off_selection_plot.png" ,
 #'        plot = gp,
 #'        width = 5,
 #'        height = 5)
 #'
-#' cutoff.result.list <- plot.cutoff(data = list(summary.table.a, summary.table.b)
+#' cutoff.result.list <- plot.cutoff(data = list(summary.table.a, summary.table.b),
 #'                  comp.names = c('A', 'B'))
 #'
 #' ggsave(filename = "~/cut_off_list_plot.png",
-#'       plot = cutoff.result.list,
+#'       plot = cutoff.result.list[[2]],
 #'       width = 5,
 #'       height = 5,
 #'       dpi = 500)
