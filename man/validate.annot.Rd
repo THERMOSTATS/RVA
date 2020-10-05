@@ -5,6 +5,7 @@
 \title{Validate Annotation Table}
 \usage{
 validate.annot(
+  data,
   annot,
   annot.flags,
   sample.id,
@@ -14,6 +15,8 @@ validate.annot(
 )
 }
 \arguments{
+\item{data}{The input count data.}
+
 \item{annot}{The annotation dataframe.}
 
 \item{annot.flags}{The vector of annotation flags passed by the user.}

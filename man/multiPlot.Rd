@@ -4,7 +4,7 @@
 \alias{multiPlot}
 \title{Multi Plot}
 \usage{
-multiPlot(allID, backup.d.sig, nd.res)
+multiPlot(allID, backup.d.sig, nd.res, ...)
 }
 \arguments{
 \item{allID}{A vector of all pathway ID's from directional and non directional enriched datasets.}

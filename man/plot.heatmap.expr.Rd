@@ -102,11 +102,6 @@ png("heatmap_plot_name.png", width = 500, height = 500)
 draw(hm.expr$gp)
 dev.off()
 
-
-
-
-
-
 }
 \references{
 Xingpeng Li,Tatiana Gelaf Romer & Aliyah Olaniyan, RVA - RNAseq Visualization Automation tool.

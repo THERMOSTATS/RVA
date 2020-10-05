@@ -5,7 +5,7 @@
 \title{Create ggplot object for number of differntially expressed genes with
 different FDR and fold change cutoff.}
 \usage{
-get.cutoff.df(datin, pvalues, FCs, FCflag, FDRflag)
+get.cutoff.df(datin, pvalues, FCs, FCflag = "logFC", FDRflag = "adj.P.Val")
 }
 \arguments{
 \item{pvalues}{A set of p-values for FDR cutoff to be checked.}

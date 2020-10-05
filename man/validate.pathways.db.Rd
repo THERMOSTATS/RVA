@@ -4,10 +4,12 @@
 \alias{validate.pathways.db}
 \title{Validate Pathways DB}
 \usage{
-validate.pathways.db(pathway.db)
+validate.pathways.db(pathway.db, customized.pathways)
 }
 \arguments{
 \item{pathway.db}{The databse to be used for encrichment analysis. Can be one of the following, "rWikiPathways", "KEGG", "REACTOME", "Hallmark","rWikiPathways_aug_2020"}
+
+\item{customized.pathways}{the customized pathways in the format of two column dataframe (column name as "gs_name" and "entrez_gene") to be used in analysis}
 }
 \description{
 To ensure selected db name is correct.

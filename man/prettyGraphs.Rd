@@ -4,7 +4,7 @@
 \alias{prettyGraphs}
 \title{Pretty Graphs}
 \usage{
-prettyGraphs(vizdf)
+prettyGraphs(vizdf, ...)
 }
 \arguments{
 \item{vizdf}{A dataframes of enriched pathways.}
