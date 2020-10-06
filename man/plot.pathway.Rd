@@ -79,7 +79,7 @@ library(ggplot2)
 result <- plot.pathway(data = list(summary.table.a, summary.table.b), comp.names = c("A","B"))
 ggsave("~/pathways_non_directional_plot.png",
 plot = result[[3]],
-width = 600, height = 600, dpi = 300))
+width = 600, height = 600, dpi = 300)
 }
 \references{
 Xingpeng Li & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.

@@ -51,7 +51,7 @@
 #'              geneset = disease_signature_summary_statistics_table,
 #'              plot.save.to = "~/address_to_folder/volcano_plot.png")
 #'
-#' plot.volcano(data = list(summary.table.a, summary.table.b),
+#' plot.volcano(data = list(example_summary_statistics_table, example_summary_statistics_table1),
 #'             comp.names = c("A", "B"),
 #'             geneset = disease_signature_summary_statistics_table,
 #'             plot.save.to = "~/address_to_folder/volcano_plot.png")

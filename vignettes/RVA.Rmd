@@ -15,8 +15,6 @@ vignette: >
 ---
 
 
-
-
 ```{r message=F, warning=F}
 library(RVA)
 ```

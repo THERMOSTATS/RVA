@@ -23,9 +23,9 @@
 #' @return If the input \code{data} is a data list, then a multi-facet ggplot plot object which contains each
 #' of the summary statistics table will be returned; otherwise, if the input \code{data} is a data frame, then the function will return a list which contains 3 elements:
 #' \item{df.sub}{A dataframe, which contains the number of genes(3rd column) with FDR (1st column), Fold Change (2nd column)}
-#' \item{gp}{A ggplot object to show the simplified cutoff combination result}
 #' \item{plot3d}{A plotly object to show the 3d illustration of all possible cutoff selectiosn and
 #' the number of DE genes in the 3d surface}
+#' \item{gp}{A ggplot object to show the simplified cutoff combination result}
 #'
 #'
 #' @importFrom dplyr %>% filter as_tibble mutate bind_rows
@@ -46,9 +46,9 @@
 #'
 #'
 #' @examples
-#' plot.cutoff(data, plot.save.to = "~/cut_off_selection_plot.png")
+#' plot.cutoff(Sample_summary_statistics_table, plot.save.to = "~/cut_off_selection_plot.png")
 #'
-#'plot.cutoff(data = list(summary.table.a, summary.table.b),
+#'plot.cutoff(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
 #'            comp.names = c("A", "B"),
 #'            plot.save.to = "~/cut_off_list_plot.png")
 #'
@@ -56,20 +56,12 @@
 #' #Save figures using ggplot2
 #' library(ggplot2)
 #'
-#' gp <- plot.cutoff(data)
+#' gp <- plot.cutoff(Sample_summary_statistics_table)
 #' ggsave(filename = "~/cut_off_selection_plot.png" ,
-#'        plot = gp,
+#'        plot = gp[[3]],
 #'        width = 5,
 #'        height = 5)
 #'
-#' cutoff.result.list <- plot.cutoff(data = list(summary.table.a, summary.table.b),
-#'                  comp.names = c('A', 'B'))
-#'
-#' ggsave(filename = "~/cut_off_list_plot.png",
-#'       plot = cutoff.result.list[[2]],
-#'       width = 5,
-#'       height = 5,
-#'       dpi = 500)
 
 plot.cutoff <- function(data = data,
                         comp.names = NULL,
@@ -226,7 +218,8 @@ make.cutoff.plotly <- function(df) {
 #'
 
 plot.cutoff.single <- function(datin,
-                               FCflag, FDRflag,
+                               FCflag,
+                               FDRflag,
                                FCs,
                                pvalues) {
 

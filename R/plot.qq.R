@@ -27,7 +27,7 @@
 #'         plot.save.to = "~/qq_plot.png")
 #' plot.qq(data = list(summary.table.a, summary.table.b),
 #'         comp.names = c("A","B"),
-#'         plot.save.to = = "~/qq_list_plot.png")
+#'         plot.save.to = "~/qq_list_plot.png")
 #'
 #' #Save figures using ggplot2
 #' library(ggplot2)

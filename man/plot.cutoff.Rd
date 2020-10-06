@@ -68,9 +68,9 @@ The default range of the fold change is from 1 to 2, and p value is from 0 to 0.
 for FC and 0.005 for FDR.
 }
 \examples{
-plot.cutoff(data, plot.save.to = "~/cut_off_selection_plot.png")
+plot.cutoff(Sample_summary_statistics_table, plot.save.to = "~/cut_off_selection_plot.png")
 
-plot.cutoff(data = list(summary.table.a, summary.table.b),
+plot.cutoff(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
            comp.names = c("A", "B"),
            plot.save.to = "~/cut_off_list_plot.png")
 
@@ -78,20 +78,12 @@ plot.cutoff(data = list(summary.table.a, summary.table.b),
 #Save figures using ggplot2
 library(ggplot2)
 
-gp <- plot.cutoff(data)
+gp <- plot.cutoff(Sample_summary_statistics_table)
 ggsave(filename = "~/cut_off_selection_plot.png" ,
-       plot = gp,
+       plot = gp[[2]],
        width = 5,
        height = 5)
 
-cutoff.result.list <- plot.cutoff(data = list(summary.table.a, summary.table.b),
-                 comp.names = c('A', 'B'))
-
-ggsave(filename = "~/cut_off_list_plot.png",
-      plot = cutoff.result.list[[2]],
-      width = 5,
-      height = 5,
-      dpi = 500)
 }
 \references{
 Xingpeng Li & Olya Besedina, RVA - RNAseq Visualization Automation tool.
