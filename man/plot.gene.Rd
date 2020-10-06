@@ -56,8 +56,8 @@ This is the function to process the gene count table to show gene expression var
 The function takes the gene counts and returns a ggplot that shows gene expression variation over time or group.
 }
 \examples{
-plot <- plot.gene(data = example_count_table,
-anno = sample_annotation_table,
+plot <- plot.gene(data = count_table,
+anno = sample_annotation,
 plot.save.to = "~/address_to_folder/gene_plot.png")
 
 #Save figures using ggplot2

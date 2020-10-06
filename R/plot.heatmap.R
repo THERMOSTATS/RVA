@@ -105,8 +105,8 @@ plot.heatmap.cfb <- function(cpm,
 #'
 #'
 #' @examples
-#' plot.heatmap.expr(data = example_count_table,
-#' annot = sample_annotation_table,
+#' hm.expr <- plot.heatmap.expr(data = count_table,
+#' annot = sample_annotation,
 #' plot.save.to = "~/address_to_folder/heatmap_plot.png")
 #'
 #' #Save figures using ComplexHeatmap

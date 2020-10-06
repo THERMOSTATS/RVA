@@ -25,7 +25,7 @@
 #' @examples
 #' plot.qq(data = example_summary_statistics_table,
 #'         plot.save.to = "~/qq_plot.png")
-#' plot.qq(data = list(summary.table.a, summary.table.b),
+#' plot.qq(data = list(example_summary_statistics_table, example_summary_statistics_table1),
 #'         comp.names = c("A","B"),
 #'         plot.save.to = "~/qq_list_plot.png")
 #'

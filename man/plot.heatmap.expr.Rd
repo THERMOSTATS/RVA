@@ -92,8 +92,8 @@ The function takes raw CPM data and returns both a list containing a data frame
 with values based on the fill parameter and a heatmap plot.
 }
 \examples{
-plot.heatmap.expr(data = example_count_table,
-annot = sample_annotation_table,
+hm.expr <- plot.heatmap.expr(data = count_table,
+annot = sample_annotation,
 plot.save.to = "~/address_to_folder/heatmap_plot.png")
 
 #Save figures using ComplexHeatmap

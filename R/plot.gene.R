@@ -38,8 +38,8 @@
 #'
 #'
 #' @examples
-#' plot <- plot.gene(data = example_count_table,
-#' anno = sample_annotation_table,
+#' plot <- plot.gene(data = count_table,
+#' anno = sample_annotation,
 #' plot.save.to = "~/address_to_folder/gene_plot.png")
 #'
 #' #Save figures using ggplot2

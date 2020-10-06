@@ -9,8 +9,7 @@ Authors@R:
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Automate downstream visualization & pathway analysis in RNAseq analysis.
 Maintainer: Xingpeng Li <xingpeng.li@pfizer.com>
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+License: GPLv3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
@@ -29,10 +28,7 @@ Imports:
   ComplexHeatmap (>= 2.2.0),
   GSEABase (>= 1.48.0),
   circlize (>= 0.4.10),
-  clusterProfiler (>= 3.14.3),
-  data.table (>= 1.12.8),
   dplyr (>= 1.0.0),
-  edgeR (>= 3.28.1),
   ggplot2 (>= 3.3.2),
   ggpubr (>= 0.4.0),
   grid (>= 3.6.1),

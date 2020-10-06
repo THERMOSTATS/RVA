@@ -83,12 +83,12 @@ genes, e.g. disease signature genes, the genes which are up-regulated and down-r
 }
 \examples{
 plot.volcano(data = example_summary_statistics_table,
-             geneset = disease_signature_summary_statistics_table,
+             geneset = Sample_disease_gene_set,
              plot.save.to = "~/address_to_folder/volcano_plot.png")
 
-plot.volcano(data = list(summary.table.a, summary.table.b),
+plot.volcano(data = list(example_summary_statistics_table, example_summary_statistics_table1),
             comp.names = c("A", "B"),
-            geneset = disease_signature_summary_statistics_table,
+            geneset = Sample_disease_gene_set,
             plot.save.to = "~/address_to_folder/volcano_plot.png")
 
 #Save figures using ggplot2
