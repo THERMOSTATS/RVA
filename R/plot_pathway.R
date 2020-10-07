@@ -58,7 +58,7 @@
 #'result <- plot_pathway(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1), comp.names = c("A","B"))
 #'ggsave("~/pathways_non_directional_plot.png",
 #'plot = result[[3]],
-#'width = 600, height = 600, dpi = 300)
+#'width = 8, height = 6, dpi = 300)
 #' @export plot_pathway
 #'
 #'

@@ -231,7 +231,7 @@ validate.genes.present <- function(data.genes, geneset) {
 #' @title Validate Foldchange
 #' @description This function ensures the fold change minimum, maximum, and step
 #'         are valid.
-#' @inheritParams plot.cutoff
+#' @inheritParams plot_cutoff
 #'
 #' @details Specifically it checks that the FCmax is greater than the FCmin,
 #'         that at least 1 FCstep can fit within the FCmax and FCmin, that
@@ -257,7 +257,7 @@ validate.FC <- function(FCmin,
 #' @title Validate Pvalues
 #' @description This function ensures the fold change minimum, maximum, and step
 #'         are valid.
-#' @inheritParams plot.cutoff
+#' @inheritParams plot_cutoff
 #'
 #' @details Specifically it checks that the pvalues are between 0-1, and that
 #'         at least 1 `p.step` fits within the `p.min` and `p.max` bounds and
