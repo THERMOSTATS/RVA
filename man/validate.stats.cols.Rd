@@ -8,6 +8,10 @@ validate.stats.cols(datin, name = 1, req.cols)
 }
 \arguments{
 \item{datin}{the summary statistics file.}
+
+\item{name}{summary statistics file position indicator}
+
+\item{req.cols}{required column names of \code{FCflag} and \code{FDRflag} pass on from validate.stats}
 }
 \description{
 Required columns are \code{FCflag} and \code{FDRflag}

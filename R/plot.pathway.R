@@ -558,6 +558,7 @@ multiPlot <- function(allID, backup.d.sig, nd.res, ...){
 #' @import org.Hs.eg.db
 #' @importFrom purrr set_names map2 map
 #' @importFrom msigdbr msigdbr
+#' @param ... pass over parameters
 #'
 #' @references Xingpeng Li & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 #'
@@ -682,7 +683,7 @@ dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
 #' @param OUT.Directional logical, whether output directional or non-directional pathway analysis result, default: NULL.
 #' @param IS.list logical, whether the input is a list, default: NULL
 #' @param customized.pathways the customized pathways in the format of two column dataframe to be used in analysis
-#'
+#' @param ... pass over parameters
 #' @return Returns a dataframe.
 #'
 #' @importFrom rWikiPathways downloadPathwayArchive

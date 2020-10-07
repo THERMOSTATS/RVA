@@ -8,6 +8,10 @@ validate.stats(datin, name = 1, ...)
 }
 \arguments{
 \item{datin}{the summary statistics file.}
+
+\item{name}{summary statistics file position indicator}
+
+\item{...}{pass on variables}
 }
 \description{
 Check for required column names and types.

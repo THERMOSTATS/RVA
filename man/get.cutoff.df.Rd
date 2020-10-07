@@ -8,6 +8,8 @@ different FDR and fold change cutoff.}
 get.cutoff.df(datin, pvalues, FCs, FCflag = "logFC", FDRflag = "adj.P.Val")
 }
 \arguments{
+\item{datin}{Dataframe from plot.cutoff.single.}
+
 \item{pvalues}{A set of p-values for FDR cutoff to be checked.}
 
 \item{FCs}{A set of fold change cutoff to be checked.}
@@ -15,8 +17,6 @@ get.cutoff.df(datin, pvalues, FCs, FCflag = "logFC", FDRflag = "adj.P.Val")
 \item{FCflag}{The column name of the log2FC in the summary statistics table.}
 
 \item{FDRflag}{The column name of the False Discovery Rate (FDR) in the summary statistics table.}
-
-\item{df}{Dataframe from plot.cutoff.single.}
 }
 \description{
 This function processes dataframe from plot.cutoff.single function

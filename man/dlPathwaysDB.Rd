@@ -10,6 +10,8 @@ dlPathwaysDB(pathway.db, customized.pathways = NULL, ...)
 \item{pathway.db}{The databse to be used for encrichment analysis. Can be one of the following, "rWikiPathways", "KEGG", "REACTOME", "Hallmark","rWikiPathways_aug_2020"}
 
 \item{customized.pathways}{the user provided pathway added for analysis.}
+
+\item{...}{pass over parameters}
 }
 \value{
 Returns a dataframe.

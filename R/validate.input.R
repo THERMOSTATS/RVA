@@ -300,8 +300,10 @@ validate.pval.range <- function(pval,
 #'
 #' @description Check for required column names and types.
 #'
-#' @inheritParams plot.cutoff
 #' @param datin the summary statistics file.
+#' @param name summary statistics file position indicator
+#' @param ... pass on variables
+#'
 #' @references Xingpeng Li, Tatiana Gelaf Romer & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 validate.stats <- function(datin,
                            name = 1,
@@ -313,7 +315,7 @@ validate.stats <- function(datin,
 
 #' @title Check Summary Statistics Required Columns
 #' @description Required columns are `FCflag` and `FDRflag`
-#'
+#' @param req.cols required column names of `FCflag` and `FDRflag` pass on from validate.stats
 #' @inheritParams validate.stats
 #' @references Xingpeng Li, Tatiana Gelaf Romer & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 validate.stats.cols <- function(datin,

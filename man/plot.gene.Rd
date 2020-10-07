@@ -58,7 +58,7 @@ The function takes the gene counts and returns a ggplot that shows gene expressi
 \examples{
 plot <- plot.gene(data = count_table,
 anno = sample_annotation,
-plot.save.to = "~/address_to_folder/gene_plot.png")
+plot.save.to = "~/gene_plot.png")
 
 #Save figures using ggplot2
 library(ggplot2)

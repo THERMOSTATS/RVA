@@ -16,8 +16,9 @@
 #' @param p.max The maximum FDR cutoff to be checked, default = 0.2.
 #' @param p.step The step from the minimum to maximum fold change cutoff, one step increase at a time, default = 0.005.
 #' @param plot.save.to The address where to save the plot from simplified cutoff combination with FDR of 0.01, 0.05, 0.1, and 0.2.
-#' @param gen.3d.plot Whether generate a 3d plotly object to visualize the result, only applys to single dataframe input.
-#'
+#' @param gen.3d.plot Whether generate a 3d plotly object to visualize the result, only applys to single dataframe input, default = F.
+#' @param gen.plot Whether generate a plot to visualize the result, default = T.
+
 #'
 #'
 #' @return If the input \code{data} is a data list, then a multi-facet ggplot plot object which contains each
@@ -181,7 +182,7 @@ plot.cutoff <- function(data = data,
 #' which depicts the number of differntially expressed genes with different FDR and
 #' fold change cutoff.
 #'
-#' @param data Summary statistics table from limma or DEseq2, where each row is a gene.
+#' @param df Summary statistics table from limma or DEseq2, where each row is a gene.
 #'
 #' @importFrom dplyr %>% filter as_tibble mutate bind_rows
 #' @importFrom plotly plot_ly add_markers layout
@@ -266,7 +267,7 @@ get.cutoff.ggplot <- function(df, FCflag, FDRflag) {
 #' and produces a ggplot object which depicts the number of differntially expressed
 #' genes with different FDR and fold change cutoff.
 #'
-#' @param df Dataframe from plot.cutoff.single.
+#' @param datin Dataframe from plot.cutoff.single.
 #' @param FCflag The column name of the log2FC in the summary statistics table.
 #' @param FDRflag The column name of the False Discovery Rate (FDR) in the summary statistics table.
 #' @param pvalues A set of p-values for FDR cutoff to be checked.

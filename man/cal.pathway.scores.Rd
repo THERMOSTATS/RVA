@@ -38,6 +38,8 @@ cal.pathway.scores(
 \item{IS.list}{logical, whether the input is a list, default: NULL}
 
 \item{customized.pathways}{the customized pathways in the format of two column dataframe to be used in analysis}
+
+\item{...}{pass over parameters}
 }
 \value{
 Returns a dataframe.

@@ -9,7 +9,7 @@ Authors@R:
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Automate downstream visualization & pathway analysis in RNAseq analysis.
 Maintainer: Xingpeng Li <xingpeng.li@pfizer.com>
-License: GPLv3
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

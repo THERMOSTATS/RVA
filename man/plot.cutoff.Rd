@@ -45,7 +45,9 @@ will be p.min + p.step, p.min default = 0.}
 
 \item{plot.save.to}{The address where to save the plot from simplified cutoff combination with FDR of 0.01, 0.05, 0.1, and 0.2.}
 
-\item{gen.3d.plot}{Whether generate a 3d plotly object to visualize the result, only applys to single dataframe input.}
+\item{gen.3d.plot}{Whether generate a 3d plotly object to visualize the result, only applys to single dataframe input, default = F.}
+
+\item{gen.plot}{Whether generate a plot to visualize the result, default = T.}
 }
 \value{
 If the input \code{data} is a data list, then a multi-facet ggplot plot object which contains each
