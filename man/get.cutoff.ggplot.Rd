@@ -8,14 +8,14 @@ different FDR and fold change cutoff.}
 get.cutoff.ggplot(df, FCflag, FDRflag)
 }
 \arguments{
-\item{df}{Dataframe from plot.cutoff.single.}
+\item{df}{Dataframe from plot_cutoff_single.}
 
 \item{FCflag}{The column name of the log2FC in the summary statistics table.}
 
 \item{FDRflag}{The column name of the False Discovery Rate (FDR) in the summary statistics table.}
 }
 \description{
-This function processes dataframe from plot.cutoff.single function
+This function processes dataframe from plot_cutoff_single function
 and produces a ggplot object which depicts the number of differntially expressed
 genes with different FDR and fold change cutoff.
 }

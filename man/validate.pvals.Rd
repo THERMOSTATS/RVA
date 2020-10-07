@@ -6,14 +6,6 @@
 \usage{
 validate.pvals(p.min, p.max, p.step)
 }
-\arguments{
-\item{p.min}{The minimum starting FDR cutoff to be checked, so the minimum fold change cutoff to be evaluated
-will be p.min + p.step, p.min default = 0.}
-
-\item{p.max}{The maximum FDR cutoff to be checked, default = 0.2.}
-
-\item{p.step}{The step from the minimum to maximum fold change cutoff, one step increase at a time, default = 0.005.}
-}
 \description{
 This function ensures the fold change minimum, maximum, and step
 are valid.

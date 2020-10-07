@@ -38,7 +38,7 @@
 #' @importFrom tidyr separate
 #' @importFrom purrr map
 #'
-#' @export plot.volcano
+#' @export plot_volcano
 #'
 #' @references Xingpeng Li & Tatiana Gelaf Romer & Olya Besedina, RVA - RNAseq Visualization Automation tool.
 #'
@@ -47,26 +47,18 @@
 #'
 #'
 #' @examples
-#' plot.volcano(data = example_summary_statistics_table,
+#' plot_volcano(data = example_summary_statistics_table,
 #'              geneset = Sample_disease_gene_set,
-#'              plot.save.to = "~/address_to_folder/volcano_plot.png")
+#'              plot.save.to = "~/volcano_plot.png")
 #'
-#' plot.volcano(data = list(example_summary_statistics_table, example_summary_statistics_table1),
+#' plot_volcano(data = list(example_summary_statistics_table, example_summary_statistics_table1),
 #'             comp.names = c("A", "B"),
 #'             geneset = Sample_disease_gene_set,
-#'             plot.save.to = "~/address_to_folder/volcano_plot.png")
-#'
-#' #Save figures using ggplot2
-#' library(ggplot2)
-#' volcano.result <- plot.volcano(data = example_summary_statistics_table)
-#' ggsave(filename = "~/address_to_folder/volcano_plot.png",
-#'        plot = volcano.result,
-#'        width = 5,
-#'        height = 5,
-#'        dpi = 500)
+#'             plot.save.to = "~/volcano_multiplots.png")
 
 
-plot.volcano <- function(data=data,
+
+plot_volcano <- function(data=data,
                          comp.names = NULL,
                          geneset = NULL,
                          geneset.FCflag = "logFC",

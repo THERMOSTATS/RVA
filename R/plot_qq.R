@@ -15,7 +15,7 @@
 #'
 #' @importFrom ggplot2 ggsave ggplot geom_point geom_abline geom_line geom_ribbon xlab ylab facet_wrap
 #'
-#' @export plot.qq
+#' @export plot_qq
 #'
 #' @references Xingpeng Li & Tatiana Gelaf Romer & Olya Besedina, RVA - RNAseq Visualization Automation tool.
 #'
@@ -23,22 +23,15 @@
 #'
 #'
 #' @examples
-#' plot.qq(data = example_summary_statistics_table,
+#' plot_qq(data = example_summary_statistics_table,
 #'         plot.save.to = "~/qq_plot.png")
-#' plot.qq(data = list(example_summary_statistics_table, example_summary_statistics_table1),
+#' plot_qq(data = list(example_summary_statistics_table, example_summary_statistics_table1),
 #'         comp.names = c("A","B"),
 #'         plot.save.to = "~/qq_list_plot.png")
 #'
-#' #Save figures using ggplot2
-#' library(ggplot2)
-#' qq.result <- plot.qq(data = example_summary_statistics_table)
-#' ggsave(filename = "~/qq_plot.png",
-#'        plot = qq.result,
-#'        width = 10,
-#'        height = 10,
-#'        dpi = 500)
 
-plot.qq <- function(data = data,
+
+plot_qq <- function(data = data,
                     comp.names = NULL,
                     p.value.flag = "P.Value",
                     ci = 0.95,

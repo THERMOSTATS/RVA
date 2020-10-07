@@ -1,29 +1,29 @@
 #' @title Plot a CPM Heatmap
 #'
-#' @description An alias for `plot.heatmap.expr(annot, cpm, fill = "CPM", ...)`.
+#' @description An alias for `plot_heatmap.expr(annot, cpm, fill = "CPM", ...)`.
 #'
-#' @inheritParams plot.heatmap.expr
+#' @inheritParams plot_heatmap.expr
 #'
 #' @export
-plot.heatmap.cpm <- function(cpm,
+plot_heatmap.cpm <- function(cpm,
                              annot,
                              title = "RVA CPM Heatmap",
                              ...) {
-  plot.heatmap.expr(cpm, annot, fill = "CPM", title = title, ...)
+  plot_heatmap.expr(cpm, annot, fill = "CPM", title = title, ...)
 }
 
 #' @title Plot a CFB Heatmap
 #'
-#' @description An alias for `plot.heatmap.expr(annot, cpm, fill = "CFB", ...)`.
+#' @description An alias for `plot_heatmap.expr(annot, cpm, fill = "CFB", ...)`.
 #'
-#' @inheritParams plot.heatmap.expr
+#' @inheritParams plot_heatmap.expr
 #'
 #' @export
-plot.heatmap.cfb <- function(cpm,
+plot_heatmap.cfb <- function(cpm,
                              annot,
                              title = "RVA CFB Heatmap",
                              ...) {
-  plot.heatmap.expr(cpm, annot, fill = "CFB", title = title, ...)
+  plot_heatmap.expr(cpm, annot, fill = "CFB", title = title, ...)
 }
 
 #' @title Plot Heatmap From Raw CPM
@@ -95,7 +95,7 @@ plot.heatmap.cfb <- function(cpm,
 #' @importFrom data.table as.data.table dcast.data.table melt.data.table dcast melt
 #' @importFrom grid grid.text gpar
 #'
-#' @export plot.heatmap.expr
+#' @export plot_heatmap.expr
 #'
 #'
 #' @references Xingpeng Li,Tatiana Gelaf Romer & Aliyah Olaniyan, RVA - RNAseq Visualization Automation tool.
@@ -105,19 +105,13 @@ plot.heatmap.cfb <- function(cpm,
 #'
 #'
 #' @examples
-#' hm.expr <- plot.heatmap.expr(data = count_table,
+#' plot_heatmap.expr(data = count_table,
 #' annot = sample_annotation,
-#' plot.save.to = "~/address_to_folder/heatmap_plot.png")
-#'
-#' #Save figures using ComplexHeatmap
-#' library(ComplexHeatmap)
-#' png("heatmap_plot_name.png", width = 500, height = 500)
-#' draw(hm.expr$gp)
-#' dev.off()
-#'
+#' plot.save.to = "~/heatmap_plot.png")
 
 
-plot.heatmap.expr <- function(data = count,
+
+plot_heatmap.expr <- function(data = count,
                               annot = meta,
                               sample.id = "sample_id",
                               annot.flags = c("day", "Treatment", "tissue"),

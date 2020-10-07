@@ -35,7 +35,7 @@
 #' @importFrom purrr map2 set_names map
 #' @importFrom plotly plot_ly add_markers layout
 #'
-#' @export plot.cutoff
+#' @export plot_cutoff
 #'
 #' @references Xingpeng Li & Olya Besedina, RVA - RNAseq Visualization Automation tool.
 #'
@@ -47,9 +47,9 @@
 #'
 #'
 #' @examples
-#' plot.cutoff(Sample_summary_statistics_table, plot.save.to = "~/cut_off_selection_plot.png")
+#' plot_cutoff(Sample_summary_statistics_table, plot.save.to = "~/cut_off_selection_plot.png")
 #'
-#'plot.cutoff(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
+#'plot_cutoff(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
 #'            comp.names = c("A", "B"),
 #'            plot.save.to = "~/cut_off_list_plot.png")
 #'
@@ -57,14 +57,14 @@
 #' #Save figures using ggplot2
 #' library(ggplot2)
 #'
-#' gp <- plot.cutoff(Sample_summary_statistics_table)
+#' gp <- plot_cutoff(Sample_summary_statistics_table)
 #' ggsave(filename = "~/cut_off_selection_plot.png" ,
 #'        plot = gp[[3]],
 #'        width = 5,
 #'        height = 5)
 #'
 
-plot.cutoff <- function(data = data,
+plot_cutoff <- function(data = data,
                         comp.names = NULL,
                         FCflag = "logFC",
                         FDRflag = "adj.P.Val",
@@ -97,7 +97,7 @@ plot.cutoff <- function(data = data,
 
         pvalues <- c(0.01, 0.05, 0.1, 0.2)
 
-        df <- map(data, plot.cutoff.single,
+        df <- map(data, plot_cutoff_single,
                   FCflag, FDRflag,
                   FCs,
                   pvalues) %>%
@@ -106,7 +106,7 @@ plot.cutoff <- function(data = data,
           mutate(Comparisons.ID = factor(Comparisons.ID,levels = comp.names))
       } else {
         pvalues <- seq(from = p.min, to = p.max, by = p.step)
-        df <- plot.cutoff.single(data,
+        df <- plot_cutoff_single(data,
                                  FCflag,
                                  FDRflag,
                                  FCs,
@@ -121,7 +121,7 @@ plot.cutoff <- function(data = data,
           warning(paste0("Although gen.3d.plot = T, no 3D plots are",
                          " generated when the input is a list. To",
                          " create 3D plots for a list of dataframes,",
-                         " run plot.cutoff on each dataframe separately.")
+                         " run plot_cutoff on each dataframe separately.")
           )
         }
 
@@ -218,7 +218,7 @@ make.cutoff.plotly <- function(df) {
 #' @param FDRflag The column name of the False Discovery Rate (FDR) in the summary statistics table.
 #'
 
-plot.cutoff.single <- function(datin,
+plot_cutoff_single <- function(datin,
                                FCflag,
                                FDRflag,
                                FCs,
@@ -235,11 +235,11 @@ plot.cutoff.single <- function(datin,
 
 #' @title Create ggplot object for number of differntially expressed genes with
 #' different FDR and fold change cutoff.
-#' @description This function processes dataframe from plot.cutoff.single function
+#' @description This function processes dataframe from plot_cutoff_single function
 #' and produces a ggplot object which depicts the number of differntially expressed
 #' genes with different FDR and fold change cutoff.
 #'
-#' @param df Dataframe from plot.cutoff.single.
+#' @param df Dataframe from plot_cutoff_single.
 #' @param FCflag The column name of the log2FC in the summary statistics table.
 #' @param FDRflag The column name of the False Discovery Rate (FDR) in the summary statistics table.
 #' @importFrom ggplot2 ggsave ggplot geom_bar geom_text aes theme_minimal labs position_dodge element_text scale_fill_viridis_d facet_grid
@@ -263,11 +263,11 @@ get.cutoff.ggplot <- function(df, FCflag, FDRflag) {
 
 #' @title Create ggplot object for number of differntially expressed genes with
 #' different FDR and fold change cutoff.
-#' @description This function processes dataframe from plot.cutoff.single function
+#' @description This function processes dataframe from plot_cutoff_single function
 #' and produces a ggplot object which depicts the number of differntially expressed
 #' genes with different FDR and fold change cutoff.
 #'
-#' @param datin Dataframe from plot.cutoff.single.
+#' @param datin Dataframe from plot_cutoff_single.
 #' @param FCflag The column name of the log2FC in the summary statistics table.
 #' @param FDRflag The column name of the False Discovery Rate (FDR) in the summary statistics table.
 #' @param pvalues A set of p-values for FDR cutoff to be checked.

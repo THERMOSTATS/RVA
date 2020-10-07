@@ -6,14 +6,6 @@
 \usage{
 validate.FC(FCmin, FCmax, FCstep)
 }
-\arguments{
-\item{FCmin}{The minimum starting fold change cutoff to be checked, so the minimum fold change cutoff to be evaluated
-will be FCmin + FCstep, FCmin default = 1.}
-
-\item{FCmax}{The maximum fold change cutoff to be checked, default = 2.}
-
-\item{FCstep}{The step from the minimum to maximum fold change cutoff, one step increase at a time, default = 0.01.}
-}
 \description{
 This function ensures the fold change minimum, maximum, and step
 are valid.

@@ -44,26 +44,27 @@
 #' @details The function takes the summary statistics table and use user selected parameter based on check.cutoff to do pathway enrichment analysis
 #'
 #'
-#' @examples result <- plot.pathway(data = summary.table,
+#' @examples result <- plot_pathway(data = Sample_summary_statistics_table,
 #' gene.id.type = "ENSEMBL",
 #' FC.cutoff = 1.5,
 #' p.cutoff = 0.05,
-#' plot.save.to = "~/address_to_folder/pathway_plot.png")
-#' @examples result <- plot.pathway(data = list(summary.table.a, summary.table.b), comp.names = c("A","B"))
+#' plot.save.to = "~/pathway_plot.png")
+#' @examples result <- plot_pathway(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
+#' comp.names = c("A","B"))
 #'
 #' @examples
 #' #Save figures using ggplot2
 #' library(ggplot2)
-#'result <- plot.pathway(data = list(summary.table.a, summary.table.b), comp.names = c("A","B"))
+#'result <- plot_pathway(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1), comp.names = c("A","B"))
 #'ggsave("~/pathways_non_directional_plot.png",
 #'plot = result[[3]],
 #'width = 600, height = 600, dpi = 300)
-#' @export plot.pathway
+#' @export plot_pathway
 #'
 #'
 
 
-plot.pathway <- function(data = df,
+plot_pathway <- function(data = df,
                          comp.names = NULL,
                          gene.id.type = "ENSEMBL",
                         FC.cutoff = 1.3,

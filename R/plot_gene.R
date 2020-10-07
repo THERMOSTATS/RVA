@@ -30,7 +30,7 @@
 #' @importFrom ggplot2 facet_wrap ggsave ggplot aes_ geom_boxplot geom_point scale_color_brewer theme_classic
 #' @importFrom clusterProfiler bitr
 #'
-#' @export plot.gene
+#' @export plot_gene
 #'
 #' @references Xingpeng Li,Tatiana Gelaf Romer & Aliyah Olaniyan, RVA - RNAseq Visualization Automation tool.
 #'
@@ -38,22 +38,13 @@
 #'
 #'
 #' @examples
-#' plot <- plot.gene(data = count_table,
+#' plot_gene(data = count_table,
 #' anno = sample_annotation,
 #' plot.save.to = "~/gene_plot.png")
 #'
-#' #Save figures using ggplot2
-#' library(ggplot2)
-#' ggsave(plot,
-#' "gene_plot_name.png",
-#' device = "png",
-#' width = 100,
-#' height = 100,
-#' dpi = 200,
-#' limitsize = FALSE)
-#'
 
-plot.gene <- function(data = dat,
+
+plot_gene <- function(data = dat,
                       anno = meta,
                       gene.names = c("AAAS", "A2ML1", "AADACL3"),
                       ct.table.id.type = "ENSEMBL",
