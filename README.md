@@ -1,12 +1,3 @@
----
-output: 
-  html_document:
-    keep_md: true
-    theme: flatly
-    highlight: tango
----
-
-
 # RNAseq Visualization Automation
 &nbsp;
 
