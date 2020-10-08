@@ -1,25 +1,28 @@
 ---
-title: "RNAseq Visualization Automation"
 output: 
   html_document:
-    toc: true
-    toc_float:
-      collapsed: no 
+    keep_md: true
     theme: flatly
     highlight: tango
-    smooth_scroll: false
-    keep_md: true
-vignette: >
-  %\VignetteIndexEntry{RNAseq Visualization Automation}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 
+# RNAseq Visualization Automation
+&nbsp;
+
+Install RVA from GitHub
+
+```r
+devtools::install_github("THERMOSTATS/RVA_prod")
+```
+&nbsp;
+
+Load package for use
 
 ```r
 library(RVA)
 ```
+&nbsp;
 
 
 
@@ -52,90 +55,12 @@ This is head of the first summary statictic table present in the list:
 |ENSG00000152778.9  | -0.9307776| 4.302267| -7.771144|       0|         0| 21.76999|
 &nbsp;
 
-Press to see head of other first summary statictic tables present in the list **d1**.
-<style type="text/css">
-button.btn.collapsed:before
-{
-    content:'+' ;
-    display:block;
-    width:15px;
-}
-button.btn:before
-{
-    content:'-' ;
-    display:block;
-    width:15px;
-}
-</style>
-
-
-
-
-<p>
-<button class="btn btn-primary collapsed" data-toggle="collapse" data-target="#ce1">
-</button>
-</p>
-<div class="collapse" id="ce1">
-<div class="card card-body">
-
-|                   |      logFC|  AveExpr|         t| P.Value| adj.P.Val|        B|
-|:------------------|----------:|--------:|---------:|-------:|---------:|--------:|
-|ENSG00000144802.11 | -0.7069298| 5.020866| -8.262126|       0|         0| 25.27765|
-|ENSG00000120217.14 | -1.2432231| 3.112864| -8.216540|       0|         0| 24.60000|
-|ENSG00000123610.5  | -1.1598147| 4.306067| -8.082374|       0|         0| 23.92575|
-|ENSG00000152778.9  | -0.8696375| 4.302267| -7.484307|       0|         0| 19.77355|
-|ENSG00000102524.11 | -0.7876810| 5.599148| -7.460093|       0|         0| 19.65622|
-|ENSG00000166927.13 | -0.7649758| 4.316286| -7.414143|       0|         0| 19.30722|
-
-
-
-|                   |      logFC|  AveExpr|         t| P.Value| adj.P.Val|        B|
-|:------------------|----------:|--------:|---------:|-------:|---------:|--------:|
-|ENSG00000123610.5  | -1.2751732| 4.306067| -9.037755|       0|         0| 31.17891|
-|ENSG00000120217.14 | -1.2806570| 3.112864| -8.666190|       0|         0| 28.05503|
-|ENSG00000152778.9  | -0.9779237| 4.302267| -8.568470|       0|         0| 27.55941|
-|ENSG00000148926.10 | -0.9244597| 6.083623| -8.166436|       0|         0| 24.63495|
-|ENSG00000102524.11 | -0.8410758| 5.599148| -8.156662|       0|         0| 24.56339|
-|ENSG00000144802.11 | -0.6701410| 5.020866| -8.054358|       0|         0| 23.81627|
-
-</div>
-</div>
-&nbsp;
 
 The row names are gene id, the supported gene id can be one of: ACCNUM, ALIAS, ENSEMBL, ENSEMBLPROT, ENSEMBLTRANS, ENTREZID, ENZYME, EVIDENCE, EVIDENCEALL, GENENAME, GO, GOALL, IPI, MAP, OMIM. For the provided sample datasets in this package we only have ENSEMBL id's for gene id type.
 &nbsp;
 
-# Functions {.tabset .tabset-fade .tabset-pills} 
+# Functions  
 
-<style type="text/css">
-.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
-  background-color: unset;
-  color: unset;
-}
-</style>
-
-<script type="text/javascript">
-$(document).ready(function(){
-  $("body").on('click', '.tocify-item', function (e) {
-    e.preventDefault();
-
-    var el = $(this);
-    var block = $('.tab-content div[data-unique="' + el.attr('data-unique') + '"]');
-    var id = block.closest('.tab-pane').attr('id');
-
-    //if( block.hasClass('fade') ) {
-      $('.nav-pills [href="#' + id + '"]').trigger('click');
-    //}
-    setTimeout(function(){
-      $('html, body').animate({
-          scrollTop: block.offset().top
-      }, 1000);
-    },300);
-  });
-
-
-});
-</script>
 
 ## Cutoff Plot 
 &nbsp;
@@ -164,7 +89,7 @@ plot_cutoff(data = data,
 &nbsp;
 
 
-### 1.1 Cutoff Plot - Input: a data frame
+### 1.1 Cutoff Plot - Input: a data frame.
 
 ```r
 cutoff.result <- plot_cutoff(data = df,
@@ -207,21 +132,18 @@ head(cutoff.result[[1]])
 ```r
 cutoff.result[[2]]
 ```
-
-<!--html_preserve--><div id="htmlwidget-e1cce1e970d0a6ee416c" style="width:672px;height:480px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-e1cce1e970d0a6ee416c">{"x":{"visdat":{"bf8825c258b0":["function () ","plotlyVisDat"]},"cur_data":"bf8825c258b0","attrs":{"bf8825c258b0":{"x":{},"y":{},"z":{},"opacity":0.5,"mode":"markers","color":{},"size":1,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d"},"bf8825c258b0.1":{"x":{},"y":{},"z":{},"opacity":0.5,"mode":"markers","color":{},"size":1,"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter3d","inherit":true}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"scene":{"xaxis":{"title":"Fold Change"},"yaxis":{"title":"FDR"},"zaxis":{"title":"Number of DE genes"}},"hovermode":"closest","showlegend":true,"legend":{"yanchor":"top","y":0.5}},"source":"A","config":{"showSendToCloud":false},"data":[{"x":[1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],"y":[0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2],"z":[0,244,296,333,365,393,419,438,456,466,480,498,504,511,520,529,541,553,568,585,593,0,82,100,113,126,133,142,151,158,162,166,170,175,175,181,185,190,196,204,210,214,0,34,45,52,59,63,68,73,77,77,79,81,85,85,87,89,91,92,93,96,97,0,16,25,30,32,34,38,39,41,41,41,43,47,47,48,49,51,52,53,55,55,0,9,13,16,17,18,19,19,21,21,21,21,22,22,23,24,25,25,25,26,26,0,7,10,13,14,15,15,15,15,15,15,15,16,16,17,18,19,19,19,20,20,0,5,7,9,10,11,11,11,11,11,11,11,11,11,11,12,13,13,13,14,14,0,2,3,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,1,2,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4],"opacity":0.5,"mode":"markers","type":"scatter3d","marker":{"colorbar":{"title":"Number_of_Genes<br />Number_of_Genes","ticklen":2},"cmin":0,"cmax":593,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[0,244,296,333,365,393,419,438,456,466,480,498,504,511,520,529,541,553,568,585,593,0,82,100,113,126,133,142,151,158,162,166,170,175,175,181,185,190,196,204,210,214,0,34,45,52,59,63,68,73,77,77,79,81,85,85,87,89,91,92,93,96,97,0,16,25,30,32,34,38,39,41,41,41,43,47,47,48,49,51,52,53,55,55,0,9,13,16,17,18,19,19,21,21,21,21,22,22,23,24,25,25,25,26,26,0,7,10,13,14,15,15,15,15,15,15,15,16,16,17,18,19,19,19,20,20,0,5,7,9,10,11,11,11,11,11,11,11,11,11,11,12,13,13,13,14,14,0,2,3,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,1,2,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4],"size":[55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55],"sizemode":"area","line":{"colorbar":{"title":"","ticklen":2},"cmin":0,"cmax":593,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[0,244,296,333,365,393,419,438,456,466,480,498,504,511,520,529,541,553,568,585,593,0,82,100,113,126,133,142,151,158,162,166,170,175,175,181,185,190,196,204,210,214,0,34,45,52,59,63,68,73,77,77,79,81,85,85,87,89,91,92,93,96,97,0,16,25,30,32,34,38,39,41,41,41,43,47,47,48,49,51,52,53,55,55,0,9,13,16,17,18,19,19,21,21,21,21,22,22,23,24,25,25,25,26,26,0,7,10,13,14,15,15,15,15,15,15,15,16,16,17,18,19,19,19,20,20,0,5,7,9,10,11,11,11,11,11,11,11,11,11,11,12,13,13,13,14,14,0,2,3,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,1,2,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]}},"textfont":{"size":55},"error_y":{"width":55},"error_x":{"width":55},"line":{"width":55},"frame":null},{"x":[1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.2,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.3,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.4,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.6,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.7,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.8,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],"y":[0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2],"z":[0,244,296,333,365,393,419,438,456,466,480,498,504,511,520,529,541,553,568,585,593,0,82,100,113,126,133,142,151,158,162,166,170,175,175,181,185,190,196,204,210,214,0,34,45,52,59,63,68,73,77,77,79,81,85,85,87,89,91,92,93,96,97,0,16,25,30,32,34,38,39,41,41,41,43,47,47,48,49,51,52,53,55,55,0,9,13,16,17,18,19,19,21,21,21,21,22,22,23,24,25,25,25,26,26,0,7,10,13,14,15,15,15,15,15,15,15,16,16,17,18,19,19,19,20,20,0,5,7,9,10,11,11,11,11,11,11,11,11,11,11,12,13,13,13,14,14,0,2,3,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,1,2,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4],"opacity":0.5,"mode":"markers","type":"scatter3d","marker":{"colorbar":{"title":"Number_of_Genes<br />Number_of_Genes","ticklen":2},"cmin":0,"cmax":593,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[0,244,296,333,365,393,419,438,456,466,480,498,504,511,520,529,541,553,568,585,593,0,82,100,113,126,133,142,151,158,162,166,170,175,175,181,185,190,196,204,210,214,0,34,45,52,59,63,68,73,77,77,79,81,85,85,87,89,91,92,93,96,97,0,16,25,30,32,34,38,39,41,41,41,43,47,47,48,49,51,52,53,55,55,0,9,13,16,17,18,19,19,21,21,21,21,22,22,23,24,25,25,25,26,26,0,7,10,13,14,15,15,15,15,15,15,15,16,16,17,18,19,19,19,20,20,0,5,7,9,10,11,11,11,11,11,11,11,11,11,11,12,13,13,13,14,14,0,2,3,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,1,2,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4],"size":[55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55,55],"sizemode":"area","line":{"colorbar":{"title":"","ticklen":2},"cmin":0,"cmax":593,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":false,"color":[0,244,296,333,365,393,419,438,456,466,480,498,504,511,520,529,541,553,568,585,593,0,82,100,113,126,133,142,151,158,162,166,170,175,175,181,185,190,196,204,210,214,0,34,45,52,59,63,68,73,77,77,79,81,85,85,87,89,91,92,93,96,97,0,16,25,30,32,34,38,39,41,41,41,43,47,47,48,49,51,52,53,55,55,0,9,13,16,17,18,19,19,21,21,21,21,22,22,23,24,25,25,25,26,26,0,7,10,13,14,15,15,15,15,15,15,15,16,16,17,18,19,19,19,20,20,0,5,7,9,10,11,11,11,11,11,11,11,11,11,11,12,13,13,13,14,14,0,2,3,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,1,2,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4]}},"textfont":{"size":55},"error_y":{"width":55},"error_x":{"width":55},"line":{"width":55},"frame":null},{"x":[1.2,2],"y":[0,0.2],"type":"scatter3d","mode":"markers","opacity":0,"hoverinfo":"none","showlegend":false,"marker":{"colorbar":{"title":"Number_of_Genes<br />Number_of_Genes","ticklen":2,"len":0.5,"lenmode":"fraction","y":1,"yanchor":"top"},"cmin":0,"cmax":593,"colorscale":[["0","rgba(68,1,84,1)"],["0.0416666666666667","rgba(70,19,97,1)"],["0.0833333333333333","rgba(72,32,111,1)"],["0.125","rgba(71,45,122,1)"],["0.166666666666667","rgba(68,58,128,1)"],["0.208333333333333","rgba(64,70,135,1)"],["0.25","rgba(60,82,138,1)"],["0.291666666666667","rgba(56,93,140,1)"],["0.333333333333333","rgba(49,104,142,1)"],["0.375","rgba(46,114,142,1)"],["0.416666666666667","rgba(42,123,142,1)"],["0.458333333333333","rgba(38,133,141,1)"],["0.5","rgba(37,144,140,1)"],["0.541666666666667","rgba(33,154,138,1)"],["0.583333333333333","rgba(39,164,133,1)"],["0.625","rgba(47,174,127,1)"],["0.666666666666667","rgba(53,183,121,1)"],["0.708333333333333","rgba(79,191,110,1)"],["0.75","rgba(98,199,98,1)"],["0.791666666666667","rgba(119,207,85,1)"],["0.833333333333333","rgba(147,214,70,1)"],["0.875","rgba(172,220,52,1)"],["0.916666666666667","rgba(199,225,42,1)"],["0.958333333333333","rgba(226,228,40,1)"],["1","rgba(253,231,37,1)"]],"showscale":true,"color":[0,593],"line":{"color":"rgba(44,160,44,1)"}},"z":[0,593],"frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 &nbsp;
 
 **3.** A plot to visualize it:
-&nbsp;
 
 
 ```r
 cutoff.result[[3]]
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 &nbsp;
+
 
 **Saving figures**
 &nbsp;
@@ -229,7 +151,7 @@ cutoff.result[[3]]
 Figures can be saved using two approaches:
 &nbsp;
 
-**1.** Using imbedded function with predetermined dpi
+**1.** Using imbedded fucntion with predetermined dpi
 &nbsp;
 
 
@@ -252,7 +174,7 @@ ggsave("~/cut_off_selection_plot.png", cutoff.result[[3]], width = 5, height = 5
 &nbsp;
 
 
-### 1.2 Cutoff Plot - Input: a list
+### 1.2 Cutoff Plot - Input: a list.
 &nbsp;
 
 
@@ -296,7 +218,7 @@ head(cutoff.result.list[[1]])
 cutoff.result.list
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -305,7 +227,7 @@ cutoff.result.list
 Figures can be saved using two approaches:
 &nbsp;
 
-**1.** Using imbedded function with predetermined dpi
+**1.** Using imbedded fucntion with predetermined dpi
 &nbsp;
 
 
@@ -338,7 +260,7 @@ This is the function to generate a qqplot object with confidence interval from t
 &nbsp;
 
 
-### 2.1 QQ Plot - Input: a data frame
+### 2.1 QQ Plot - Input: a data frame.
 &nbsp;
 
 
@@ -347,7 +269,7 @@ qq.result <- plot_qq(df)
 qq.result
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -356,7 +278,7 @@ qq.result
 Figures can be saved using two approaches:
 &nbsp;
 
-**1.** Using imbedded function with predetermined dpi
+**1.** Using imbedded fucntion with predetermined dpi
 &nbsp;
 
 
@@ -376,7 +298,7 @@ ggsave("~/qq_plot.png", qq.result, width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
-### 2.2 QQ Plot - Input: a list
+### 2.2 QQ Plot - Input: a list.
 &nbsp;
 
 **plot_qq** function can also take a list as an input data, but requires *comp.names* to be specified. The result object is a set of qq plots for each of the data frames in the list.
@@ -389,7 +311,7 @@ qq.list.result <- plot_qq(data = d1,
 qq.list.result
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -398,7 +320,7 @@ qq.list.result
 Figures can be saved using two approaches:
 &nbsp;
 
-**1.** Using imbedded function with predetermined dpi
+**1.** Using imbedded fucntion with predetermined dpi
 &nbsp;
 
 
@@ -457,7 +379,7 @@ plot_volcano(
 ```
 &nbsp;
 
-### 3.1 Volcano Plot - Input: a data frame
+### 3.1 Volcano Plot - Input: a data frame. 
 &nbsp;
 
 
@@ -465,10 +387,10 @@ plot_volcano(
 plot_volcano(data = df)
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-30-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 &nbsp;
 
-### 3.2 Volcano Plot - Input: a list
+### 3.2 Volcano Plot - Input: a list.
 &nbsp;
 
 Volcano Plot can also take a list as an input data with specified **comp.name** for each data frame.
@@ -480,7 +402,7 @@ plot_volcano(data = d1,
              comp.names = c('a', 'b', 'c'))
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
 &nbsp;
 
 ### 3.3 Highlight genes of interest in the volcano plot
@@ -489,7 +411,7 @@ plot_volcano(data = d1,
 You can highlight gene sets (like disease related genes from a Disease vs Healthy comparison).
 &nbsp;
 
-The gene set to be highlighted in the volcano plot can be specified in two ways:
+The gene set to be highlighted in the volcano plot can be spesified in two ways:
 &nbsp;
 
 **1.** A summary statistics table with the highlighted genes as row names (the gene name format needs to be consistent with the main summary statistics table). For example, this summary statistics table could be the statistical analysis output from a Disease vs Healthy comparison (only containing the subsetted significant genes).
@@ -545,7 +467,7 @@ plot_volcano(data = df,
  Running plot volcano... Please make sure gene id type(rownames) of `data` consistent to that of `geneset` (if provided). 
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-35-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-31-1.png)<!-- -->
 &nbsp;
 
 By default, the genes which have positive fold change in the provided **geneset** parameter will be colored yellow, and negative fold will be colored  purple, this also can be changed by specifying *upcolor* and *downcolor*:
@@ -572,7 +494,7 @@ Checking gene sets for listof data frames
  Provided input list had a total of 12045 in common, non-common gene id will not be considered. 
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-36-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
 &nbsp;
 
 **Example with option 2**
@@ -601,7 +523,7 @@ volcano.result <- plot_volcano(data = df,
 volcano.result
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-37-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-33-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -610,7 +532,7 @@ volcano.result
 Figures can be saved using two approaches:
 &nbsp;
 
-**1.** Using imbedded function with predetermined dpi
+**1.** Using imbedded fucntion with predetermined dpi
 &nbsp;
 
 
@@ -673,10 +595,7 @@ pathway.result <- plot_pathway(data = df, pathway.db = "rWikiPathways", gene.id.
 ```
 &nbsp;
 
-### 4.1 Pathway Analysis - Input: a data frame 
-&nbsp;
-
-Pathway analysis result is a list that contains 5 objects:
+### 4.1 Pathway analysis result is a list that contains 5 objects:
 &nbsp;
 
 **1.** Pathway analysis table with directional result (test up-regulated gene set and down-regulated gene set respectively).
@@ -725,7 +644,7 @@ head(pathway.result[[2]])
 pathway.result[[3]]
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-46-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-42-1.png)<!-- -->
 &nbsp;
 
 **4.** Pathway analysis plot with non-directional result.
@@ -736,7 +655,7 @@ pathway.result[[3]]
 pathway.result[[4]]
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-47-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-43-1.png)<!-- -->
 &nbsp;
 
 **5.** Pathway analysis plot with combined direaction and non-directional result.
@@ -747,7 +666,7 @@ pathway.result[[4]]
 pathway.result[[5]]
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-48-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-44-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -763,10 +682,7 @@ ggsave("joint_plot.png",pathway.result[[5]], width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
-### 4.2 Pathway Analysis - Input:  a list
-&nbsp;
-
-Pathway analysis for the list of summary tables will result in a list that contains 4 objects:
+### 4.2 Pathway analysis for the list of summary tables will result in a list that contains 4 objects:
 &nbsp;
 
 Pathways with list of data as input, the list can be replaced with `d1` from the top. When list inputs are given `comp.names` should be speicified in order to identify the comparison groups.
@@ -824,7 +740,7 @@ head(list.pathway.result[[2]])
 list.pathway.result[[3]]
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-55-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-51-1.png)<!-- -->
 &nbsp;
 
 **4.** Pathway analysis plot with non directional result for list of summary tables.
@@ -835,7 +751,7 @@ list.pathway.result[[3]]
 list.pathway.result[[4]]
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-56-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-52-1.png)<!-- -->
 &nbsp;
 
 **Saving figures**
@@ -874,7 +790,7 @@ kegg.pathway.result <- plot_pathway(data = list(df,df1),
 kegg.pathway.result[[3]]
 ```
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-59-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-55-1.png)<!-- -->
 
 
 &nbsp;
@@ -982,7 +898,7 @@ The result of **plot_heatmap.expr** with **fill = CPM** contains 2 objects:
 **1.** Heat map 
 &nbsp;
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-67-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-63-1.png)<!-- -->
 &nbsp;
 
 **2.** A data frame of CPM values (fill = CPM in this example) for each geneid split by treatment group and time point.
@@ -1056,7 +972,7 @@ The result of **plot_heatmap.expr** with **fill = CFB** contains 2 objects:
 **1.** Heat map 
 &nbsp;
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-72-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-68-1.png)<!-- -->
 &nbsp;
 
 **2.** A data frame of change from baselines values (fill = CFB in this example) for each geneid split by treatment group and time point.
@@ -1189,7 +1105,7 @@ The result of **plot_gene** contains 2 objects:
 **1.** A gene expression plot that distinguishes log cpm gene expression for each geneid across the treatment groups and time points.
 &nbsp;
 
-![](C:/Users/lix410/AppData/Local/Temp/1/RtmpM3w3vi/preview-85e84f6644d7.dir/RVA_files/figure-html/unnamed-chunk-83-1.png)<!-- -->
+![](RVA_files/figure-html/unnamed-chunk-79-1.png)<!-- -->
 &nbsp;
 
 **2.** A table that shows gene expression values by gene id, treatment group and time point with both sample ids and gene symbols.

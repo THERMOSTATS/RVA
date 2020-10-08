@@ -1,26 +1,29 @@
 ---
-title: "RNAseq Visualization Automation"
 output: 
   html_document:
-    toc: true
+    # keep_md: true
     theme: flatly
     highlight: tango
-    keep_md: true
-vignette: >
-  %\VignetteIndexEntry{RNAseq Visualization Automation}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
 ---
 
 
+# RNAseq Visualization Automation
+&nbsp;
+
+Install RVA from GitHub
+```{r eval=F}
+devtools::install_github("THERMOSTATS/RVA_prod")
+```
+&nbsp;
+
+Load package for use
 ```{r message=F, warning=F}
 library(RVA)
 ```
+&nbsp;
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, rows.print=25, comment = "")
-
-library(ggplot2)
 
 options(
   ggplot2.continuous.colour = 'viridis',
@@ -51,80 +54,12 @@ knitr::kable(head(d1[[1]]))
 ```
 &nbsp;
 
-Press to see head of other first summary statictic tables present in the list **d1**.
-```{css,echo=FALSE}
-button.btn.collapsed:before
-{
-    content:'+' ;
-    display:block;
-    width:15px;
-}
-button.btn:before
-{
-    content:'-' ;
-    display:block;
-    width:15px;
-}
-```
-
-```{r,echo=FALSE,results='hide'}
-knitr::knit_hooks$set(drop1=function(before, options, envir) {
-    if (before) {
-        paste(
-            '<p>',
-'<button class="btn btn-primary collapsed" data-toggle="collapse" data-target="#ce1">',
-'</button>',
-'</p>',
-'<div class="collapse" id="ce1">',
-'<div class="card card-body">',  sep = "\n")
-    } else {
-        paste("</div>", "</div>", sep = "\n")
-    }
-})
-```
-
-
-```{r,drop1=TRUE,results="markup", echo=F}
-options(width = 120)
-knitr::kable(head(d1[[2]]))
-knitr::kable(head(d1[[3]]))
-```
-&nbsp;
 
 The row names are gene id, the supported gene id can be one of: ACCNUM, ALIAS, ENSEMBL, ENSEMBLPROT, ENSEMBLTRANS, ENTREZID, ENZYME, EVIDENCE, EVIDENCEALL, GENENAME, GO, GOALL, IPI, MAP, OMIM. For the provided sample datasets in this package we only have ENSEMBL id's for gene id type.
 &nbsp;
 
-# Functions {.tabset .tabset-fade .tabset-pills} 
+# Functions  
 
-```{css, echo=FALSE}
-.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
-  background-color: unset;
-  color: unset;
-}
-```
-
-```{js, echo=FALSE}
-$(document).ready(function(){
-  $("body").on('click', '.tocify-item', function (e) {
-    e.preventDefault();
-
-    var el = $(this);
-    var block = $('.tab-content div[data-unique="' + el.attr('data-unique') + '"]');
-    var id = block.closest('.tab-pane').attr('id');
-
-    //if( block.hasClass('fade') ) {
-      $('.nav-pills [href="#' + id + '"]').trigger('click');
-    //}
-    setTimeout(function(){
-      $('html, body').animate({
-          scrollTop: block.offset().top
-      }, 1000);
-    },300);
-  });
-
-
-});
-```
 
 ## Cutoff Plot 
 &nbsp;
@@ -152,7 +87,7 @@ plot_cutoff(data = data,
 &nbsp;
 
 
-### 1.1 Cutoff Plot - Input: a data frame
+### 1.1 Cutoff Plot - Input: a data frame.
 ```{r}
 cutoff.result <- plot_cutoff(data = df,
                        gen.plot = T,
@@ -178,18 +113,18 @@ knitr::kable(head(cutoff.result[[1]]))
 **2.** A 3D plotly object, where the x-axis is Fold change threshold, y-axis is FDR cutoff, and z-axis is the number of DE genes under the x,y combination:
 &nbsp;
 
-```{r, warning=F}
+```{r, warning=F, eval=F}
 cutoff.result[[2]]
 ```
 &nbsp;
 
 **3.** A plot to visualize it:
-&nbsp;
 
-```{r}
+```{r, warning=F}
 cutoff.result[[3]]
 ```
 &nbsp;
+
 
 **Saving figures**
 &nbsp;
@@ -197,7 +132,7 @@ cutoff.result[[3]]
 Figures can be saved using two approaches:
 &nbsp;
 
-**1.** Using imbedded function with predetermined dpi
+**1.** Using imbedded fucntion with predetermined dpi
 &nbsp;
 
 ```{r, eval=FALSE}
@@ -218,7 +153,7 @@ ggsave("~/cut_off_selection_plot.png", cutoff.result[[3]], width = 5, height = 5
 &nbsp;
 
 
-### 1.2 Cutoff Plot - Input: a list
+### 1.2 Cutoff Plot - Input: a list.
 &nbsp;
 
 ```{r, message=FALSE}
@@ -256,7 +191,7 @@ cutoff.result.list
 Figures can be saved using two approaches:
 &nbsp;
 
-**1.** Using imbedded function with predetermined dpi
+**1.** Using imbedded fucntion with predetermined dpi
 &nbsp;
 
 ```{r, eval=FALSE}
@@ -287,7 +222,7 @@ This is the function to generate a qqplot object with confidence interval from t
 &nbsp;
 
 
-### 2.1 QQ Plot - Input: a data frame
+### 2.1 QQ Plot - Input: a data frame.
 &nbsp;
 
 ```{r, results='hide'}
@@ -302,7 +237,7 @@ qq.result
 Figures can be saved using two approaches:
 &nbsp;
 
-**1.** Using imbedded function with predetermined dpi
+**1.** Using imbedded fucntion with predetermined dpi
 &nbsp;
 
 ```{r, eval=FALSE}
@@ -320,7 +255,7 @@ ggsave("~/qq_plot.png", qq.result, width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
-### 2.2 QQ Plot - Input: a list
+### 2.2 QQ Plot - Input: a list.
 &nbsp;
 
 **plot_qq** function can also take a list as an input data, but requires *comp.names* to be specified. The result object is a set of qq plots for each of the data frames in the list.
@@ -339,7 +274,7 @@ qq.list.result
 Figures can be saved using two approaches:
 &nbsp;
 
-**1.** Using imbedded function with predetermined dpi
+**1.** Using imbedded fucntion with predetermined dpi
 &nbsp;
 
 ```{r, eval=FALSE}
@@ -395,7 +330,7 @@ plot_volcano(
 ```
 &nbsp;
 
-### 3.1 Volcano Plot - Input: a data frame
+### 3.1 Volcano Plot - Input: a data frame. 
 &nbsp;
 
 ```{r message=F, results='hide', warning=F}
@@ -403,7 +338,7 @@ plot_volcano(data = df)
 ```
 &nbsp;
 
-### 3.2 Volcano Plot - Input: a list
+### 3.2 Volcano Plot - Input: a list.
 &nbsp;
 
 Volcano Plot can also take a list as an input data with specified **comp.name** for each data frame.
@@ -421,7 +356,7 @@ plot_volcano(data = d1,
 You can highlight gene sets (like disease related genes from a Disease vs Healthy comparison).
 &nbsp;
 
-The gene set to be highlighted in the volcano plot can be specified in two ways:
+The gene set to be highlighted in the volcano plot can be spesified in two ways:
 &nbsp;
 
 **1.** A summary statistics table with the highlighted genes as row names (the gene name format needs to be consistent with the main summary statistics table). For example, this summary statistics table could be the statistical analysis output from a Disease vs Healthy comparison (only containing the subsetted significant genes).
@@ -500,7 +435,7 @@ volcano.result
 Figures can be saved using two approaches:
 &nbsp;
 
-**1.** Using imbedded function with predetermined dpi
+**1.** Using imbedded fucntion with predetermined dpi
 &nbsp;
 
 ```{r, warning=FALSE, eval=FALSE}
@@ -559,10 +494,7 @@ pathway.result <- plot_pathway(data = df, pathway.db = "rWikiPathways", gene.id.
 ```
 &nbsp;
 
-### 4.1 Pathway Analysis - Input: a data frame 
-&nbsp;
-
-Pathway analysis result is a list that contains 5 objects:
+### 4.1 Pathway analysis result is a list that contains 5 objects:
 &nbsp;
 
 **1.** Pathway analysis table with directional result (test up-regulated gene set and down-regulated gene set respectively).
@@ -625,10 +557,7 @@ ggsave("joint_plot.png",pathway.result[[5]], width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
-### 4.2 Pathway Analysis - Input:  a list
-&nbsp;
-
-Pathway analysis for the list of summary tables will result in a list that contains 4 objects:
+### 4.2 Pathway analysis for the list of summary tables will result in a list that contains 4 objects:
 &nbsp;
 
 Pathways with list of data as input, the list can be replaced with `d1` from the top. When list inputs are given `comp.names` should be speicified in order to identify the comparison groups.
