@@ -47,11 +47,11 @@
 #'
 #'
 #' @examples
-#' plot_volcano(data = example_summary_statistics_table,
+#' plot_volcano(data = Sample_summary_statistics_table,
 #'              geneset = Sample_disease_gene_set,
 #'              plot.save.to = "~/volcano_plot.png")
 #'
-#' plot_volcano(data = list(example_summary_statistics_table, example_summary_statistics_table1),
+#' plot_volcano(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
 #'             comp.names = c("A", "B"),
 #'             geneset = Sample_disease_gene_set,
 #'             plot.save.to = "~/volcano_multiplots.png")
@@ -174,7 +174,7 @@ plot_volcano <- function(data=data,
         if(is.null(plot.save.to)){
                 p
         }else{
-                ggsave(file=plot.save.to,
+                ggsave(filename = plot.save.to,
                        plot = p,
                        dpi = 300,
                        units = "in",

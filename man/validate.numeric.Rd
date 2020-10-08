@@ -10,6 +10,8 @@ validate.numeric(datin, col, name = 1)
 \item{datin}{The data in question.}
 
 \item{col}{The column to validate as numeric.}
+
+\item{name}{the position of dataset}
 }
 \description{
 Ensures that a column in a dataframe which must be numeric is

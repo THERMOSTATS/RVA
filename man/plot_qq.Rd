@@ -34,9 +34,9 @@ like \code{limma} or \code{DESeq2}.
 The function produces the qqplot to evaluate the result from differential expression analysis. The output is a ggplot object.
 }
 \examples{
-plot_qq(data = example_summary_statistics_table,
+plot_qq(data = Sample_summary_statistics_table,
         plot.save.to = "~/qq_plot.png")
-plot_qq(data = list(example_summary_statistics_table, example_summary_statistics_table1),
+plot_qq(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
         comp.names = c("A","B"),
         plot.save.to = "~/qq_list_plot.png")
 

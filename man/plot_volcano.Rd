@@ -82,11 +82,11 @@ The function takes the summary statistics table and returns a ggplot, with the o
 genes, e.g. disease signature genes, the genes which are up-regulated and down-regulated in diseased subjects.
 }
 \examples{
-plot_volcano(data = example_summary_statistics_table,
+plot_volcano(data = Sample_summary_statistics_table,
              geneset = Sample_disease_gene_set,
              plot.save.to = "~/volcano_plot.png")
 
-plot_volcano(data = list(example_summary_statistics_table, example_summary_statistics_table1),
+plot_volcano(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
             comp.names = c("A", "B"),
             geneset = Sample_disease_gene_set,
             plot.save.to = "~/volcano_multiplots.png")

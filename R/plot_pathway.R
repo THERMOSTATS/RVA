@@ -18,8 +18,8 @@
 #' @param Fisher.down.cutoff The FDR cutoff selected (numeric) for the pathway enrichment analysis' Fisher's exact test with the downregulated gene set.
 #' @param plot.save.to The address to save the plot from simplified cutoff combination with FDR of 0.01, 0.05, 0.1, and 0.2.
 #' @param pathway.db The databse to be used for encrichment analysis. Can be one of the following, "rWikiPathways", "KEGG", "REACTOME", "Hallmark","rWikiPathways_aug_2020".
-#' @param customized.pathways the customized pathways in the format of two column dataframe (column name as "gs_name" and "entrez_gene") to be used in analysis
-#'
+#' @param customized.pathways the customized pathways in the format of two column dataframe (column name as "gs_name" and "entrez_gene") to be used in analysis.
+#' @param ... pass on variables
 #' @return The function returns a list of 5 objects:
 #' \item{1}{result table from directional pathway enrichment analysis}
 #' \item{2}{result table from non-directional pathway enrichment analysis}
@@ -49,16 +49,18 @@
 #' FC.cutoff = 1.5,
 #' p.cutoff = 0.05,
 #' plot.save.to = "~/pathway_plot.png")
-#' @examples result <- plot_pathway(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
+#' @examples result <- plot_pathway(data = list(Sample_summary_statistics_table,
+#' Sample_summary_statistics_table1),
 #' comp.names = c("A","B"))
 #'
 #' @examples
 #' #Save figures using ggplot2
 #' library(ggplot2)
-#'result <- plot_pathway(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1), comp.names = c("A","B"))
-#'ggsave("~/pathways_non_directional_plot.png",
-#'plot = result[[3]],
-#'width = 8, height = 6, dpi = 300)
+#' result <- plot_pathway(data = list(Sample_summary_statistics_table,
+#' Sample_summary_statistics_table1), comp.names = c("A","B"))
+#' ggsave("~/pathways_non_directional_plot.png",
+#' plot = result[[3]],
+#' width = 8, height = 6, dpi = 300)
 #' @export plot_pathway
 #'
 #'
@@ -401,7 +403,7 @@ nullreturn <- function(IS.list,type=1){
 #' @title Second Cutoff Error
 #' @description The function takes in a list of dataframe, comp names and a specified type, to output a dataframe styled for ggplot.
 #'
-#' @param data A list of dataframes.
+#' @param df A list of dataframes.
 #' @param comp.names a character vector contain the comparison names corresponding to the same order to the \code{dat.list}. default = NULL.
 #' @param TypeQ If type = 1(default) return directional null plot. If type = 2 return non directional null plot.
 #'
@@ -432,6 +434,7 @@ secondCutoffErr <- function(df,comp.names, TypeQ = 1){
 #' @description Special cases where list input and at least one treatment has signal but others don't.
 #'
 #' @param vizdf A dataframes of enriched pathways.
+#' @param ... pass on variables
 #'
 #' @return Returns a dataframe.
 #'
@@ -468,6 +471,7 @@ prettyGraphs <- function(vizdf, ...){
 #' @param allID A vector of all pathway ID's from directional and non directional enriched datasets.
 #' @param backup.d.sig A dataframe type of object with directional pathways data prior to any cutoff's being applied
 #' @param nd.res A dataframe type of object with non directional pathways data prior to any cutoff's being applied
+#' @param ... pass on variables
 #'
 #' @return Returns ggplot.
 #'

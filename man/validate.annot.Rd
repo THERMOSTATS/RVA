@@ -21,7 +21,9 @@ validate.annot(
 
 \item{annot.flags}{The vector of annotation flags passed by the user.}
 
-\item{fill}{The fill value indicated by the user.}
+\item{sample.id}{Sample id label to check if in annot.}
+
+\item{fill}{The fill value indicated by the user,"count" or "CPM".}
 
 \item{baseline.flag}{The baseline.flag passed by the user.}
 

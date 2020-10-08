@@ -7,6 +7,8 @@
 plot_heatmap.cfb(cpm, annot, title = "RVA CFB Heatmap", ...)
 }
 \arguments{
+\item{cpm}{cpm data}
+
 \item{annot}{A long-format dataframe with any pertinent treatment data about
 the samples. The only required column is one titled the \code{sample.id}
 value with values matching the column names of sample IDs in \code{data}.
@@ -14,6 +16,8 @@ Additional columns can contain information such as treament
 compounds, dates of sample collection, or dosage quantities.}
 
 \item{title}{A title for the heatmap. Default = "RVA Heatmap".}
+
+\item{...}{pass over parameters}
 }
 \description{
 An alias for \code{plot_heatmap.expr(annot, cpm, fill = "CFB", ...)}.

@@ -1,7 +1,8 @@
 #' @title Plot a CPM Heatmap
 #'
 #' @description An alias for `plot_heatmap.expr(annot, cpm, fill = "CPM", ...)`.
-#'
+#' @param ... pass over parameters
+#' @param cpm cpm data
 #' @inheritParams plot_heatmap.expr
 #'
 #' @export
@@ -15,6 +16,8 @@ plot_heatmap.cpm <- function(cpm,
 #' @title Plot a CFB Heatmap
 #'
 #' @description An alias for `plot_heatmap.expr(annot, cpm, fill = "CFB", ...)`.
+#' @param ... pass over parameters
+#' @param cpm cpm data
 #'
 #' @inheritParams plot_heatmap.expr
 #'

@@ -7,11 +7,11 @@
 secondCutoffErr(df, comp.names, TypeQ = 1)
 }
 \arguments{
+\item{df}{A list of dataframes.}
+
 \item{comp.names}{a character vector contain the comparison names corresponding to the same order to the \code{dat.list}. default = NULL.}
 
 \item{TypeQ}{If type = 1(default) return directional null plot. If type = 2 return non directional null plot.}
-
-\item{data}{A list of dataframes.}
 }
 \value{
 Returns a dataframe.

@@ -23,9 +23,9 @@
 #'
 #'
 #' @examples
-#' plot_qq(data = example_summary_statistics_table,
+#' plot_qq(data = Sample_summary_statistics_table,
 #'         plot.save.to = "~/qq_plot.png")
-#' plot_qq(data = list(example_summary_statistics_table, example_summary_statistics_table1),
+#' plot_qq(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
 #'         comp.names = c("A","B"),
 #'         plot.save.to = "~/qq_list_plot.png")
 #'
@@ -88,7 +88,7 @@ plot_qq <- function(data = data,
         }
 
         if(!is.null(plot.save.to)){ #save file if needed
-                ggsave(file=plot.save.to,
+                ggsave(filename = plot.save.to,
                        plot = p,
                        width = 6,
                        height = 6,

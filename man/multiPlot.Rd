@@ -12,6 +12,8 @@ multiPlot(allID, backup.d.sig, nd.res, ...)
 \item{backup.d.sig}{A dataframe type of object with directional pathways data prior to any cutoff's being applied}
 
 \item{nd.res}{A dataframe type of object with non directional pathways data prior to any cutoff's being applied}
+
+\item{...}{pass on variables}
 }
 \value{
 Returns ggplot.

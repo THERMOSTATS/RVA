@@ -8,6 +8,8 @@ prettyGraphs(vizdf, ...)
 }
 \arguments{
 \item{vizdf}{A dataframes of enriched pathways.}
+
+\item{...}{pass on variables}
 }
 \value{
 Returns a dataframe.

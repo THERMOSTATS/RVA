@@ -6,6 +6,13 @@
 \usage{
 validate.data.annot(data, annot, sample.id)
 }
+\arguments{
+\item{data}{input data}
+
+\item{annot}{annotation file}
+
+\item{sample.id}{sample id in the input}
+}
 \description{
 Ensures that the annotation file matches the data file with
 respect to sample IDs. Throws warnings if there are discrepencies.

@@ -335,7 +335,7 @@ validate.stats.cols <- function(datin,
 
 #' @title Check Summary Statistics Required Column Types
 #' @description `FCflag` and `FDRflag` must be numeric.
-#'
+#' @param flags `FCflag` or `FDRflag` to be checked
 #' @inheritParams validate.stats
 #' @references Xingpeng Li, Tatiana Gelaf Romer & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 validate.col.types <- function(datin,
@@ -378,6 +378,7 @@ validate.geneid.flag <- function(value, name) {
 #'
 #' @param datin The data in question.
 #' @param col The column to validate as numeric.
+#' @param name the position of dataset
 #'
 #' @details This specifically checks if any of the values in the column can
 #'         be coerced as numeric.
@@ -401,7 +402,8 @@ validate.numeric <- function(datin,
 #' @param data The input count data.
 #' @param annot The annotation dataframe.
 #' @param annot.flags The vector of annotation flags passed by the user.
-#' @param fill The fill value indicated by the user.
+#' @param sample.id Sample id label to check if in annot.
+#' @param fill The fill value indicated by the user,"count" or "CPM".
 #' @param baseline.flag The baseline.flag passed by the user.
 #' @param baseline.val The baseline value passed by the user.
 #'
@@ -502,6 +504,9 @@ validate.data <- function(data) {
 #' @title Validate Data in the Context of Annotation
 #' @description Ensures that the annotation file matches the data file with
 #'         respect to sample IDs. Throws warnings if there are discrepencies.
+#' @param data input data
+#' @param annot annotation file
+#' @param sample.id sample id in the input
 #' @references Xingpeng Li, Tatiana Gelaf Romer & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 validate.data.annot <- function(data, annot, sample.id) {
 

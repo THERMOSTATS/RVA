@@ -49,7 +49,9 @@ Differentially Expressed (DE) genes by \code{FC.cutoff} and \code{FDR.cutoff}.}
 
 \item{pathway.db}{The databse to be used for encrichment analysis. Can be one of the following, "rWikiPathways", "KEGG", "REACTOME", "Hallmark","rWikiPathways_aug_2020".}
 
-\item{customized.pathways}{the customized pathways in the format of two column dataframe (column name as "gs_name" and "entrez_gene") to be used in analysis}
+\item{customized.pathways}{the customized pathways in the format of two column dataframe (column name as "gs_name" and "entrez_gene") to be used in analysis.}
+
+\item{...}{pass on variables}
 }
 \value{
 The function returns a list of 5 objects:
@@ -72,12 +74,14 @@ gene.id.type = "ENSEMBL",
 FC.cutoff = 1.5,
 p.cutoff = 0.05,
 plot.save.to = "~/pathway_plot.png")
-result <- plot_pathway(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
+result <- plot_pathway(data = list(Sample_summary_statistics_table,
+Sample_summary_statistics_table1),
 comp.names = c("A","B"))
 
 #Save figures using ggplot2
 library(ggplot2)
-result <- plot_pathway(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1), comp.names = c("A","B"))
+result <- plot_pathway(data = list(Sample_summary_statistics_table,
+Sample_summary_statistics_table1), comp.names = c("A","B"))
 ggsave("~/pathways_non_directional_plot.png",
 plot = result[[3]],
 width = 8, height = 6, dpi = 300)

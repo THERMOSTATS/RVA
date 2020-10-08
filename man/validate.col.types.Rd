@@ -10,6 +10,8 @@ validate.col.types(datin, name = 1, flags)
 \item{datin}{the summary statistics file.}
 
 \item{name}{summary statistics file position indicator}
+
+\item{flags}{\code{FCflag} or \code{FDRflag} to be checked}
 }
 \description{
 \code{FCflag} and \code{FDRflag} must be numeric.
