@@ -3,11 +3,9 @@ title: "RNAseq Visualization Automation"
 output: 
   html_document:
     toc: true
-    toc_float:
-      collapsed: no 
     theme: flatly
     highlight: tango
-    smooth_scroll: false
+    keep_md: true
 vignette: >
   %\VignetteIndexEntry{RNAseq Visualization Automation}
   %\VignetteEngine{knitr::rmarkdown}
