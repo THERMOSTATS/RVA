@@ -1,9 +1,15 @@
 ---
+title: "RNAseq Visualization Automation"
 output: 
   html_document:
+    toc: true
     # keep_md: true
     theme: flatly
     highlight: tango
+vignette: >
+  %\VignetteIndexEntry{RNAseq Visualization Automation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 
