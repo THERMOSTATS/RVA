@@ -4,7 +4,7 @@
 Install RVA from GitHub
 
 ```r
-devtools::install_github("THERMOSTATS/RVA_prod")
+devtools::install_github("THERMOSTATS/RVA")
 ```
 &nbsp;
 
