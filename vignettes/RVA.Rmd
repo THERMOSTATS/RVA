@@ -143,7 +143,7 @@ Figures can be saved using two approaches:
 
 ```{r, eval=FALSE}
 plot_cutoff(data = df,
-            plot.save.to = "~/cut_off_selection_plot.png")
+            plot.save.to = "cut_off_selection_plot.png")
 ```
 &nbsp;
 
@@ -152,7 +152,7 @@ plot_cutoff(data = df,
 
 ```{r, eval=F}
 library(ggplot2)
-ggsave("~/cut_off_selection_plot.png", cutoff.result[[3]], width = 5, height = 5, dpi = 300)
+ggsave("cut_off_selection_plot.png", cutoff.result[[3]], width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
@@ -203,7 +203,7 @@ Figures can be saved using two approaches:
 ```{r, eval=FALSE}
 plot_cutoff(data = d1,
             comp.names = c("A", "B", "C"),
-            plot.save.to = "~/cut_off_list_plot.png")
+            plot.save.to = "cut_off_list_plot.png")
 ```
 &nbsp;
 
@@ -212,7 +212,7 @@ plot_cutoff(data = d1,
 
 ```{r, eval=F}
 library(ggplot2)
-ggsave("~/cut_off_list_plot.png", cutoff.result.list, width = 5, height = 5, dpi = 300)
+ggsave("cut_off_list_plot.png", cutoff.result.list, width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
@@ -248,7 +248,7 @@ Figures can be saved using two approaches:
 
 ```{r, eval=FALSE}
 plot_qq(data = df,
-        plot.save.to = "~/qq_plot.png")
+        plot.save.to = "qq_plot.png")
 ```
 &nbsp;
 
@@ -257,7 +257,7 @@ plot_qq(data = df,
 
 ```{r, eval=F}
 library(ggplot2)
-ggsave("~/qq_plot.png", qq.result, width = 5, height = 5, dpi = 300)
+ggsave("qq_plot.png", qq.result, width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
@@ -286,7 +286,7 @@ Figures can be saved using two approaches:
 ```{r, eval=FALSE}
 plot_qq(data = d1,
         comp.names = c("A", "B", "C"),
-        plot.save.to = "~/qq_list_plot.png")
+        plot.save.to = "qq_list_plot.png")
 ```
 &nbsp;
 
@@ -295,7 +295,7 @@ plot_qq(data = d1,
 
 ```{r, eval=F}
 library(ggplot2)
-ggsave("~/qq_list_plot.png", qq.list.result, width = 5, height = 5, dpi = 300)
+ggsave("qq_list_plot.png", qq.list.result, width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
@@ -447,7 +447,7 @@ Figures can be saved using two approaches:
 ```{r, warning=FALSE, eval=FALSE}
 plot_volcano(data = df,
              geneset = dgs,
-             plot.save.to = "~/volcano_plot.png")
+             plot.save.to = "volcano_plot.png")
 ```
 &nbsp;
 
@@ -456,7 +456,7 @@ plot_volcano(data = df,
 
 ```{r, eval=F}
 library(ggplot2)
-ggsave("~/volcano_plot.png", volcano.result, width = 5, height = 5, dpi = 300)
+ggsave("volcano_plot.png", volcano.result, width = 5, height = 5, dpi = 300)
 ```
 &nbsp;
 
@@ -928,32 +928,10 @@ Here is an example of how you can customize your output dimensions and save your
 
 ```{r message=FALSE, eval=F}
 library(ggplot2)
-ggsave("gene_plots1_4.png", device = "png", width = 100, height = 100, dpi = 200, limitsize = FALSE)
+ggsave(gene.result, "gene_plots1_4.png", device = "png", width = 100, height = 100, dpi = 200, limitsize = FALSE)
 ```
 &nbsp;
 
 &nbsp;
 
 &nbsp;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
