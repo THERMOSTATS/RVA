@@ -248,7 +248,7 @@ get.cutoff.ggplot <- function(df, FCflag, FDRflag) {
 
   ggplot(df, aes(x=FC, y=Number_of_Genes, fill=pvalue)) +
     geom_bar(stat="identity", position=position_dodge()) +
-    geom_text(aes(label=Number_of_Genes), vjust=-1, color="black",
+    geom_text(aes(label=Number_of_Genes), vjust=-0.3, color="black",
               position = position_dodge(0.9), size=3.5) +
     labs(x = FCflag, fill = FDRflag) +
     ylab("Number of Genes under cutoff") +
