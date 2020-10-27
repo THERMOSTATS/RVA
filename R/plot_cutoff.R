@@ -145,7 +145,7 @@ plot_cutoff <- function(data = data,
                              FCmin, FCmax, FCstep,
                              FDRflag, p.min, p.max, p.step)
 
-
+      plot3d <- NULL
       if(gen.3d.plot){
         plot3d <- make.cutoff.plotly(df)
       }
@@ -291,7 +291,7 @@ get.cutoff.df <- function(datin,
 
   get.gene.num <- function(FC, pvalue, FCflag, FDRflag){
     num.pass <- datin %>%
-      filter(DAT_FDR <= pvalue , DAT_FC >= log2(FC)) %>%
+      filter(DAT_FDR <= pvalue , abs(DAT_FC) >= log2(FC)) %>%
       nrow
     return(num.pass)
   }

@@ -5,7 +5,7 @@
 #'
 #' @param data Summary statistics table or a list that contains multiple summary statistics tables from limma or DEseq2, where each row is a gene.
 #' @param comp.names A character vector that contains the comparison names which correspond to the same order as \code{data}. No default.
-#' @param p.value.flag The column name of \code{P-VALUE} (NOT FDR, NO multiplicity adjusted p-value) in the summary statistics table. Default = "p.value.flag".
+#' @param p.value.flag The column name of \code{P-VALUE} (NOT FDR, NO multiplicity adjusted p-value) in the summary statistics table. Default = "P.Value".
 #' @param ci Confidence interval. Default = 0.95
 #' @param plot.save.to The file name and the address where to save the qq-plot "~/address_to_folder/qqplot.png". Default = NULL.
 #'
