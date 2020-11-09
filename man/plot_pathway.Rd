@@ -5,7 +5,7 @@
 \title{Pathway analysis and visualization}
 \usage{
 plot_pathway(
-  data = df,
+  data = ~df,
   comp.names = NULL,
   gene.id.type = "ENSEMBL",
   FC.cutoff = 1.3,

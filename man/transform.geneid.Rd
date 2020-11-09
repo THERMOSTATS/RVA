@@ -4,9 +4,9 @@
 \alias{transform.geneid}
 \title{Transform GeneIDs}
 \usage{
-\method{transform}{geneid}(gene.names, from = gene.id.type, to = ct.table.id.type)
+\method{transform}{geneid}(gene.names, from = ~gene.id.type, to = ~ct.table.id.type)
 
-\method{transform}{geneid}(gene.names, from = gene.id.type, to = ct.table.id.type)
+\method{transform}{geneid}(gene.names, from = ~gene.id.type, to = ~ct.table.id.type)
 }
 \arguments{
 \item{gene.names}{Genes,in the format of character vector, to be transformed.}

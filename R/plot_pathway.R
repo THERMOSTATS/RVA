@@ -37,6 +37,7 @@
 #' @importFrom ggpubr as_ggplot
 #' @importFrom gridExtra arrangeGrob
 #' @importFrom purrr set_names map2
+#' @importFrom rlang .data
 #'
 #'
 #' @references Xingpeng Li & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
@@ -66,301 +67,300 @@
 #'
 
 
-plot_pathway <- function(data = df,
+plot_pathway <- function(data = ~df,
                          comp.names = NULL,
                          gene.id.type = "ENSEMBL",
-                        FC.cutoff = 1.3,
-                        FDR.cutoff = 0.05,
-                        FCflag = "logFC",
-                        FDRflag = "adj.P.Val",
-                        Fisher.cutoff = 0.1,
-                        Fisher.up.cutoff = 0.1,
-                        Fisher.down.cutoff = 0.1,
-                        plot.save.to = NULL,
-                        pathway.db = "rWikiPathways",
-                        customized.pathways = NULL,
-                        ...){
+                         FC.cutoff = 1.3,
+                         FDR.cutoff = 0.05,
+                         FCflag = "logFC",
+                         FDRflag = "adj.P.Val",
+                         Fisher.cutoff = 0.1,
+                         Fisher.up.cutoff = 0.1,
+                         Fisher.down.cutoff = 0.1,
+                         plot.save.to = NULL,
+                         pathway.db = "rWikiPathways",
+                         customized.pathways = NULL,
+                         ...){
 
-        # Gene set enrichment test (Fisher) in FC positive and FC negative group separately.
-        # the p.adjust value will be compared from + and - group and choose the smaller one and assign the +/- value.
+  # Gene set enrichment test (Fisher) in FC positive and FC negative group separately.
+  # the p.adjust value will be compared from + and - group and choose the smaller one and assign the +/- value.
 
-        cat(paste0("\n\n Running plot pathway. Acceptable data types are list() & data.frame() \n\n"))
-        cat(paste0("\n\n Current program setting only accepts rownames as ", gene.id.type,", use parameter `gene.id.type` to adjust if needed. \n\n"))
+  cat(paste0("\n\n Running plot pathway. Acceptable data types are list() & data.frame() \n\n"))
+  cat(paste0("\n\n Current program setting only accepts rownames as ", gene.id.type,", use parameter `gene.id.type` to adjust if needed. \n\n"))
 
-        validate.single.table.isnotlist(data)
-        validate.comp.names(comp.names,data)
-        validate.pathways.db(pathway.db, customized.pathways)
+  validate.single.table.isnotlist(data)
+  validate.comp.names(comp.names,data)
+  validate.pathways.db(pathway.db, customized.pathways)
 
 
-        if(inherits(data, "list")){
-                cat ("\n Executing list of data \n")
-                out.d.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = T , IS.list = T, customized.pathways) %>%
-                        set_names(comp.names) %>%
-                        bind_rows(, .id = "Comparisons.ID") %>%
-                        mutate(Description = factor(Description,levels = unique(Description)))
+  if(inherits(data, "list")){
+    cat ("\n Executing list of data \n")
+    out.d.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = T , IS.list = T, customized.pathways) %>%
+      set_names(comp.names) %>%
+      bind_rows(, .id = "Comparisons.ID") %>%
+      mutate(Description = factor(.data$Description,levels = unique(.data$Description)))
 
-                out.nd.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = F , IS.list = T, customized.pathways) %>%
-                        set_names(comp.names) %>%
-                        bind_rows(, .id = "Comparisons.ID") %>%
-                        mutate(Description = factor(Description,levels = unique(Description)))
+    out.nd.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = F , IS.list = T, customized.pathways) %>%
+      set_names(comp.names) %>%
+      bind_rows(, .id = "Comparisons.ID") %>%
+      mutate(Description = factor(.data$Description,levels = unique(.data$Description)))
 
-        }else{
-                path.res <- cal.pathway.scores(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = NULL , IS.list = F, customized.pathways)
-                out.d.sig <- path.res[[1]]
-                out.nd.sig <- path.res[[2]]
-                nd.res <- path.res[[3]]
-                backup.d.sig <- path.res[[1]]
+  }else{
+    path.res <- cal.pathway.scores(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = NULL , IS.list = F, customized.pathways)
+    out.d.sig <- path.res[[1]]
+    out.nd.sig <- path.res[[2]]
+    nd.res <- path.res[[3]]
+    backup.d.sig <- path.res[[1]]
+  }
+
+
+  ##visualize directionally changed pathways
+  if(is.null(out.d.sig)){
+    cat(paste0("\n No directional enriched pathway can be calculated.\n"))
+    p.d <- NULL
+
+  }else if(nrow(out.d.sig) == 0){
+    cat(paste0("\n No directional enriched pathway passed threshold of FDR < ",Fisher.down.cutoff," in down-regulated pathways or ",Fisher.up.cutoff," for up-regulated pathways.\n"))
+    p.d <- NULL
+  }else{
+    out.d.path <- out.d.sig %>%
+      filter(.data$directional.p.adjust >= -Fisher.down.cutoff & .data$directional.p.adjust <= Fisher.up.cutoff) %>%
+      pull(.data$Description) %>%
+      unique
+    out.d.sig <- out.d.sig %>%
+      filter(.data$Description %in% out.d.path)
+
+    #retain original dataset before transofrmation
+    sav.out.d.sig <- out.d.sig
+
+    #case where there is a false signal in one treatment but none in the other
+    if (nrow(out.d.sig) == 0 & !inherits(data,"list")) {
+
+      cat ("\n The cutoff values for Fisher.down.cutoff & Fisher.up.cutoff resulted in 0 values being selected,  consider choosing looser cutoff values \n")
+      p.d <- NULL
+
+    } else {
+
+      if (inherits(data,"list")){
+        check_0 = unique(out.d.sig$ID)
+
+        if (nrow(out.d.sig) == 0) {
+
+          #if the second cutoff removes all the rows
+          cat ("\n The cutoff values for Fisher.down.cutoff & Fisher.up.cutoff resulted in 0 values being selected,  consider choosing looser cutoff values \n")
+          out.d.sig <- secondCutoffErr(out.d.sig ,comp.names, TypeQ = 1)
         }
+        else if (!(length(check_0) == 1 & check_0[1] == "")){
+          if (sum(out.d.sig$ID == "") > 0)
+            cat ("\n Warning: There were null entries \n")
+          out.d.sig <- prettyGraphs(out.d.sig)
 
-
-        ##visualize directionally changed pathways
-        if(is.null(out.d.sig)){
-                cat(paste0("\n No directional enriched pathway can be calculated.\n"))
-                p.d <- NULL
-
-        }else if(nrow(out.d.sig) == 0){
-                cat(paste0("\n No directional enriched pathway passed threshold of FDR < ",Fisher.down.cutoff," in down-regulated pathways or ",Fisher.up.cutoff," for up-regulated pathways.\n"))
-                p.d <- NULL
-        }else{
-                out.d.path <- out.d.sig %>%
-                        filter(directional.p.adjust >= -Fisher.down.cutoff & directional.p.adjust <= Fisher.up.cutoff) %>%
-                        pull(Description) %>%
-                        unique
-                out.d.sig <- out.d.sig %>%
-                        filter(Description %in% out.d.path)
-
-                #retain original dataset before transofrmation
-                sav.out.d.sig <- out.d.sig
-
-                #case where there is a false signal in one treatment but none in the other
-                  if (nrow(out.d.sig) == 0 & !inherits(data,"list")) {
-
-                    cat ("\n The cutoff values for Fisher.down.cutoff & Fisher.up.cutoff resulted in 0 values being selected,  consider choosing looser cutoff values \n")
-                    p.d <- NULL
-
-                  } else {
-
-                  if (inherits(data,"list")){
-                    check_0 = unique(out.d.sig$ID)
-
-                    if (nrow(out.d.sig) == 0) {
-
-                      #if the second cutoff removes all the rows
-                      cat ("\n The cutoff values for Fisher.down.cutoff & Fisher.up.cutoff resulted in 0 values being selected,  consider choosing looser cutoff values \n")
-                      out.d.sig <- secondCutoffErr(out.d.sig ,comp.names, TypeQ = 1)
-                    }
-                    else if (!(length(check_0) == 1 & check_0[1] == "")){
-                      if (sum(out.d.sig$ID == "") > 0)
-                        cat ("\n Warning: There were null entries \n")
-                        out.d.sig <- prettyGraphs(out.d.sig)
-
-                    #if the second cutoff eliminated one of the facets then do
-                    } else if (length(comp.names) != length(unique(out.d.sig$Comparisons.ID))){
-                      out.d.sig <- secondCutoffErr(out.d.sig ,comp.names, TypeQ = 1)
-                    }
-                  }
-
-                  p.d <-  ggplot(out.d.sig, aes(x = Description, y= log10.padj,fill=fil.cor )) +
-                          geom_bar(stat = "identity" ) +
-                          coord_flip() +
-                          geom_hline(yintercept=-log10(0.05), linetype="dashed",color = "grey") +
-                          geom_hline(yintercept=log10(0.05), linetype="dashed",color = "grey") +
-                          geom_hline(yintercept= 0,color = "black") +
-                          annotate("rect",
-                                   xmin = -Inf,
-                                   xmax = Inf,
-                                   ymin =-log10(0.05),
-                                   ymax = log10(0.05),
-                                   fill = "grey",
-                                   alpha = 0.4) +
-                          scale_fill_identity() +
-                          xlab("Pathway") +
-                          ylab("-log10(FDR)")
-
-                  #make sure the returned dataset only has observations with signals
-                  out.d.sig <- sav.out.d.sig[sav.out.d.sig$ID != "",]
-
-                  if(inherits(data, "list")){
-                          p.d <- p.d + facet_grid(.~ Comparisons.ID)
-                  }
-
-                }
-
+          #if the second cutoff eliminated one of the facets then do
+        } else if (length(comp.names) != length(unique(out.d.sig$Comparisons.ID))){
+          out.d.sig <- secondCutoffErr(out.d.sig ,comp.names, TypeQ = 1)
         }
+      }
+
+      p.d <-  ggplot(out.d.sig, aes(x = .data$Description, y= .data$log10.padj,fill=.data$fil.cor )) +
+        geom_bar(stat = "identity" ) +
+        coord_flip() +
+        geom_hline(yintercept=-log10(0.05), linetype="dashed",color = "grey") +
+        geom_hline(yintercept=log10(0.05), linetype="dashed",color = "grey") +
+        geom_hline(yintercept= 0,color = "black") +
+        annotate("rect",
+                 xmin = -Inf,
+                 xmax = Inf,
+                 ymin =-log10(0.05),
+                 ymax = log10(0.05),
+                 fill = "grey",
+                 alpha = 0.4) +
+        scale_fill_identity() +
+        xlab("Pathway") +
+        ylab("-log10(FDR)")
+
+      #make sure the returned dataset only has observations with signals
+      out.d.sig <- sav.out.d.sig[sav.out.d.sig$ID != "",]
+
+      if(inherits(data, "list")){
+        p.d <- p.d + facet_grid(.~ Comparisons.ID)
+      }
+
+    }
+
+  }
 
 
-        ## non-directional test p value
-        if(is.null(out.nd.sig)){
-                cat(paste0("\n No non-directional enriched pathway can be calculated.\n"))
-                p.nd <- NULL
-                p.all <- ggplot() +
-                        annotate("text", x = 4, y = 25, size=8, label = paste0("No non-directional \n enriched pathway\n passed threshold of FDR ",Fisher.cutoff," \n thus a combined plot is not provided")) +
-                        theme(axis.title.y = element_blank(),
-                        axis.text.y = element_blank())
+  ## non-directional test p value
+  if(is.null(out.nd.sig)){
+    cat(paste0("\n No non-directional enriched pathway can be calculated.\n"))
+    p.nd <- NULL
+    p.all <- ggplot() +
+      annotate("text", x = 4, y = 25, size=8, label = paste0("No non-directional \n enriched pathway\n passed threshold of FDR ",Fisher.cutoff," \n thus a combined plot is not provided")) +
+      theme(axis.title.y = element_blank(),
+            axis.text.y = element_blank())
 
 
-        }else if(nrow(out.nd.sig) == 0){
-                cat(paste0("\n No non-directional enriched pathway passed threshold of FDR ",Fisher.cutoff,". \n"))
-                p.nd <- NULL
-                p.all <- ggplot() +
-                  annotate("text", x = 4, y = 25, size=8, label = paste0("No non-directional \n enriched pathway\n passed threshold of FDR ",Fisher.cutoff," \n thus a combined plot is not provided")) +
-                  theme(axis.title.y = element_blank(),
-                        axis.text.y = element_blank())
+  }else if(nrow(out.nd.sig) == 0){
+    cat(paste0("\n No non-directional enriched pathway passed threshold of FDR ",Fisher.cutoff,". \n"))
+    p.nd <- NULL
+    p.all <- ggplot() +
+      annotate("text", x = 4, y = 25, size=8, label = paste0("No non-directional \n enriched pathway\n passed threshold of FDR ",Fisher.cutoff," \n thus a combined plot is not provided")) +
+      theme(axis.title.y = element_blank(),
+            axis.text.y = element_blank())
+
+  }else{
+    out.nd.path <- out.nd.sig %>%
+      filter(.data$p.adjust < Fisher.cutoff) %>%
+      pull(.data$Description) %>%
+      unique
+    out.nd.sig <- out.nd.sig %>%
+      filter(.data$Description %in% out.nd.path)
+
+    sav.out.nd.sig <- out.nd.sig
+
+    if (nrow(out.nd.sig) == 0 & !inherits(data,"list")) {
+
+      cat ("\n The cutoff value for Fisher.cutoff resulted in 0 values being selected \n, consider choosing looser cutoff values \n")
+      e_message <- "The cutoff value for Fisher up/down/non-directional cutoff \n resulted in 0 values being selected, \n consider choosing looser cutoff values"
+      p.nd <- NULL
+      p.all <- ggplot() +
+        annotate("text", x = 4, y = 25, size=6, label = paste0(e_message," \n\n Provided Cutoff's ","\n Fisher Cutoff = ",
+                                                               Fisher.cutoff,",\n Fisher Cutoff down = ",
+                                                               Fisher.down.cutoff,", \n Fisher Cutoff up = ", Fisher.up.cutoff )) +
+        theme(axis.title.y = element_blank(),
+              axis.text.y = element_blank())
+
+
+    } else {
+
+      if (inherits(data,"list")){
+
+        #if this is the case we don't have to look at others
+        if (nrow(out.nd.sig) == 0) {
+          #if the second cutoff removes all the rows
+          cat (" \n The cutoff value for Fisher.cutoff resulted in 0 values being selected, consider choosing looser cutoff values \n")
+
+          out.nd.sig <- secondCutoffErr(out.nd.sig ,comp.names, TypeQ = 2)
+          out.nd.sig[out.nd.sig$pvalue == -99999,]['pvalue'] = 1
+          out.nd.sig[out.nd.sig$p.adjust == -99999,]['p.adjust'] = 1
+        }
+        else if (sum(out.nd.sig$ID == "") > 0){
+          check_0 = unique(out.nd.sig$ID)
+
+          if (!(length(check_0) == 1 & check_0[1] == "")){
+            #print ("Changed")
+            out.nd.sig <- prettyGraphs(out.nd.sig)
+            out.nd.sig[out.nd.sig$pvalue == -99999,]['pvalue'] = 1
+            out.nd.sig[out.nd.sig$p.adjust == -99999,]['p.adjust'] = 1
+          } else if (length(comp.names) != length(unique(out.nd.sig$Comparisons.ID))){
+            out.nd.sig <- secondCutoffErr(out.nd.sig ,comp.names, TypeQ = 2)
+            out.nd.sig[out.nd.sig$pvalue == -99999,]['pvalue'] = 1
+            out.nd.sig[out.nd.sig$p.adjust == -99999,]['p.adjust'] = 1
+          }
+        }
+      }
+
+
+      #cases where data frame is passed
+      #most likely for cases where all treatment groups are null
+      check_1 = unique(out.nd.sig$ID)
+      check_2 = unique(out.nd.sig$Description)
+      if (length(check_1) == 1 & check_1[1] == "" & check_2[1] == "" & mean(out.nd.sig$pvalue) == -99999){
+        out.nd.sig[out.nd.sig$pvalue == -99999,]['pvalue'] = 1
+        out.nd.sig[out.nd.sig$p.adjust == -99999,]['p.adjust'] = 1
+      }
+
+      p.nd <-  ggplot(out.nd.sig,aes(x=.data$Description,y=-log10(.data$p.adjust))) +
+        geom_bar(stat = "identity" ) +
+        coord_flip() +
+        annotate("rect",
+                 xmin = -Inf,
+                 xmax = Inf,
+                 ymin = 0,
+                 ymax = -log10(0.05),
+                 fill = "grey",
+                 alpha = 0.4) +
+        geom_hline(yintercept= -log10(0.05),color = "grey") +
+        ylab("-log10(FDR) - Fisher's Test") +
+        xlab("Pathway") +
+        theme_minimal()
+
+      #make sure returned dataset has signals
+      out.nd.sig <- sav.out.nd.sig[sav.out.nd.sig$ID != "",]
+
+      if(inherits(data, "list")){
+        p.nd <- p.nd + facet_grid(.~ Comparisons.ID)
+      }
+
+      # below chunk only run when single summary statistics table is provided
+      if(!inherits(data, "list")){
+
+
+        if(is.null(out.d.sig)){test_1 <- 0}else{test_1 <- nrow(out.d.sig)}
+        if(is.null(out.nd.sig)){test_2 <- 0}else{test_2 <- nrow(out.nd.sig)}
+
+
+        if(!(test_1 > 0 & test_2 > 0)){
+          e_message <- "The cutoff value for Fisher up/down/non-directional cutoff \n resulted in 0 values being selected, \n  consider choosing looser cutoff values"
+          p.all <- ggplot() +
+            annotate("text", x = 4, y = 25, size=6, label = paste0(e_message," \n\n Provided Cutoff's ","\n Fisher Cutoff = ",
+                                                                   Fisher.cutoff,",\n Fisher Cutoff down = ",
+                                                                   Fisher.down.cutoff,", \n Fisher Cutoff up = ", Fisher.up.cutoff )) +
+            theme(axis.title.y = element_blank(),
+                  axis.text.y = element_blank())
 
         }else{
-                out.nd.path <- out.nd.sig %>%
-                        filter(p.adjust < Fisher.cutoff) %>%
-                        pull(Description) %>%
-                        unique
-                out.nd.sig <- out.nd.sig %>%
-                        filter(Description %in% out.nd.path)
-
-                sav.out.nd.sig <- out.nd.sig
-
-                if (nrow(out.nd.sig) == 0 & !inherits(data,"list")) {
-
-                  cat ("\n The cutoff value for Fisher.cutoff resulted in 0 values being selected \n, consider choosing looser cutoff values \n")
-                  e_message <- "The cutoff value for Fisher up/down/non-directional cutoff \n resulted in 0 values being selected, \n consider choosing looser cutoff values"
-                  p.nd <- NULL
-                  p.all <- ggplot() +
-                    annotate("text", x = 4, y = 25, size=6, label = paste0(e_message," \n\n Provided Cutoff's ","\n Fisher Cutoff = ",
-                                                                           Fisher.cutoff,",\n Fisher Cutoff down = ",
-                                                                           Fisher.down.cutoff,", \n Fisher Cutoff up = ", Fisher.up.cutoff )) +
-                    theme(axis.title.y = element_blank(),
-                          axis.text.y = element_blank())
 
 
-                } else {
-
-                  if (inherits(data,"list")){
-
-                    #if this is the case we don't have to look at others
-                    if (nrow(out.nd.sig) == 0) {
-                      #if the second cutoff removes all the rows
-                      cat (" \n The cutoff value for Fisher.cutoff resulted in 0 values being selected, consider choosing looser cutoff values \n")
-
-                      out.nd.sig <- secondCutoffErr(out.nd.sig ,comp.names, TypeQ = 2)
-                      out.nd.sig[out.nd.sig$pvalue == -99999,]['pvalue'] = 1
-                      out.nd.sig[out.nd.sig$p.adjust == -99999,]['p.adjust'] = 1
-                    }
-                    else if (sum(out.nd.sig$ID == "") > 0){
-                      check_0 = unique(out.nd.sig$ID)
-
-                       if (!(length(check_0) == 1 & check_0[1] == "")){
-                        #print ("Changed")
-                        out.nd.sig <- prettyGraphs(out.nd.sig)
-                        out.nd.sig[out.nd.sig$pvalue == -99999,]['pvalue'] = 1
-                        out.nd.sig[out.nd.sig$p.adjust == -99999,]['p.adjust'] = 1
-                      } else if (length(comp.names) != length(unique(out.nd.sig$Comparisons.ID))){
-                        out.nd.sig <- secondCutoffErr(out.nd.sig ,comp.names, TypeQ = 2)
-                        out.nd.sig[out.nd.sig$pvalue == -99999,]['pvalue'] = 1
-                        out.nd.sig[out.nd.sig$p.adjust == -99999,]['p.adjust'] = 1
-                      }
-                    }
-                  }
-
-
-                  #cases where data frame is passed
-                  #most likely for cases where all treatment groups are null
-                  check_1 = unique(out.nd.sig$ID)
-                  check_2 = unique(out.nd.sig$Description)
-                  if (length(check_1) == 1 & check_1[1] == "" & check_2[1] == "" & mean(out.nd.sig$pvalue) == -99999){
-                    out.nd.sig[out.nd.sig$pvalue == -99999,]['pvalue'] = 1
-                    out.nd.sig[out.nd.sig$p.adjust == -99999,]['p.adjust'] = 1
-                  }
-
-                  p.nd <-  ggplot(out.nd.sig,aes(x=Description,y=-log10(p.adjust))) +
-                          geom_bar(stat = "identity" ) +
-                          coord_flip() +
-                          annotate("rect",
-                                   xmin = -Inf,
-                                   xmax = Inf,
-                                   ymin = 0,
-                                   ymax = -log10(0.05),
-                                   fill = "grey",
-                                   alpha = 0.4) +
-                          geom_hline(yintercept= -log10(0.05),color = "grey") +
-                          ylab("-log10(FDR) - Fisher's Test") +
-                          xlab("Pathway") +
-                          theme_minimal()
-
-                  #make sure returned dataset has signals
-                  out.nd.sig <- sav.out.nd.sig[sav.out.nd.sig$ID != "",]
-
-                  if(inherits(data, "list")){
-                          p.nd <- p.nd + facet_grid(.~ Comparisons.ID)
-                  }
-
-                  # below chunk only run when single summary statistics table is provided
-                 if(!inherits(data, "list")){
-
-
-                   if(is.null(out.d.sig)){test_1 <- 0}else{test_1 <- nrow(out.d.sig)}
-                   if(is.null(out.nd.sig)){test_2 <- 0}else{test_2 <- nrow(out.nd.sig)}
-
-
-                   if(!(test_1 > 0 & test_2 > 0)){
-                     e_message <- "The cutoff value for Fisher up/down/non-directional cutoff \n resulted in 0 values being selected, \n  consider choosing looser cutoff values"
-                     p.all <- ggplot() +
-                       annotate("text", x = 4, y = 25, size=6, label = paste0(e_message," \n\n Provided Cutoff's ","\n Fisher Cutoff = ",
-                                                                              Fisher.cutoff,",\n Fisher Cutoff down = ",
-                                                                              Fisher.down.cutoff,", \n Fisher Cutoff up = ", Fisher.up.cutoff )) +
-                       theme(axis.title.y = element_blank(),
-                             axis.text.y = element_blank())
-
-                   }else{
-
-
-                  if(length(unique(out.d.sig$ID)) > length(unique(out.nd.sig$ID))){
-                    cat(paste0("More pathways in directional data than non directional data \n",
-                               "hence using pathways exsting in directinal dataset"))
-                  }else{
-                    cat(paste0("More pathways in non directional data than directional data \n",
-                               "hence using pathways exsting in non directinal dataset"))
-                  }
-
-                  ## non-directional test p value - with matched plot
-                  allID <- unique(c(unique(out.d.sig$ID), unique(out.nd.sig$ID)))
-
-                  mplots <- multiPlot(allID, backup.d.sig, nd.res)
-
-                  if (!length(mplots) == 2){
-                    p.all <- mplots
-                  }else{
-                  dplot <- mplots[[1]]
-                  ndplot <- mplots[[2]]
-
-                  p.all <- gridExtra::arrangeGrob(ndplot,dplot,
-                                                  ncol=2,
-                                                  widths=c(0.75, 0.25)) %>% as_ggplot
-
-                    }
-                  }
-                 }
-                }
+          if(length(unique(out.d.sig$ID)) > length(unique(out.nd.sig$ID))){
+            cat(paste0("More pathways in directional data than non directional data \n",
+                       "hence using pathways exsting in directinal dataset"))
+          }else{
+            cat(paste0("More pathways in non directional data than directional data \n",
+                       "hence using pathways exsting in non directinal dataset"))
           }
 
+          ## non-directional test p value - with matched plot
+          allID <- unique(c(unique(out.d.sig$ID), unique(out.nd.sig$ID)))
 
+          mplots <- multiPlot(allID, backup.d.sig, nd.res)
 
-        if(is.null(plot.save.to)){
-                cat("\n Plot file name not specified, a plot in ggplot object will be returned! \n")
-        }else{
-                ggsave(filename = plot.save.to,
-                       plot = p.all,
-                       dpi = 300,
-                       units = "in",
-                       device='png')
+          if (!length(mplots) == 2){
+            p.all <- mplots
+          }else{
+            dplot <- mplots[[1]]
+            ndplot <- mplots[[2]]
+
+            p.all <- gridExtra::arrangeGrob(ndplot,dplot,
+                                            ncol=2,
+                                            widths=c(0.75, 0.25)) %>% as_ggplot
+
+          }
         }
+      }
+    }
+  }
 
-        if(inherits(data, "list")){
-                return(list(out.d.sig, out.nd.sig, p.d, p.nd))
 
-        }else{
-                return(list(out.d.sig, out.nd.sig, p.d, p.nd, p.all))
-        }
+
+  if(is.null(plot.save.to)){
+    cat("\n Plot file name not specified, a plot in ggplot object will be returned! \n")
+  }else{
+    ggsave(filename = plot.save.to,
+           plot = p.all,
+           dpi = 300,
+           units = "in",
+           device='png')
+  }
+
+  if(inherits(data, "list")){
+    return(list(out.d.sig, out.nd.sig, p.d, p.nd))
+
+  }else{
+    return(list(out.d.sig, out.nd.sig, p.d, p.nd, p.all))
+  }
 
 }
-
 
 
 
@@ -439,6 +439,7 @@ secondCutoffErr <- function(df,comp.names, TypeQ = 1){
 #' @return Returns a dataframe.
 #'
 #' @importFrom dplyr %>% filter
+#' @importFrom rlang .data
 #'
 #' @references Xingpeng Li & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 #'
@@ -453,7 +454,7 @@ prettyGraphs <- function(vizdf, ...){
   unique_ID = g2$ID
   newdf = data.frame()
   for (i in g1$Comparisons.ID){
-    temp = g1 %>% filter(Comparisons.ID == i)
+    temp = g1 %>% filter(.data$Comparisons.ID == i)
     temp = temp[rep(seq_len(nrow(temp)), each = length(unique_ID)),]
     temp[["Description"]] = unique_desc
     newdf = rbind(newdf,temp)
@@ -476,6 +477,7 @@ prettyGraphs <- function(vizdf, ...){
 #' @return Returns ggplot.
 #'
 #' @importFrom dplyr %>% filter mutate
+#' @importFrom rlang .data
 #' @importFrom ggplot2 ggsave ggplot coord_flip geom_bar geom_hline annotate scale_fill_identity xlab ylab theme theme_minimal scale_fill_identity element_blank
 #'
 #' @references Xingpeng Li & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
@@ -483,7 +485,6 @@ prettyGraphs <- function(vizdf, ...){
 #' @details Multi plot is for directional and non-directional plots, when one of the plots doesn't contain observations.
 #'
 #'
-
 
 
 multiPlot <- function(allID, backup.d.sig, nd.res, ...){
@@ -496,10 +497,10 @@ multiPlot <- function(allID, backup.d.sig, nd.res, ...){
   allID_ = allID[allID %in% nd.res_$ID]
 
   matched.d.sig <- backup.d.sig_ %>%
-    filter(ID %in% allID_)
+    filter(.data$ID %in% allID_)
 
   matched.nd.sig <- nd.res_ %>%
-    filter(ID %in% allID_)  %>%
+    filter(.data$ID %in% allID_)  %>%
     mutate(Description = factor(matched.d.sig$Description,levels = matched.d.sig$Description))
 
   #if allid_ is empty raise this error,
@@ -514,29 +515,29 @@ multiPlot <- function(allID, backup.d.sig, nd.res, ...){
     return (nullplot)
 
   }else{
-  ndplot <- ggplot(matched.nd.sig,aes(x=as.factor(Description),y=-log10(p.adjust))) +
-    geom_bar(stat = "identity" ) +
-    coord_flip() +
-    annotate("rect",xmin = -Inf,xmax = Inf,ymin = 0,ymax = -log10(0.05),fill = "grey", alpha = 0.4) +
-    geom_hline(yintercept= -log10(0.05),color = "grey") +
-    ylab("-log10(FDR)") +
-    xlab("Pathway") +
-    theme(axis.title.y = element_blank(),
-          axis.text.y = element_blank())
+    ndplot <- ggplot(matched.nd.sig,aes(x=as.factor(.data$Description),y=-log10(.data$p.adjust))) +
+      geom_bar(stat = "identity" ) +
+      coord_flip() +
+      annotate("rect",xmin = -Inf,xmax = Inf,ymin = 0,ymax = -log10(0.05),fill = "grey", alpha = 0.4) +
+      geom_hline(yintercept= -log10(0.05),color = "grey") +
+      ylab("-log10(FDR)") +
+      xlab("Pathway") +
+      theme(axis.title.y = element_blank(),
+            axis.text.y = element_blank())
 
 
-  dplot <- ggplot(matched.d.sig, aes(x = Description, y= log10.padj,fill=fil.cor )) +
-    geom_bar(stat = "identity" ) +
-    coord_flip() +
-    geom_hline(yintercept=-log10(0.05), linetype="dashed",color = "grey") +
-    geom_hline(yintercept=log10(0.05), linetype="dashed",color = "grey") +
-    geom_hline(yintercept= 0,color = "black") +
-    annotate("rect",xmin = -Inf,xmax = Inf,ymin =-log10(0.05),ymax = log10(0.05),fill = "grey", alpha = 0.4) +
-    scale_fill_identity() +
-    xlab("Pathway") +
-    ylab("-log10(FDR)")
+    dplot <- ggplot(matched.d.sig, aes(x = .data$Description, y= .data$log10.padj,fill=.data$fil.cor )) +
+      geom_bar(stat = "identity" ) +
+      coord_flip() +
+      geom_hline(yintercept=-log10(0.05), linetype="dashed",color = "grey") +
+      geom_hline(yintercept=log10(0.05), linetype="dashed",color = "grey") +
+      geom_hline(yintercept= 0,color = "black") +
+      annotate("rect",xmin = -Inf,xmax = Inf,ymin =-log10(0.05),ymax = log10(0.05),fill = "grey", alpha = 0.4) +
+      scale_fill_identity() +
+      xlab("Pathway") +
+      ylab("-log10(FDR)")
 
-  return (list(ndplot,dplot))
+    return (list(ndplot,dplot))
 
   }
 }
@@ -562,6 +563,7 @@ multiPlot <- function(allID, backup.d.sig, nd.res, ...){
 #' @importFrom dplyr %>% select pull as_tibble filter mutate left_join bind_rows
 #' @import org.Hs.eg.db
 #' @importFrom purrr set_names map2 map
+#' @importFrom rlang .data
 #' @importFrom msigdbr msigdbr
 #' @param ... pass over parameters
 #'
@@ -581,18 +583,18 @@ dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
         clusterProfiler::read.gmt()
 
       names(gene.dl)[1] <- "ont"
-      gene.dl <- gene.dl %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
+      gene.dl <- gene.dl %>% tidyr::separate(.data$ont, c("name","version","wpid","org"), "%")
 
       #from the overall data, extract pathways id and gene number
-      wpid2gene <- gene.dl %>% dplyr::select(wpid,gene) #TERM2GENE
+      wpid2gene <- gene.dl %>% dplyr::select(.data$wpid,.data$gene) #TERM2GENE
 
       #for the same pathways id's get the full descriptive name
-      wpid2name <- gene.dl %>% dplyr::select(wpid,name) #TERM2NAME
+      wpid2name <- gene.dl %>% dplyr::select(.data$wpid,.data$name) #TERM2NAME
 
     }else if(pathway.db == "KEGG"){
       #data(GSVAdata::c2BroadSets)
 
-      c2Bsets <- c2BroadSets
+      c2Bsets <- RVA::c2BroadSets
 
       KEGG <- c2Bsets[c(grep("^KEGG", names(c2Bsets)))]
       gene.dl <- map(KEGG, bsetfunc) %>% bind_rows() %>% set_names(c("gs_name","entrez_gene"))
@@ -606,7 +608,7 @@ dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
 
       #data(c2BroadSets)
 
-      c2Bsets <- c2BroadSets
+      c2Bsets <- RVA::c2BroadSets
 
       REAC <- c2Bsets[c(grep("^REACTOME", names(c2Bsets)))]
       gene.dl <- map(REAC, bsetfunc) %>% bind_rows() %>% set_names(c("gs_name","entrez_gene"))
@@ -619,7 +621,7 @@ dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
     }else if (pathway.db == "Hallmark"){
 
       gene.dl <- msigdbr::msigdbr(species = "Homo sapiens",category = c("H")) %>%
-        dplyr::select(gs_name, entrez_gene)
+        dplyr::select(.data$gs_name, .data$entrez_gene)
 
       #from the overall data, extract pathways id and gene number
       wpid2gene <- gene.dl
@@ -631,13 +633,13 @@ dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
       #throw warning about timestamp
       #gene.dl <- clusterProfiler::read.gmt('wikipathways-20200710-gmt-Homo_sapiens.gmt')
       #gene.dl <- gene.dl %>% tidyr::separate(ont, c("name","version","wpid","org"), "%")
-      gene.dl <- wpA2020
+      gene.dl <- RVA::wpA2020
 
       #from the overall data, extract pathways id and gene number
-      wpid2gene <- gene.dl %>% dplyr::select(wpid,gene) #TERM2GENE
+      wpid2gene <- gene.dl %>% dplyr::select(.data$wpid,.data$gene) #TERM2GENE
 
       #for the same pathways id's get the full descriptive name
-      wpid2name <- gene.dl %>% dplyr::select(wpid,name) #TERM2NAME
+      wpid2name <- gene.dl %>% dplyr::select(.data$wpid,.data$name) #TERM2NAME
     }
   }
 
@@ -647,8 +649,8 @@ dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
 
       if(nrow(customized.pathways) < 100){
         cat(paste0("\n\n!! Customized pathway information alone will be used for analysis without any additional database,",
-                       " if accumulated number of genes in pathway is too small compared to all genes provided in summary statistics table,",
-                       " the result may not be applicable !!\n\n"))
+                   " if accumulated number of genes in pathway is too small compared to all genes provided in summary statistics table,",
+                   " the result may not be applicable !!\n\n"))
       }
 
       wpid2gene <- customized.pathways
@@ -662,7 +664,7 @@ dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
         customized.pathways$gene <- as.character(customized.pathways$gene)
 
         wpid2gene <- wpid2gene %>% bind_rows(customized.pathways)
-        wpid2name <- wpid2name %>% bind_rows(customized.pathways %>% select(wpid = wpid, name = wpid))
+        wpid2name <- wpid2name %>% bind_rows(customized.pathways %>% select(wpid = .data$wpid, name = .data$wpid))
       }else{
         wpid2gene <- wpid2gene %>% bind_rows(customized.pathways)
       }
@@ -696,6 +698,7 @@ dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
 #' @importFrom dplyr %>% as_tibble filter mutate left_join bind_rows select pull
 #' @import org.Hs.eg.db
 #' @importFrom stringr word
+#' @importFrom rlang .data
 #'
 #' @references Xingpeng Li & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 #'
@@ -726,14 +729,14 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
       bkgd.genes.entrez <- rownames(data) %>%
         word(sep = '\\.') %>%
         clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db) %>%
-        pull(ENTREZID)
+        pull(.data$ENTREZID)
 
       data.subset <- data[,c(FCflag, FDRflag)]
       colnames(data.subset) <- c("FC","FDR")
 
       data <- data.subset %>%
         as_tibble(rownames = "gene") %>%
-        filter(abs(FC) >= log2(FC.cutoff), FDR <= FDR.cutoff) #apply filter
+        filter(abs(.data$FC) >= log2(FC.cutoff), .data$FDR <= FDR.cutoff) #apply filter
 
       #processing pathway analysis
       if(nrow(data) < 10){
@@ -741,13 +744,13 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
       }
 
       # 1. Get Enrichment test of increase
-      if(nrow(filter(data,FC >0)) != 0){
+      if(nrow(filter(data,.data$FC >0)) != 0){
 
         #if this throws an error replacing it with custom error message
         tryCatch({
           genes.entrez.up <- data %>%
-            filter(FC > 0) %>%
-            pull(gene) %>%
+            filter(.data$FC > 0) %>%
+            pull(.data$gene) %>%
             word(sep = '\\.') %>%
             clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db)
 
@@ -777,13 +780,13 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
 
 
       # 2. Get Enrichment test of decrease
-      if(nrow(filter(data,FC < 0)) != 0){
+      if(nrow(filter(data,.data$FC < 0)) != 0){
 
         #If an error is found throw a custom error message
         tryCatch({
           genes.entrez.dn <- data %>%
-            filter(FC < 0) %>%
-            pull(gene) %>%
+            filter(.data$FC < 0) %>%
+            pull(.data$gene) %>%
             word(sep = '\\.') %>%
             clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db)
 
@@ -814,38 +817,38 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
       if(nrow(res.up) != 0 & nrow(res.dn) != 0){
         res.up <- ewp.up@result %>%
           as_tibble %>%
-          mutate(directional.p.adjust = p.adjust)
+          mutate(directional.p.adjust = .data$p.adjust)
         res.dn <- ewp.dn@result %>%
           as_tibble %>%
-          mutate(directional.p.adjust = -p.adjust)
+          mutate(directional.p.adjust = -.data$p.adjust)
         #identify the duplicated pathways have both up and down information and pick the one with smaller adj.p as final direction
         dup.up <- res.up %>%
-          filter(ID %in% intersect(res.dn$ID,res.up$ID)) %>%
-          dplyr::select(ID,directional.p.adjust)
+          filter(.data$ID %in% intersect(res.dn$ID,res.up$ID)) %>%
+          dplyr::select(.data$ID,.data$directional.p.adjust)
 
         reassign.dup <- res.dn %>%
-          filter(ID %in% intersect(res.dn$ID,res.up$ID)) %>%
+          filter(.data$ID %in% intersect(res.dn$ID,res.up$ID)) %>%
           left_join(dup.up,by="ID") %>%
-          mutate(directional.p.adjust = ifelse(abs(directional.p.adjust.x) < abs(directional.p.adjust.y),
-                                               directional.p.adjust.x,
-                                               directional.p.adjust.y)) %>% # use the smaller p value to assign direction
-          dplyr::select(-directional.p.adjust.x,-directional.p.adjust.y)
+          mutate(directional.p.adjust = ifelse(abs(.data$directional.p.adjust.x) < abs(.data$directional.p.adjust.y),
+                                               .data$directional.p.adjust.x,
+                                               .data$directional.p.adjust.y)) %>% # use the smaller p value to assign direction
+          dplyr::select(-.data$directional.p.adjust.x,-.data$directional.p.adjust.y)
 
         d.res <- res.dn %>%
-          filter(!(ID %in% reassign.dup$ID)) %>%
-          bind_rows(reassign.dup, filter(res.up,!(ID %in% reassign.dup$ID))) %>%
-          dplyr::select(ID, Description,directional.p.adjust) %>%
-          mutate(direction = ifelse(directional.p.adjust > 0,"up","down"))
+          filter(!(.data$ID %in% reassign.dup$ID)) %>%
+          bind_rows(reassign.dup, filter(res.up,!(.data$ID %in% reassign.dup$ID))) %>%
+          dplyr::select(.data$ID, .data$Description,.data$directional.p.adjust) %>%
+          mutate(direction = ifelse(.data$directional.p.adjust > 0,"up","down"))
       }else if(nrow(res.up) == 0 & nrow(res.dn) != 0){
         d.res <- res.dn %>%
           as_tibble %>%
-          mutate(directional.p.adjust = -p.adjust) %>%
-          mutate(direction = ifelse(directional.p.adjust > 0,"up","down"))
+          mutate(directional.p.adjust = -.data$p.adjust) %>%
+          mutate(direction = ifelse(.data$directional.p.adjust > 0,"up","down"))
       }else if(nrow(res.up) != 0 & nrow(res.dn) == 0){
         d.res <- res.up %>%
           as_tibble %>%
-          mutate(directional.p.adjust = p.adjust) %>%
-          mutate(direction = ifelse(directional.p.adjust > 0,"up","down"))
+          mutate(directional.p.adjust = .data$p.adjust) %>%
+          mutate(direction = ifelse(.data$directional.p.adjust > 0,"up","down"))
       }else{
         d.res <- NULL
         cat("\n No directional enriched pathway has been detected. \n")
@@ -855,7 +858,7 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
       #3.  Get Enrichment test without direction
       if(nrow(data)!=0){
         genes.entrez <- data %>%
-          pull(gene) %>%
+          pull(.data$gene) %>%
           word(sep = '\\.') %>%
           clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db)
 
@@ -874,7 +877,7 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
           nd.res <- nullreturn(IS.list = IS.list , type=2)
         }else{
           nd.res <- ewp@result %>%
-            dplyr::select(ID, Description, pvalue, p.adjust)
+            dplyr::select(.data$ID, .data$Description, .data$pvalue, .data$p.adjust)
 
         }
 
@@ -884,9 +887,9 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
           out.d.sig <- nullreturn(IS.list = IS.list,type=1)
         }else{
           out.d.sig <- d.res %>%
-            mutate(log10.padj = ifelse(direction == "up", -log10(abs(directional.p.adjust)), log10(abs(directional.p.adjust)))) %>%
-            mutate(fil.cor = ifelse(direction == "up", "#E31A1C", "#1F78B4")) %>%
-            mutate(Description = factor(Description,levels = Description))
+            mutate(log10.padj = ifelse(.data$direction == "up", -log10(abs(.data$directional.p.adjust)), log10(abs(.data$directional.p.adjust)))) %>%
+            mutate(fil.cor = ifelse(.data$direction == "up", "#E31A1C", "#1F78B4")) %>%
+            mutate(Description = factor(.data$Description,levels = .data$Description))
         }
 
 
@@ -894,7 +897,7 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
           out.nd.sig <- nullreturn(IS.list = IS.list,type=2)
         }else{
           out.nd.sig <- nd.res %>%
-            mutate(Description = factor(Description,levels = Description))
+            mutate(Description = factor(.data$Description,levels = .data$Description))
         }
 
       }else{

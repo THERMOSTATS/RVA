@@ -5,8 +5,8 @@
 \title{Plot Heatmap From Raw CPM}
 \usage{
 plot_heatmap.expr(
-  data = count,
-  annot = meta,
+  data = ~count,
+  annot = ~meta,
   sample.id = "sample_id",
   annot.flags = c("day", "Treatment", "tissue"),
   ct.table.id.type = "ENSEMBL",

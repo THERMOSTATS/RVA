@@ -97,6 +97,8 @@ plot_heatmap.cfb <- function(cpm,
 #' @importFrom circlize colorRamp2
 #' @importFrom data.table as.data.table dcast.data.table melt.data.table dcast melt
 #' @importFrom grid grid.text gpar
+#' @importFrom rlang .data
+#' @importFrom grDevices dev.off png
 #'
 #' @export plot_heatmap.expr
 #'
@@ -114,8 +116,8 @@ plot_heatmap.cfb <- function(cpm,
 
 
 
-plot_heatmap.expr <- function(data = count,
-                              annot = meta,
+plot_heatmap.expr <- function(data = ~count,
+                              annot = ~meta,
                               sample.id = "sample_id",
                               annot.flags = c("day", "Treatment", "tissue"),
                               ct.table.id.type = "ENSEMBL",
@@ -131,141 +133,141 @@ plot_heatmap.expr <- function(data = count,
 
   options(warn=-1)
   suppressWarnings({
-  suppressMessages({
+    suppressMessages({
 
-  validate.geneid.flag(ct.table.id.type, "ct.table.id.type")
-  validate.geneid.flag(gene.id.type, "gene.id.type")
-  validate.flag(fill, "fill", c("CFB", "CPM"))
-  validate.flag(input.type, "input.type", c("count", "cpm"))
-  validate.annot(data, annot, annot.flags, sample.id, fill, baseline.flag, baseline.val)
-  validate.data(data)
-  validate.data.annot(data, annot, sample.id)
+      validate.geneid.flag(ct.table.id.type, "ct.table.id.type")
+      validate.geneid.flag(gene.id.type, "gene.id.type")
+      validate.flag(fill, "fill", c("CFB", "CPM"))
+      validate.flag(input.type, "input.type", c("count", "cpm"))
+      validate.annot(data, annot, annot.flags, sample.id, fill, baseline.flag, baseline.val)
+      validate.data(data)
+      validate.data.annot(data, annot, sample.id)
 
-  user.title = title
+      user.title = title
 
-  if(input.type == "count") {
-      data <- cpm(data, log = TRUE) %>%
+      if(input.type == "count") {
+        data <- cpm(data, log = TRUE) %>%
           as_tibble(rownames = "geneid")
-  } else {
-      data <- data %>%
+      } else {
+        data <- data %>%
           as_tibble(rownames = "geneid")
-  }
+      }
 
-  data <- reformat.ensembl(data, ct.table.id.type)
+      data <- reformat.ensembl(data, ct.table.id.type)
 
-  if(!is.null(gene.names)) {
-    gene.names <- transform.geneid(gene.names,
-                                   from = gene.id.type,
-                                   to = ct.table.id.type)
-    data <- data %>% filter(geneid %in% gene.names)
-  }
+      if(!is.null(gene.names)) {
+        gene.names <- transform.geneid(gene.names,
+                                       from = gene.id.type,
+                                       to = ct.table.id.type)
+        data <- data %>% filter(.data$geneid %in% gene.names)
+      }
 
-  long <- data %>%
-    as.data.table %>%
-    melt(id.vars = "geneid",
-         variable.name = "sample_id",
-         value.name = "cpm") %>%
-    merge(annot, by = "sample_id") %>%
-    select_at(vars(c("geneid", "subject_id", annot.flags, "cpm")))
+      long <- data %>%
+        as.data.table %>%
+        melt(id.vars = "geneid",
+             variable.name = "sample_id",
+             value.name = "cpm") %>%
+        merge(annot, by = "sample_id") %>%
+        select_at(vars(c("geneid", "subject_id", annot.flags, "cpm")))
 
-  long$cpm <- as.numeric(long$cpm)
+      long$cpm <- as.numeric(long$cpm)
 
-  if(fill == "CFB") {
-    long <- calc.cfb(long, annot, baseline.flag, baseline.val)
-    fill.var <- "cfb"
-  } else if (fill == "CPM") {
-    long <- long %>%
-      filter(!is.na(cpm))
-    fill.var <- "cpm"
-  }
+      if(fill == "CFB") {
+        long <- calc.cfb(long, annot, baseline.flag, baseline.val)
+        fill.var <- "cfb"
+      } else if (fill == "CPM") {
+        long <- long %>%
+          filter(!is.na(cpm))
+        fill.var <- "cpm"
+      }
 
-  long <- long %>%
-    as.data.table %>%
-    group_by_at(vars(c("geneid", annot.flags))) %>%
-    dplyr::summarize(!!fill.var := mean(UQ(as.name(fill.var)))) %>%
-    ungroup()
+      long <- long %>%
+        as.data.table %>%
+        group_by_at(vars(c("geneid", annot.flags))) %>%
+        dplyr::summarize(!!fill.var := mean(UQ(as.name(fill.var)))) %>%
+        ungroup()
 
-  if(is.null(gene.names)) {
-    gene.names <- long %>%
-      group_by(geneid)
-    if(fill == "CFB") {
-      gene.names <- gene.names %>%
-        dplyr::summarize(cfb = max(abs(cfb)))
-    }
-    if(fill == "CPM") {
-      gene.names <- gene.names %>%
-        dplyr::summarize(cpm = max(cpm))
-    }
-    gene.names <- gene.names %>%
-      ungroup() %>%
-      arrange_at(fill.var, dplyr::desc) %>%
-      .$geneid %>%
-      .[1:gene.count]
+      if(is.null(gene.names)) {
+        gene.names <- long %>%
+          group_by(.data$geneid)
+        if(fill == "CFB") {
+          gene.names <- gene.names %>%
+            dplyr::summarize(cfb = max(abs(.data$cfb)))
+        }
+        if(fill == "CPM") {
+          gene.names <- gene.names %>%
+            dplyr::summarize(cpm = max(cpm))
+        }
+        gene.names <- gene.names %>%
+          ungroup() %>%
+          arrange_at(fill.var, dplyr::desc) %>%
+          .$geneid %>%
+          .[1:gene.count]
 
-    long <- long %>%
-      filter(geneid %in% gene.names)
-  }
+        long <- long %>%
+          filter(.data$geneid %in% gene.names)
+      }
 
-  annot <- long %>%
-    select_at(vars(annot.flags)) %>%
-    unique %>%
-    as.data.frame
+      annot <- long %>%
+        select_at(vars(annot.flags)) %>%
+        unique %>%
+        as.data.frame
 
-  wide.df <- long %>%
-    as.data.table %>%
-    dcast(geneid ~ ..., value.var = fill.var)
+      wide.df <- long %>%
+        as.data.table %>%
+        dcast(geneid ~ ..., value.var = fill.var)
 
-  wide <- wide.df %>%
-    dplyr::select(-geneid) %>%
-    as.matrix
+      wide <- wide.df %>%
+        dplyr::select(-.data$geneid) %>%
+        as.matrix
 
-  #new code - if cpm then do z-score transofrm
-  if (fill == "CPM"){
-    wide = t(scale(t(wide)))
-  }
-  #change anoot flags into factors
-  annot[,annot.flags] = data.frame(lapply(annot[,annot.flags], as.factor))
+      #new code - if cpm then do z-score transofrm
+      if (fill == "CPM"){
+        wide = t(scale(t(wide)))
+      }
+      #change anoot flags into factors
+      annot[,annot.flags] = data.frame(lapply(annot[,annot.flags], as.factor))
 
-  #new code - change color scale to adjust for z - score
-  range_cpm =c(wide)
+      #new code - change color scale to adjust for z - score
+      range_cpm =c(wide)
 
-  colors <- switch(fill,
-                   CFB = colorRamp2(c(-2, 0, 2), c("blue", "grey", "red")),
-                   CPM = get.cpm.colors(range_cpm))# use to be long$cpm inside
-  title <- switch(fill,
-                  CFB = "CFB (log2CPM)",# originally "log2(CFB)",
-                  CPM = "z-score (log2CPM)") # use to be log2 (CPM)
-  colnames(wide) <- NULL
-  gene.display <- transform.geneid(wide.df$geneid,
-                                     from = ct.table.id.type,
-                                     to = "SYMBOL")
-  ctid <- gene.display
-  colnames(ctid)[1] <- "FROM"
-  ctid <- ctid[!duplicated(ctid$FROM), ] #if there are multiple symbols, pick the first one
-  gene.display <- ctid %>% left_join(ctid)
-  colnames(gene.display)[1] = ct.table.id.type
+      colors <- switch(fill,
+                       CFB = colorRamp2(c(-2, 0, 2), c("blue", "grey", "red")),
+                       CPM = get.cpm.colors(range_cpm))# use to be long$cpm inside
+      title <- switch(fill,
+                      CFB = "CFB (log2CPM)",# originally "log2(CFB)",
+                      CPM = "z-score (log2CPM)") # use to be log2 (CPM)
+      colnames(wide) <- NULL
+      gene.display <- transform.geneid(wide.df$geneid,
+                                       from = ct.table.id.type,
+                                       to = "SYMBOL")
+      ctid <- gene.display
+      colnames(ctid)[1] <- "FROM"
+      ctid <- ctid[!duplicated(ctid$FROM), ] #if there are multiple symbols, pick the first one
+      gene.display <- ctid %>% left_join(ctid)
+      colnames(gene.display)[1] = ct.table.id.type
 
-  rownames(wide) <- gene.display[,2]
-  set.seed(200) #fix the color scheme
-  gp <- Heatmap(wide, col = colors, name = "Heatmap",
-                na_col = "black",
-                cluster_columns = F,
-                heatmap_legend_param = list(title = title),
-                column_title = user.title,
-                row_title = "Genes",
-                bottom_annotation = columnAnnotation(df=annot))
-  gp
-  if(is.null(plot.save.to)){
-    print("Plot file name not specified, a plot in Heatmap object will be output to the first object of the return list!")
-  }else{
-    png(filename = plot.save.to)
-    print(gp)
-    dev.off()
-  }
-  #wide.df
-  return(list(gp = gp,
-              df.sub = wide.df))
-  })
+      rownames(wide) <- gene.display[,2]
+      set.seed(200) #fix the color scheme
+      gp <- Heatmap(wide, col = colors, name = "Heatmap",
+                    na_col = "black",
+                    cluster_columns = F,
+                    heatmap_legend_param = list(title = title),
+                    column_title = user.title,
+                    row_title = "Genes",
+                    bottom_annotation = columnAnnotation(df=annot))
+      gp
+      if(is.null(plot.save.to)){
+        print("Plot file name not specified, a plot in Heatmap object will be output to the first object of the return list!")
+      }else{
+        grDevices::png(filename = plot.save.to)
+        print(gp)
+        grDevices::dev.off()
+      }
+      #wide.df
+      return(list(gp = gp,
+                  df.sub = wide.df))
+    })
   })
 }
 
@@ -293,7 +295,7 @@ get.cpm.colors <- function(data) {
 #'
 reformat.ensembl <- function(logcpm, ct.table.id.type){
   if(ct.table.id.type == "ENSEMBL"){
-    logcpm <- logcpm %>% mutate(geneid = word(geneid, sep = '\\.'))}
+    logcpm <- logcpm %>% mutate(geneid = word(.data$geneid, sep = '\\.'))}
   return(logcpm)
 }
 
@@ -311,8 +313,8 @@ reformat.ensembl <- function(logcpm, ct.table.id.type){
 #' @importFrom clusterProfiler bitr
 #'
 transform.geneid <- function(gene.names,
-                             from = gene.id.type,
-                             to = ct.table.id.type){
+                             from = ~gene.id.type,
+                             to = ~ct.table.id.type){
   out <- gene.names %>%
     clusterProfiler::bitr(fromType = from, toType = to,OrgDb = org.Hs.eg.db)
   return(out)
@@ -338,6 +340,7 @@ transform.geneid <- function(gene.names,
 #' @importFrom tidyr unite separate
 #' @importFrom data.table dcast melt
 #' @importFrom rlang UQ
+#' @importFrom rlang .data
 #'
 calc.cfb <- function(data, annot, baseline.flag, baseline.val) {
   cast.formula <- paste0("... ~ ", paste0(baseline.flag, collapse = "+"))
@@ -352,11 +355,11 @@ calc.cfb <- function(data, annot, baseline.flag, baseline.val) {
     dcast(cast.formula, value.var = "cpm", fun.aggregate = mean) %>%
     melt(value.name = "cpm", variable.name = "variable",
          measure.vars = relevant.vars) %>%
-    filter(!is.na(UQ(as.name(baseline.var))) & !is.na(variable)) %>%
-    separate(variable, into = baseline.flag, sep = "_") %>%
+    filter(!is.na(UQ(as.name(baseline.var))) & !is.na(.data$variable)) %>%
+    separate(.data$variable, into = baseline.flag, sep = "_") %>%
     dplyr::mutate(cpm = as.numeric(cpm),
                   !!baseline.var := as.numeric(UQ(as.name(baseline.var)))) %>%
     dplyr::mutate(cfb = cpm-UQ(as.name(baseline.var))) %>%
-    filter(!is.na(cfb)) %>%
+    filter(!is.na(.data$cfb)) %>%
     select_at(vars(-c(baseline.var, "cpm")))
 }

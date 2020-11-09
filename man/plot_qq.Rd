@@ -17,7 +17,7 @@ plot_qq(
 
 \item{comp.names}{A character vector that contains the comparison names which correspond to the same order as \code{data}. No default.}
 
-\item{p.value.flag}{The column name of \code{P-VALUE} (NOT FDR, NO multiplicity adjusted p-value) in the summary statistics table. Default = "p.value.flag".}
+\item{p.value.flag}{The column name of \code{P-VALUE} (NOT FDR, NO multiplicity adjusted p-value) in the summary statistics table. Default = "P.Value".}
 
 \item{ci}{Confidence interval. Default = 0.95}
 
