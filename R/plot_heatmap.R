@@ -84,6 +84,7 @@ plot_heatmap.cfb <- function(cpm,
 #'
 #'
 #' @importFrom dplyr left_join mutate filter select_at vars group_by_at ungroup group_by select summarize arrange_at
+#' @importFrom purrr flatten_chr
 #' @import edgeR
 #' @importFrom edgeR cpm
 #' @import tidyr
@@ -198,11 +199,19 @@ plot_heatmap.expr <- function(data = ~count,
           gene.names <- gene.names %>%
             dplyr::summarize(cpm = max(cpm))
         }
+
+        #Old version
+        #gene.names <- gene.names %>%
+        #  ungroup() %>%
+        #  arrange_at(fill.var, dplyr::desc) %>%
+        #  .$geneid %>%
+        #  .[1:gene.count]
+
+        #new version
         gene.names <- gene.names %>%
           ungroup() %>%
-          arrange_at(fill.var, dplyr::desc) %>%
-          .$geneid %>%
-          .[1:gene.count]
+          arrange_at(fill.var, dplyr::desc) %>% select("geneid") %>% flatten_chr
+        gene.names <- gene.names[1:gene.count]
 
         long <- long %>%
           filter(.data$geneid %in% gene.names)
@@ -335,8 +344,9 @@ transform.geneid <- function(gene.names,
 #'         same length as `baseline.flag`, and the value at each index must
 #'         represent a value from the column given by the corresponding index
 #'         in `baseline.flag`.
-#' @importFrom dplyr %>% mutate filter select_at
+#' @importFrom dplyr %>% mutate filter select_at select
 #' @importFrom stringr str_flatten
+#' @importFrom purrr flatten_chr
 #' @importFrom tidyr unite separate
 #' @importFrom data.table dcast melt
 #' @importFrom rlang UQ
@@ -344,10 +354,18 @@ transform.geneid <- function(gene.names,
 #'
 calc.cfb <- function(data, annot, baseline.flag, baseline.val) {
   cast.formula <- paste0("... ~ ", paste0(baseline.flag, collapse = "+"))
+
+  #new version
   relevant.vars <- annot %>%
     unite(col = "var", baseline.flag, remove = F) %>%
-    .$var %>%
-    unique
+    select("var") %>% flatten_chr %>% unique
+
+  #old version
+  #relevant.vars <- annot %>%
+  #  unite(col = "var", baseline.flag, remove = F) %>%
+  #  .$var %>%
+  #  unique
+
   baseline.var <- str_flatten(baseline.val, collapse = "_")
   relevant.vars <- relevant.vars[relevant.vars != baseline.var]
 
