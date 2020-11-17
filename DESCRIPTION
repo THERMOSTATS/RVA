@@ -1,0 +1,47 @@
+Package: RVA
+Title: RNAseq Visualization Automation
+Version: 0.0.1
+Authors@R: 
+    person(given = "Xingpeng",
+           family = "Li",
+           role = c("aut", "cre"),
+           email = "xingpeng.li@pfizer.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Automate downstream visualization & pathway analysis in RNAseq analysis.
+Maintainer: Xingpeng Li <xingpeng.li@pfizer.com>
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+biocViews:
+Imports:
+  GSVAdata (>= 1.22.0),
+  clusterProfiler (>= 3.14.3),
+  data.table (>= 1.12.8),
+  edgeR (>= 3.28.1),
+  org.Hs.eg.db (>= 3.10.0),
+  ComplexHeatmap (>= 2.2.0),
+  GSEABase (>= 1.48.0),
+  circlize (>= 0.4.10),
+  dplyr (>= 1.0.0),
+  ggplot2 (>= 3.3.2),
+  ggpubr (>= 0.4.0),
+  grid (>= 3.6.1),
+  gridExtra (>= 2.3),
+  haven (>= 2.3.1),
+  msigdbr (>= 7.1.1),
+  plotly (>= 4.9.2.1),
+  purrr (>= 0.3.4),
+  rWikiPathways (>= 1.6.1),
+  stringr (>= 1.4.0),
+  tibble,
+  tidyr (>= 1.1.0),
+  XML,
+  rlang
+Depends: 
+    R (>= 2.10)
