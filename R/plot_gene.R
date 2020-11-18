@@ -29,6 +29,7 @@
 #' @import org.Hs.eg.db
 #' @importFrom ggplot2 facet_wrap ggsave ggplot aes_ geom_boxplot geom_point scale_color_brewer theme_classic
 #' @importFrom clusterProfiler bitr
+#' @importFrom rlang .data
 #'
 #' @export plot_gene
 #'
@@ -39,13 +40,12 @@
 #'
 #' @examples
 #' plot_gene(data = count_table,
-#' anno = sample_annotation,
-#' plot.save.to = "~/gene_plot.png")
+#' anno = sample_annotation)
 #'
 
 
-plot_gene <- function(data = dat,
-                      anno = meta,
+plot_gene <- function(data = ~dat,
+                      anno = ~meta,
                       gene.names = c("AAAS", "A2ML1", "AADACL3"),
                       ct.table.id.type = "ENSEMBL",
                       gene.id.type = "SYMBOL",
@@ -89,12 +89,12 @@ plot_gene <- function(data = dat,
 
         ##merge with meta data and clean up for ggplot
         pd.dat <- logcpm %>%
-                filter(geneid %in% gene.names) %>%
-                pivot_longer(-geneid,
+                filter(.data$geneid %in% gene.names) %>%
+                pivot_longer(-.data$geneid,
                              values_to = "exprs",
                              names_to = sample.id) %>%
                 left_join(anno, by = sample.id) %>%
-                mutate(exprs = as.numeric(exprs)) %>%
+                mutate(exprs = as.numeric(.data$exprs)) %>%
                 mutate(!!time := as.factor(UQ(as.name(time))))
 
         #convert the gene names back to gene symbol for the plot
@@ -138,7 +138,7 @@ plot_gene <- function(data = dat,
                        device='png')
         }
         pgene
-        pd.dat <- pd.dat %>% dplyr::select(-new.geneid)
+        pd.dat <- pd.dat %>% dplyr::select(-.data$new.geneid)
         return(list(pgene, pd.dat))
 
         })
@@ -156,7 +156,7 @@ plot_gene <- function(data = dat,
 
 reformat.ensembl <- function(logcpm, ct.table.id.type){
         if(ct.table.id.type == "ENSEMBL"){
-                logcpm <- logcpm %>% mutate(geneid = word(geneid, sep = '\\.'))}
+                logcpm <- logcpm %>% mutate(geneid = word(.data$geneid, sep = '\\.'))}
         return(logcpm)
 }
 
@@ -175,8 +175,8 @@ reformat.ensembl <- function(logcpm, ct.table.id.type){
 #' @importFrom clusterProfiler bitr
 #'
 transform.geneid <- function(gene.names,
-                             from = gene.id.type,
-                             to = ct.table.id.type){
+                             from = ~gene.id.type,
+                             to = ~ct.table.id.type){
         out <- gene.names %>%
                 clusterProfiler::bitr(fromType = from, toType = to,OrgDb = org.Hs.eg.db)
         return(out)

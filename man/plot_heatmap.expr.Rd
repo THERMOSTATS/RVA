@@ -5,8 +5,8 @@
 \title{Plot Heatmap From Raw CPM}
 \usage{
 plot_heatmap.expr(
-  data = count,
-  annot = meta,
+  data = ~count,
+  annot = ~meta,
   sample.id = "sample_id",
   annot.flags = c("day", "Treatment", "tissue"),
   ct.table.id.type = "ENSEMBL",
@@ -93,8 +93,7 @@ with values based on the fill parameter and a heatmap plot.
 }
 \examples{
 plot_heatmap.expr(data = count_table,
-annot = sample_annotation,
-plot.save.to = "~/heatmap_plot.png")
+annot = sample_annotation)
 }
 \references{
 Xingpeng Li,Tatiana Gelaf Romer & Aliyah Olaniyan, RVA - RNAseq Visualization Automation tool.

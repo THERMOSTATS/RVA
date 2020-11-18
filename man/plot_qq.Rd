@@ -17,7 +17,7 @@ plot_qq(
 
 \item{comp.names}{A character vector that contains the comparison names which correspond to the same order as \code{data}. No default.}
 
-\item{p.value.flag}{The column name of \code{P-VALUE} (NOT FDR, NO multiplicity adjusted p-value) in the summary statistics table. Default = "p.value.flag".}
+\item{p.value.flag}{The column name of \code{P-VALUE} (NOT FDR, NO multiplicity adjusted p-value) in the summary statistics table. Default = "P.Value".}
 
 \item{ci}{Confidence interval. Default = 0.95}
 
@@ -34,11 +34,9 @@ like \code{limma} or \code{DESeq2}.
 The function produces the qqplot to evaluate the result from differential expression analysis. The output is a ggplot object.
 }
 \examples{
-plot_qq(data = Sample_summary_statistics_table,
-        plot.save.to = "~/qq_plot.png")
+plot_qq(data = Sample_summary_statistics_table)
 plot_qq(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
-        comp.names = c("A","B"),
-        plot.save.to = "~/qq_list_plot.png")
+        comp.names = c("A","B"))
 
 }
 \references{

@@ -37,6 +37,7 @@
 #' @importFrom tibble as_tibble
 #' @importFrom tidyr separate
 #' @importFrom purrr map
+#' @importFrom rlang .data
 #'
 #' @export plot_volcano
 #'
@@ -48,13 +49,11 @@
 #'
 #' @examples
 #' plot_volcano(data = Sample_summary_statistics_table,
-#'              geneset = Sample_disease_gene_set,
-#'              plot.save.to = "~/volcano_plot.png")
+#'              geneset = Sample_disease_gene_set)
 #'
 #' plot_volcano(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
 #'             comp.names = c("A", "B"),
-#'             geneset = Sample_disease_gene_set,
-#'             plot.save.to = "~/volcano_multiplots.png")
+#'             geneset = Sample_disease_gene_set)
 
 
 
@@ -127,7 +126,7 @@ plot_volcano <- function(data=data,
 
                 data.p <- map(data.n, as_tibble, rownames = "gene") %>%
                   bind_rows(.id = "Comparisons.ID") %>%
-                  mutate(Comparisons.ID = factor(Comparisons.ID,levels = comp.names))
+                  mutate(Comparisons.ID = factor(.data$Comparisons.ID,levels = comp.names))
 
 
         }else{
@@ -145,14 +144,14 @@ plot_volcano <- function(data=data,
         colnames(data.p)[which(names(data.p) == FDRflag)] <- "FDR"
 
         p <- ggplot() +
-                geom_point(data=data.p, aes(x = FC, y = -log10(FDR)),color="grey") +
+                geom_point(data=data.p, aes(x = .data$FC, y = -log10(.data$FDR)),color="grey") +
                 geom_point(data=data.p[data.p$gene %in% highlight.1,],
-                           aes(x = FC, y = -log10(FDR)),
+                           aes(x = .data$FC, y = -log10(.data$FDR)),
                            color=upcolor,
                            size=1.5,
                            shape = 21) +
                 geom_point(data=data.p[data.p$gene %in% highlight.2,],
-                           aes(x = FC, y = -log10(FDR)),
+                           aes(x = .data$FC, y = -log10(.data$FDR)),
                            color=downcolor,
                            size=1.5,
                            shape = 21) +

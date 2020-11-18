@@ -14,6 +14,7 @@
 #'
 #'
 #' @importFrom ggplot2 ggsave ggplot geom_point geom_abline geom_line geom_ribbon xlab ylab facet_wrap
+#' @importFrom rlang .data
 #'
 #' @export plot_qq
 #'
@@ -23,11 +24,9 @@
 #'
 #'
 #' @examples
-#' plot_qq(data = Sample_summary_statistics_table,
-#'         plot.save.to = "~/qq_plot.png")
+#' plot_qq(data = Sample_summary_statistics_table)
 #' plot_qq(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
-#'         comp.names = c("A","B"),
-#'         plot.save.to = "~/qq_list_plot.png")
+#'         comp.names = c("A","B"))
 #'
 
 
@@ -48,9 +47,9 @@ plot_qq <- function(data = data,
                 ps <- data[,p.value.flag]
                 df <- data.frame(
                         observed = -log10(sort(ps)),
-                        expected = -log10(ppoints(n)),
-                        clower   = -log10(qbeta(p = (1 - ci) / 2, shape1 = 1:n, shape2 = n:1)),
-                        cupper   = -log10(qbeta(p = (1 + ci) / 2, shape1 = 1:n, shape2 = n:1))
+                        expected = -log10(stats::ppoints(n)),
+                        clower   = -log10(stats::qbeta(p = (1 - ci) / 2, shape1 = 1:n, shape2 = n:1)),
+                        cupper   = -log10(stats::qbeta(p = (1 + ci) / 2, shape1 = 1:n, shape2 = n:1))
                 )
                 return(df)
         }
@@ -66,7 +65,7 @@ plot_qq <- function(data = data,
                         set_names(comp.names) %>%
                         map(get.value) %>%
                         bind_rows(, .id = "Comparisons.ID") %>%
-                        mutate(Comparisons.ID = factor(Comparisons.ID,levels = comp.names))
+                        mutate(Comparisons.ID = factor(.data$Comparisons.ID,levels = comp.names))
         }else{
                 df <- get.value(data)
         }
@@ -75,11 +74,11 @@ plot_qq <- function(data = data,
         log10P.obs <- expression(paste("Observed -log"[10], plain(P)))
 
         p <-  ggplot(df) +
-                geom_point(aes(x = expected, y = observed),shape = 1, size = 1) +
+                geom_point(aes(x = .data$expected, y = .data$observed),shape = 1, size = 1) +
                 geom_abline(intercept = 0, slope = 1, linetype =2, color="black", alpha = 0.5) +
-                geom_line(aes(expected, cupper), size = 0.5, linetype = 1, color="#00AFBB") +
-                geom_line(aes(expected, clower), size = 0.5, linetype = 1, color="#00AFBB") +
-                geom_ribbon(mapping = aes(x = expected, ymin = clower, ymax = cupper),alpha = 0.2) +
+                geom_line(aes(.data$expected, .data$cupper), size = 0.5, linetype = 1, color="#00AFBB") +
+                geom_line(aes(.data$expected, .data$clower), size = 0.5, linetype = 1, color="#00AFBB") +
+                geom_ribbon(mapping = aes(x = .data$expected, ymin = .data$clower, ymax = .data$cupper),alpha = 0.2) +
                 xlab(log10P.exp) +
                 ylab(log10P.obs)
 

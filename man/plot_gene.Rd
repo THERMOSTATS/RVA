@@ -5,8 +5,8 @@
 \title{Plot gene expression}
 \usage{
 plot_gene(
-  data = dat,
-  anno = meta,
+  data = ~dat,
+  anno = ~meta,
   gene.names = c("AAAS", "A2ML1", "AADACL3"),
   ct.table.id.type = "ENSEMBL",
   gene.id.type = "SYMBOL",
@@ -57,8 +57,7 @@ The function takes the gene counts and returns a ggplot that shows gene expressi
 }
 \examples{
 plot_gene(data = count_table,
-anno = sample_annotation,
-plot.save.to = "~/gene_plot.png")
+anno = sample_annotation)
 
 }
 \references{

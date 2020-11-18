@@ -83,13 +83,11 @@ genes, e.g. disease signature genes, the genes which are up-regulated and down-r
 }
 \examples{
 plot_volcano(data = Sample_summary_statistics_table,
-             geneset = Sample_disease_gene_set,
-             plot.save.to = "~/volcano_plot.png")
+             geneset = Sample_disease_gene_set)
 
 plot_volcano(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
             comp.names = c("A", "B"),
-            geneset = Sample_disease_gene_set,
-            plot.save.to = "~/volcano_multiplots.png")
+            geneset = Sample_disease_gene_set)
 }
 \references{
 Xingpeng Li & Tatiana Gelaf Romer & Olya Besedina, RVA - RNAseq Visualization Automation tool.

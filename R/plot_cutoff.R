@@ -19,6 +19,7 @@
 #' @param gen.3d.plot Whether generate a 3d plotly object to visualize the result, only applys to single dataframe input, default = F.
 #' @param gen.plot Whether generate a plot to visualize the result, default = T.
 
+
 #'
 #'
 #' @return If the input \code{data} is a data list, then a multi-facet ggplot plot object which contains each
@@ -34,6 +35,7 @@
 #' @importFrom haven as_factor
 #' @importFrom purrr map2 set_names map
 #' @importFrom plotly plot_ly add_markers layout
+#' @importFrom rlang .data
 #'
 #' @export plot_cutoff
 #'
@@ -47,21 +49,12 @@
 #'
 #'
 #' @examples
-#' plot_cutoff(Sample_summary_statistics_table, plot.save.to = "~/cut_off_selection_plot.png")
+#' plot_cutoff(Sample_summary_statistics_table)
 #'
 #'plot_cutoff(data = list(Sample_summary_statistics_table, Sample_summary_statistics_table1),
-#'            comp.names = c("A", "B"),
-#'            plot.save.to = "~/cut_off_list_plot.png")
+#'            comp.names = c("A", "B"))
 #'
 #'
-#' #Save figures using ggplot2
-#' library(ggplot2)
-#'
-#' gp <- plot_cutoff(Sample_summary_statistics_table)
-#' ggsave(filename = "~/cut_off_selection_plot.png" ,
-#'        plot = gp[[3]],
-#'        width = 5,
-#'        height = 5)
 #'
 
 plot_cutoff <- function(data = data,
@@ -103,7 +96,7 @@ plot_cutoff <- function(data = data,
                   pvalues) %>%
           set_names(comp.names) %>%
           bind_rows(, .id = "Comparisons.ID") %>%
-          mutate(Comparisons.ID = factor(Comparisons.ID,levels = comp.names))
+          mutate(Comparisons.ID = factor(.data$Comparisons.ID,levels = comp.names))
       } else {
         pvalues <- seq(from = p.min, to = p.max, by = p.step)
         df <- plot_cutoff_single(data,
@@ -152,7 +145,7 @@ plot_cutoff <- function(data = data,
 
       if(gen.plot) {
         df.sub <- df %>%
-          filter(FC %in% FCs, pvalue %in% c(0.01, 0.05, 0.1, 0.2))
+          filter(.data$FC %in% FCs, .data$pvalue %in% c(0.01, 0.05, 0.1, 0.2))
         gp <- get.cutoff.ggplot(df.sub, FCflag, FDRflag)
 
         if(!plot.save.exists) {
@@ -186,11 +179,12 @@ plot_cutoff <- function(data = data,
 #'
 #' @importFrom dplyr %>% filter as_tibble mutate bind_rows
 #' @importFrom plotly plot_ly add_markers layout
+#' @importFrom rlang .data
 #'
 
 make.cutoff.plotly <- function(df) {
-  df0 <- df %>% mutate(FC = as.numeric(as.character(FC)),
-                       pvalue = as.numeric(as.character(pvalue)))
+  df0 <- df %>% mutate(FC = as.numeric(as.character(.data$FC)),
+                       pvalue = as.numeric(as.character(.data$pvalue)))
   plot_ly(data = df0,
           x = ~FC,
           y = ~pvalue,
@@ -246,9 +240,9 @@ plot_cutoff_single <- function(datin,
 
 get.cutoff.ggplot <- function(df, FCflag, FDRflag) {
 
-  ggplot(df, aes(x=FC, y=Number_of_Genes, fill=pvalue)) +
+  ggplot(df, aes(x=.data$FC, y=.data$Number_of_Genes, fill=.data$pvalue)) +
     geom_bar(stat="identity", position=position_dodge()) +
-    geom_text(aes(label=Number_of_Genes), vjust=-0.3, color="black",
+    geom_text(aes(label=.data$Number_of_Genes), vjust=-0.3, color="black",
               position = position_dodge(0.9), size=3.5) +
     labs(x = FCflag, fill = FDRflag) +
     ylab("Number of Genes under cutoff") +
@@ -276,6 +270,7 @@ get.cutoff.ggplot <- function(df, FCflag, FDRflag) {
 #' @importFrom dplyr %>% filter as_tibble mutate bind_rows
 #' @importFrom haven as_factor
 #' @importFrom purrr map2 set_names map
+#' @importFrom rlang .data
 
 get.cutoff.df <- function(datin,
                           pvalues,
@@ -285,13 +280,13 @@ get.cutoff.df <- function(datin,
 
   df <- expand.grid(list(pvalues, FCs)) %>%
     as_tibble %>%
-    setNames(c("pvalue","FC"))
+    stats::setNames(c("pvalue","FC"))
 
-  datin <- datin[,c(FDRflag,FCflag)] %>% setNames(c("DAT_FDR","DAT_FC"))
+  datin <- datin[,c(FDRflag,FCflag)] %>% stats::setNames(c("DAT_FDR","DAT_FC"))
 
   get.gene.num <- function(FC, pvalue, FCflag, FDRflag){
     num.pass <- datin %>%
-      filter(DAT_FDR <= pvalue , abs(DAT_FC) >= log2(FC)) %>%
+      filter(.data$DAT_FDR <= pvalue , abs(.data$DAT_FC) >= log2(FC)) %>%
       nrow
     return(num.pass)
   }
@@ -299,9 +294,9 @@ get.cutoff.df <- function(datin,
   df$Number_of_Genes <- unlist(map2(df$FC, df$pvalue, get.gene.num))
 
   df <- df %>%
-    mutate(pvalue = as.factor(pvalue),
-           FC = as.factor(FC),
-           Number_of_Genes = as.numeric(Number_of_Genes))
+    mutate(pvalue = as.factor(.data$pvalue),
+           FC = as.factor(.data$FC),
+           Number_of_Genes = as.numeric(.data$Number_of_Genes))
   return(df)
 }
 
