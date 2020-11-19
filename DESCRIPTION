@@ -1,6 +1,6 @@
 Package: RVA
 Title: RNAseq Visualization Automation
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person(given = "Xingpeng",
            family = "Li",
