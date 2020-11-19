@@ -111,8 +111,7 @@ plot_heatmap.cfb <- function(cpm,
 #'
 #'
 #' @examples
-#' plot_heatmap.expr(data = count_table,
-#' annot = sample_annotation)
+#' plot <- plot_heatmap.expr(data = count_table,annot = sample_annotation)
 
 
 
@@ -199,12 +198,6 @@ plot_heatmap.expr <- function(data = ~count,
             dplyr::summarize(cpm = max(cpm))
         }
 
-        #Old version
-        #gene.names <- gene.names %>%
-        #  ungroup() %>%
-        #  arrange_at(fill.var, dplyr::desc) %>%
-        #  .$geneid %>%
-        #  .[1:gene.count]
 
         #new version
         gene.names <- gene.names %>%
@@ -264,7 +257,6 @@ plot_heatmap.expr <- function(data = ~count,
                     column_title = user.title,
                     row_title = "Genes",
                     bottom_annotation = columnAnnotation(df=annot))
-      gp
       if(is.null(plot.save.to)){
         print("Plot file name not specified, a plot in Heatmap object will be output to the first object of the return list!")
       }else{
