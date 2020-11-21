@@ -1,12 +1,12 @@
 Package: RVA
 Title: RNAseq Visualization Automation
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person(given = "Xingpeng",
            family = "Li",
            role = c("aut", "cre"),
            email = "xingpeng.li@pfizer.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "0000-0002-1331-1225"))
 Description: Automate downstream visualization & pathway analysis in RNAseq analysis.
 Maintainer: Xingpeng Li <xingpeng.li@pfizer.com>
 License: GPL-2
