@@ -92,8 +92,7 @@ The function takes raw CPM data and returns both a list containing a data frame
 with values based on the fill parameter and a heatmap plot.
 }
 \examples{
-plot_heatmap.expr(data = count_table,
-annot = sample_annotation)
+plot <- plot_heatmap.expr(data = count_table[,1:20],annot = sample_annotation[1:20,])
 }
 \references{
 Xingpeng Li,Tatiana Gelaf Romer & Aliyah Olaniyan, RVA - RNAseq Visualization Automation tool.
