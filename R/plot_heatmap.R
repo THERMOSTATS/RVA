@@ -257,6 +257,7 @@ plot_heatmap.expr <- function(data = ~count,
                     column_title = user.title,
                     row_title = "Genes",
                     bottom_annotation = columnAnnotation(df=annot))
+	gp
       if(is.null(plot.save.to)){
         print("Plot file name not specified, a plot in Heatmap object will be output to the first object of the return list!")
       }else{

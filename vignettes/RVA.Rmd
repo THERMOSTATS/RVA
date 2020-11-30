@@ -3,6 +3,7 @@ title: "RNAseq Visualization Automation"
 output: 
   rmarkdown::html_vignette:
     toc: true
+
 vignette: >
   %\VignetteIndexEntry{RNAseq Visualization Automation}
   %\VignetteEngine{knitr::rmarkdown}
@@ -493,7 +494,7 @@ Our sample dataset provided in the package only contains ENSEMBL gene id types. 
 &nbsp;
 
 ```{r message=F, warning=F, results="hide"}
-pathway.result <- plot_pathway(data = df, pathway.db = "rWikiPathways", gene.id.type = "ENSEMBL")
+pathway.result <- plot_pathway(data = df, pathway.db = "Hallmark", gene.id.type = "ENSEMBL")
 ```
 &nbsp;
 
@@ -567,7 +568,7 @@ Pathways with list of data as input, the list can be replaced with `d1` from the
 &nbsp;
 
 ```{r message=F, warning=F, results="hide"}
-list.pathway.result <- plot_pathway(data = list(df,df1,df2),comp.names=c("A","B","C"),pathway.db = "rWikiPathways", gene.id.type = "ENSEMBL")
+list.pathway.result <- plot_pathway(data = list(df1,df2),comp.names=c("A","B"),pathway.db = "Hallmark", gene.id.type = "ENSEMBL")
 ```
 &nbsp;
 
@@ -623,27 +624,6 @@ ggsave("non-directional.png",pathway.result[[4]], width = 5, height = 5, dpi = 3
 ```
 &nbsp;
 
-### 4.3 Pathway analysis with KEGG database for enrichment analysis:
-&nbsp;
-
-`plot_pathways` allows many customizble parameters. For this example we will use the `KEGG` database and assign names to a list of summary tables. Other databases like KEGG, REACTOME, Hallmark or a static version of rWikiPathways can be used by changing the parameter `pathway.db = "database name"`.
-&nbsp;
-
-```{r message=F, warning=F, results="hide"}
-kegg.pathway.result <- plot_pathway(data = list(df,df1),
-                                    comp.names=c("Group A","Group B"),
-                                    pathway.db = "KEGG",
-                                    gene.id.type = "ENSEMBL"
-                                    )
-```
-&nbsp;
-
-**1.** The non directional plot for enrichment analysis.
-
-```{r }
-kegg.pathway.result[[3]]
-```
-
 
 &nbsp;
 
@@ -670,7 +650,7 @@ names must match the `sample.id` column in your annotation file:
 &nbsp;
 
 ```{r }
-count <- RVA::count_table
+count <- RVA::count_table[,1:50]
 ```
 &nbsp;
 
@@ -684,7 +664,7 @@ knitr::kable(count[1:6,1:5])
 &nbsp;
 
 ```{r }
-annot <- RVA::sample_annotation 
+annot <- RVA::sample_annotation[1:50,]
 ```
 &nbsp;
 
