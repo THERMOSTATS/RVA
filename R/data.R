@@ -26,19 +26,6 @@
 #'
 "Sample_summary_statistics_table1"
 
-#' This is data to be included in package
-#' @name Sample_summary_statistics_table2
-#' @docType data
-#' @format Third example summary statistics table as dataframe, row names are gene ID
-#' \describe{
-#'   \item{logFC}{log2 fold change from comparison}
-#'   \item{AveExpr}{Average expression for this gene}
-#'   \item{P.Value}{p value}
-#'   \item{adj.P.Val}{adjusted p value or FDR}
-#'   ...
-#' }
-#'
-"Sample_summary_statistics_table2"
 
 #' This is data to be included in package
 #' @name Sample_disease_gene_set
