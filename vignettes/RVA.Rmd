@@ -3,6 +3,8 @@ title: "RNAseq Visualization Automation"
 output: 
   rmarkdown::html_vignette:
     toc: true
+    fig_width: 6
+    fig_height: 4
 
 vignette: >
   %\VignetteIndexEntry{RNAseq Visualization Automation}
@@ -44,8 +46,7 @@ Let's load a summary statistics tables and combine them into a list named **d1**
 ```{r }
 df <- RVA::Sample_summary_statistics_table
 df1 <- RVA::Sample_summary_statistics_table1 
-df2 <- RVA::Sample_summary_statistics_table2
-d1 <- list(df, df1, df2)
+d1 <- list(df, df1)
 ```
 &nbsp;
 
@@ -162,7 +163,7 @@ ggsave("cut_off_selection_plot.png", cutoff.result[[3]], width = 5, height = 5, 
 
 ```{r, message=FALSE}
 cutoff.result.list <- plot_cutoff(data = d1, 
-                                  comp.names = c('a', 'b', 'c'))
+                                  comp.names = c('a', 'b'))
 ```
 &nbsp;
 
@@ -200,7 +201,7 @@ Figures can be saved using two approaches:
 
 ```{r, eval=FALSE}
 plot_cutoff(data = d1,
-            comp.names = c("A", "B", "C"),
+            comp.names = c("A", "B"),
             plot.save.to = "cut_off_list_plot.png")
 ```
 &nbsp;
@@ -267,7 +268,7 @@ ggsave("qq_plot.png", qq.result, width = 5, height = 5, dpi = 300)
 
 ```{r, results='hide'}
 qq.list.result <- plot_qq(data = d1, 
-        comp.names = c('A', 'B', 'C'))
+        comp.names = c('A', 'B'))
 qq.list.result
 ```
 &nbsp;
@@ -283,7 +284,7 @@ Figures can be saved using two approaches:
 
 ```{r, eval=FALSE}
 plot_qq(data = d1,
-        comp.names = c("A", "B", "C"),
+        comp.names = c("A", "B"),
         plot.save.to = "qq_list_plot.png")
 ```
 &nbsp;
@@ -350,7 +351,7 @@ Volcano Plot can also take a list as an input data with specified **comp.name** 
 
 ```{r message=F, results='hide', warning=F}
 plot_volcano(data = d1, 
-             comp.names = c('a', 'b', 'c'))
+             comp.names = c('a', 'b'))
 ```
 &nbsp;
 
@@ -407,7 +408,7 @@ By default, the genes which have positive fold change in the provided **geneset*
 
 ```{r message=F, warning=F}
 plot_volcano(data = d1,
-             comp.names = c('a', 'b', 'c'),
+             comp.names = c('a', 'b'),
              geneset = dgs,
              upcolor = "#FF0000",
              downcolor = "#0000FF",
@@ -494,7 +495,7 @@ Our sample dataset provided in the package only contains ENSEMBL gene id types. 
 &nbsp;
 
 ```{r message=F, warning=F, results="hide"}
-pathway.result <- plot_pathway(data = df, pathway.db = "rWikiPathways", gene.id.type = "ENSEMBL")
+pathway.result <- plot_pathway(data = df, pathway.db = "Hallmark", gene.id.type = "ENSEMBL")
 ```
 &nbsp;
 
@@ -568,7 +569,7 @@ Pathways with list of data as input, the list can be replaced with `d1` from the
 &nbsp;
 
 ```{r message=F, warning=F, results="hide"}
-list.pathway.result <- plot_pathway(data = list(df,df1,df2),comp.names=c("A","B","C"),pathway.db = "rWikiPathways", gene.id.type = "ENSEMBL")
+list.pathway.result <- plot_pathway(data = list(df,df1),comp.names=c("A","B"),pathway.db = "Hallmark", gene.id.type = "ENSEMBL")
 ```
 &nbsp;
 
@@ -624,27 +625,6 @@ ggsave("non-directional.png",pathway.result[[4]], width = 5, height = 5, dpi = 3
 ```
 &nbsp;
 
-### 4.3 Pathway analysis with KEGG database for enrichment analysis:
-&nbsp;
-
-`plot_pathways` allows many customizble parameters. For this example we will use the `KEGG` database and assign names to a list of summary tables. Other databases like KEGG, REACTOME, Hallmark or a static version of rWikiPathways can be used by changing the parameter `pathway.db = "database name"`.
-&nbsp;
-
-```{r message=F, warning=F, results="hide"}
-kegg.pathway.result <- plot_pathway(data = list(df,df1),
-                                    comp.names=c("Group A","Group B"),
-                                    pathway.db = "KEGG",
-                                    gene.id.type = "ENSEMBL"
-                                    )
-```
-&nbsp;
-
-**1.** The non directional plot for enrichment analysis.
-
-```{r }
-kegg.pathway.result[[3]]
-```
-
 
 &nbsp;
 
@@ -671,7 +651,7 @@ names must match the `sample.id` column in your annotation file:
 &nbsp;
 
 ```{r }
-count <- RVA::count_table
+count <- RVA::count_table[,1:50]
 ```
 &nbsp;
 
@@ -685,7 +665,7 @@ knitr::kable(count[1:6,1:5])
 &nbsp;
 
 ```{r }
-annot <- RVA::sample_annotation 
+annot <- RVA::sample_annotation[1:50,]
 ```
 &nbsp;
 
