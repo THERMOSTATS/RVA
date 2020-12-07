@@ -4,17 +4,17 @@
 \alias{validate.flag}
 \title{Validate Flag Value Is Valid}
 \usage{
-validate.flag(value, name, options)
+validate.flag(value, name, Options)
 }
 \arguments{
 \item{value}{The user-input value for the parameter}
 
 \item{name}{The name of the parameter to be displayed in the error}
 
-\item{options}{A vector of valid values for \code{value}}
+\item{Options}{A vector of valid values for \code{value}}
 }
 \description{
-Enures that the \code{value} is one of \code{options} and throws an error
+Enures that the \code{value} is one of \code{Options} and throws an error
 otherwise.
 }
 \references{

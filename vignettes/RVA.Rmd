@@ -54,7 +54,6 @@ This is head of the first summary statictic table present in the list:
 &nbsp;
 
 ```{r, echo=FALSE}
-options(width = 120)
 knitr::kable(head(d1[[1]]))
 ```
 &nbsp;
