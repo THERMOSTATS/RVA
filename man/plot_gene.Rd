@@ -13,7 +13,7 @@ plot_gene(
   treatment = "Treatment",
   sample.id = "sample_id",
   time = "day",
-  log.option = T,
+  log.option = TRUE,
   plot.save.to = NULL,
   input.type = "count"
 )

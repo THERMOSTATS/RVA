@@ -16,8 +16,8 @@ plot_cutoff(
   p.max = 0.2,
   p.step = 0.01,
   plot.save.to = NULL,
-  gen.3d.plot = T,
-  gen.plot = T
+  gen.3d.plot = TRUE,
+  gen.plot = TRUE
 )
 }
 \arguments{
