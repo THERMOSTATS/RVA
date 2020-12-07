@@ -130,7 +130,7 @@ plot_heatmap.expr <- function(data = ~count,
                               plot.save.to = NULL,
                               input.type = "count") {
 
-  options(warn=-1)
+
   suppressWarnings({
     suppressMessages({
 
@@ -252,14 +252,14 @@ plot_heatmap.expr <- function(data = ~count,
       set.seed(200) #fix the color scheme
       gp <- Heatmap(wide, col = colors, name = "Heatmap",
                     na_col = "black",
-                    cluster_columns = F,
+                    cluster_columns = FALSE,
                     heatmap_legend_param = list(title = title),
                     column_title = user.title,
                     row_title = "Genes",
                     bottom_annotation = columnAnnotation(df=annot))
 	gp
       if(is.null(plot.save.to)){
-        print("Plot file name not specified, a plot in Heatmap object will be output to the first object of the return list!")
+        message("Plot file name not specified, a plot in Heatmap object will be output to the first object of the return list!")
       }else{
         grDevices::png(filename = plot.save.to)
         print(gp)
@@ -349,14 +349,10 @@ calc.cfb <- function(data, annot, baseline.flag, baseline.val) {
 
   #new version
   relevant.vars <- annot %>%
-    unite(col = "var", baseline.flag, remove = F) %>%
+    unite(col = "var", baseline.flag, remove = FALSE) %>%
     select("var") %>% flatten_chr %>% unique
 
-  #old version
-  #relevant.vars <- annot %>%
-  #  unite(col = "var", baseline.flag, remove = F) %>%
-  #  .$var %>%
-  #  unique
+
 
   baseline.var <- str_flatten(baseline.val, collapse = "_")
   relevant.vars <- relevant.vars[relevant.vars != baseline.var]

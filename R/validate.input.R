@@ -17,20 +17,20 @@ validate.pathways.db <- function(pathway.db, customized.pathways){
     }
 
     if (pathway.db == "rWikiPathways_aug_2020"){
-      cat(paste0("\n\n Using rWikiPathways from August 2020, please use",
+      message(paste0("\n\n Using rWikiPathways from August 2020, please use",
                  " pathway.db = rWikiPathways for latest version \n\n" ))
     }
 
-    cat(paste0("\n Currently using the ", pathway.db ," database for enrichment \n\n"))
+    message(paste0("\n Currently using the ", pathway.db ," database for enrichment \n\n"))
 
   }else if(is.null(pathway.db) & !is.null(customized.pathways)){
-    cat("\n\nNo pathway database specified, will use customized pathway data for analysis.\n\n")
+    message("\n\nNo pathway database specified, will use customized pathway data for analysis.\n\n")
     if(!all(colnames(customized.pathways) == c("gs_name","entrez_gene"))){
       stop(paste0("\nPlease check the input customized.pathways with with input has two columns with gene set name and entrez gene name,\n",
                   "column names as 'gs_name' for geneset and 'entrez_gene' for gene in that geneset.\n\n"))
     }
   }else if(!is.null(pathway.db) & !is.null(customized.pathways)){
-   cat("\nBoth database and customized pathway information are provided, the customized pathway information will be appended to the database selected.\n\n")
+   message("\nBoth database and customized pathway information are provided, the customized pathway information will be appended to the database selected.\n\n")
   }
 }
 
@@ -138,7 +138,7 @@ validate.geneset <- function(data,
         #added recursively check list
         if(inherits(data, "list")){
 
-          cat ("Checking gene sets for listof data frames")
+          message("Checking gene sets for listof data frames")
 
           map(data,validate.geneset, geneset=geneset, highlight.1 = highlight.1, highlight.2 = highlight.2)
 

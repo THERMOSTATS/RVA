@@ -74,8 +74,8 @@ plot_pathway <- function(data = ~df,
   # Gene set enrichment test (Fisher) in FC positive and FC negative group separately.
   # the p.adjust value will be compared from + and - group and choose the smaller one and assign the +/- value.
 
-  cat(paste0("\n\n Running plot pathway. Acceptable data types are list() & data.frame() \n\n"))
-  cat(paste0("\n\n Current program setting only accepts rownames as ", gene.id.type,", use parameter `gene.id.type` to adjust if needed. \n\n"))
+  message(paste0("\n\n Running plot pathway. Acceptable data types are list() & data.frame() \n\n"))
+  message(paste0("\n\n Current program setting only accepts rownames as ", gene.id.type,", use parameter `gene.id.type` to adjust if needed. \n\n"))
 
   validate.single.table.isnotlist(data)
   validate.comp.names(comp.names,data)
@@ -83,19 +83,19 @@ plot_pathway <- function(data = ~df,
 
 
   if(inherits(data, "list")){
-    cat ("\n Executing list of data \n")
-    out.d.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = T , IS.list = T, customized.pathways) %>%
+    message("\n Executing list of data \n")
+    out.d.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = TRUE , IS.list = TRUE, customized.pathways) %>%
       set_names(comp.names) %>%
       bind_rows(, .id = "Comparisons.ID") %>%
       mutate(Description = factor(.data$Description,levels = unique(.data$Description)))
 
-    out.nd.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = F , IS.list = T, customized.pathways) %>%
+    out.nd.sig <- map(data, cal.pathway.scores, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = FALSE , IS.list = TRUE, customized.pathways) %>%
       set_names(comp.names) %>%
       bind_rows(, .id = "Comparisons.ID") %>%
       mutate(Description = factor(.data$Description,levels = unique(.data$Description)))
 
   }else{
-    path.res <- cal.pathway.scores(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = NULL , IS.list = F, customized.pathways)
+    path.res <- cal.pathway.scores(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = NULL , IS.list = FALSE, customized.pathways)
     out.d.sig <- path.res[[1]]
     out.nd.sig <- path.res[[2]]
     nd.res <- path.res[[3]]
@@ -105,11 +105,11 @@ plot_pathway <- function(data = ~df,
 
   ##visualize directionally changed pathways
   if(is.null(out.d.sig)){
-    cat(paste0("\n No directional enriched pathway can be calculated.\n"))
+    message(paste0("\n No directional enriched pathway can be calculated.\n"))
     p.d <- NULL
 
   }else if(nrow(out.d.sig) == 0){
-    cat(paste0("\n No directional enriched pathway passed threshold of FDR < ",Fisher.down.cutoff," in down-regulated pathways or ",Fisher.up.cutoff," for up-regulated pathways.\n"))
+    message(paste0("\n No directional enriched pathway passed threshold of FDR < ",Fisher.down.cutoff," in down-regulated pathways or ",Fisher.up.cutoff," for up-regulated pathways.\n"))
     p.d <- NULL
   }else{
     out.d.path <- out.d.sig %>%
@@ -125,7 +125,7 @@ plot_pathway <- function(data = ~df,
     #case where there is a false signal in one treatment but none in the other
     if (nrow(out.d.sig) == 0 & !inherits(data,"list")) {
 
-      cat ("\n The cutoff values for Fisher.down.cutoff & Fisher.up.cutoff resulted in 0 values being selected,  consider choosing looser cutoff values \n")
+      message("\n The cutoff values for Fisher.down.cutoff & Fisher.up.cutoff resulted in 0 values being selected,  consider choosing looser cutoff values \n")
       p.d <- NULL
 
     } else {
@@ -136,12 +136,12 @@ plot_pathway <- function(data = ~df,
         if (nrow(out.d.sig) == 0) {
 
           #if the second cutoff removes all the rows
-          cat ("\n The cutoff values for Fisher.down.cutoff & Fisher.up.cutoff resulted in 0 values being selected,  consider choosing looser cutoff values \n")
+          message("\n The cutoff values for Fisher.down.cutoff & Fisher.up.cutoff resulted in 0 values being selected,  consider choosing looser cutoff values \n")
           out.d.sig <- secondCutoffErr(out.d.sig ,comp.names, TypeQ = 1)
         }
         else if (!(length(check_0) == 1 & check_0[1] == "")){
           if (sum(out.d.sig$ID == "") > 0)
-            cat ("\n Warning: There were null entries \n")
+            message("\n Warning: There were null entries \n")
           out.d.sig <- prettyGraphs(out.d.sig)
 
           #if the second cutoff eliminated one of the facets then do
@@ -181,7 +181,7 @@ plot_pathway <- function(data = ~df,
 
   ## non-directional test p value
   if(is.null(out.nd.sig)){
-    cat(paste0("\n No non-directional enriched pathway can be calculated.\n"))
+    message(paste0("\n No non-directional enriched pathway can be calculated.\n"))
     p.nd <- NULL
     p.all <- ggplot() +
       annotate("text", x = 4, y = 25, size=8, label = paste0("No non-directional \n enriched pathway\n passed threshold of FDR ",Fisher.cutoff," \n thus a combined plot is not provided")) +
@@ -190,7 +190,7 @@ plot_pathway <- function(data = ~df,
 
 
   }else if(nrow(out.nd.sig) == 0){
-    cat(paste0("\n No non-directional enriched pathway passed threshold of FDR ",Fisher.cutoff,". \n"))
+    message(paste0("\n No non-directional enriched pathway passed threshold of FDR ",Fisher.cutoff,". \n"))
     p.nd <- NULL
     p.all <- ggplot() +
       annotate("text", x = 4, y = 25, size=8, label = paste0("No non-directional \n enriched pathway\n passed threshold of FDR ",Fisher.cutoff," \n thus a combined plot is not provided")) +
@@ -209,7 +209,7 @@ plot_pathway <- function(data = ~df,
 
     if (nrow(out.nd.sig) == 0 & !inherits(data,"list")) {
 
-      cat ("\n The cutoff value for Fisher.cutoff resulted in 0 values being selected \n, consider choosing looser cutoff values \n")
+      message("\n The cutoff value for Fisher.cutoff resulted in 0 values being selected \n, consider choosing looser cutoff values \n")
       e_message <- "The cutoff value for Fisher up/down/non-directional cutoff \n resulted in 0 values being selected, \n consider choosing looser cutoff values"
       p.nd <- NULL
       p.all <- ggplot() +
@@ -227,7 +227,7 @@ plot_pathway <- function(data = ~df,
         #if this is the case we don't have to look at others
         if (nrow(out.nd.sig) == 0) {
           #if the second cutoff removes all the rows
-          cat (" \n The cutoff value for Fisher.cutoff resulted in 0 values being selected, consider choosing looser cutoff values \n")
+          message(" \n The cutoff value for Fisher.cutoff resulted in 0 values being selected, consider choosing looser cutoff values \n")
 
           out.nd.sig <- secondCutoffErr(out.nd.sig ,comp.names, TypeQ = 2)
           out.nd.sig[out.nd.sig$pvalue == -99999,]['pvalue'] = 1
@@ -302,10 +302,10 @@ plot_pathway <- function(data = ~df,
 
 
           if(length(unique(out.d.sig$ID)) > length(unique(out.nd.sig$ID))){
-            cat(paste0("More pathways in directional data than non directional data \n",
+            message(paste0("More pathways in directional data than non directional data \n",
                        "hence using pathways exsting in directinal dataset"))
           }else{
-            cat(paste0("More pathways in non directional data than directional data \n",
+            message(paste0("More pathways in non directional data than directional data \n",
                        "hence using pathways exsting in non directinal dataset"))
           }
 
@@ -333,7 +333,7 @@ plot_pathway <- function(data = ~df,
 
 
   if(is.null(plot.save.to)){
-    cat("\n Plot file name not specified, a plot in ggplot object will be returned! \n")
+    message("\n Plot file name not specified, a plot in ggplot object will be returned! \n")
   }else{
     ggsave(filename = plot.save.to,
            plot = p.all,
@@ -406,7 +406,7 @@ nullreturn <- function(IS.list,type=1){
 secondCutoffErr <- function(df,comp.names, TypeQ = 1){
   set.compliment <- setdiff(comp.names,unique(df$Comparisons.ID))
   for (i in set.compliment){
-    ndf <- nullreturn(T,TypeQ)
+    ndf <- nullreturn(TRUE,TypeQ)
     ndf$Comparisons.ID <- i
     df <- rbind(df, ndf)
   }
@@ -495,7 +495,7 @@ multiPlot <- function(allID, backup.d.sig, nd.res, ...){
   #if allid_ is empty raise this error,
   if (length(allID_) == 0){
 
-    cat(paste0("\n\n No common ID's between n.d & dir. data \n\n"))
+    message(paste0("\n\n No common ID's between n.d & dir. data \n\n"))
 
     nullplot <- ggplot() +
       annotate("text", x = 4, y = 25, size=8, label = paste0("No common ID's between n.d & dir. data")) +
@@ -637,7 +637,7 @@ dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
     if(is.null(pathway.db)){
 
       if(nrow(customized.pathways) < 100){
-        cat(paste0("\n\n!! Customized pathway information alone will be used for analysis without any additional database,",
+        message(paste0("\n\n!! Customized pathway information alone will be used for analysis without any additional database,",
                    " if accumulated number of genes in pathway is too small compared to all genes provided in summary statistics table,",
                    " the result may not be applicable !!\n\n"))
       }
@@ -694,22 +694,17 @@ dlPathwaysDB <- function(pathway.db, customized.pathways = NULL, ...){
 
 cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = NULL , IS.list = FALSE,customized.pathways, ...){
   #supress warnings
-  options(warn=-1)
+
   suppressWarnings({
     suppressMessages({
 
       #prepare pathway information
-      #wp2gene <- rWikiPathways::downloadPathwayArchive(organism="Homo sapiens", format = "gmt") %>%
-      #  clusterProfiler::read.gmt() %>%
-      #  tidyr::separate(ont, c("name","version","wpid","org"), "%")
       collection_0 <- dlPathwaysDB(pathway.db, customized.pathways)
 
       #from the overall data, extract pathways id and gene number
-      #wpid2gene <- wp2gene %>% dplyr::select(wpid,gene) #TERM2GENE
       wpid2gene <- collection_0[[1]]
 
       #for the same pathways id's get the full descriptive name
-      #wpid2name <- wp2gene %>% dplyr::select(wpid,name) #TERM2NAME
       wpid2name <- collection_0[[2]]
 
       #Get background gene list (from all the genes available for the statistical test)
@@ -729,7 +724,7 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
 
       #processing pathway analysis
       if(nrow(data) < 10){
-        cat("\n Less then 10 genes submitted for pathway analysis, consider choosing a looser cutoff... \n")
+        message("\n Less then 10 genes submitted for pathway analysis, consider choosing a looser cutoff... \n")
       }
 
       # 1. Get Enrichment test of increase
@@ -840,7 +835,7 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
           mutate(direction = ifelse(.data$directional.p.adjust > 0,"up","down"))
       }else{
         d.res <- NULL
-        cat("\n No directional enriched pathway has been detected. \n")
+        message("\n No directional enriched pathway has been detected. \n")
 
       }
 
@@ -861,7 +856,7 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
           TERM2NAME = wpid2name)
 
         if(is.null(ewp)){
-          cat("\n No none-directional enriched pathway has been detected. \n")
+          message("\n No none-directional enriched pathway has been detected. \n")
           #helpflag
           nd.res <- nullreturn(IS.list = IS.list , type=2)
         }else{
@@ -870,7 +865,7 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
 
         }
 
-        cat(paste0("\n Enrichment test completed with ",nrow(data), " Differentially expressed genes with min FC ",round(2^min(abs(data$FC)),3)," max adj.p ",round(max(abs(data$FDR)),3),".\n\n"))
+        message(paste0("\n Enrichment test completed with ",nrow(data), " Differentially expressed genes with min FC ",round(2^min(abs(data$FC)),3)," max adj.p ",round(max(abs(data$FDR)),3),".\n\n"))
 
         if(is.null(d.res)){
           out.d.sig <- nullreturn(IS.list = IS.list,type=1)
@@ -893,7 +888,7 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
         out.d.sig <-  nullreturn(IS.list = IS.list,type=1)
         out.nd.sig <- nullreturn(IS.list = IS.list,type=2)
         nd.res <- nullreturn(IS.list = IS.list,type=2)
-        cat("\n No genes passed specified cutoff... return NULL \n")
+        message("\n No genes passed specified cutoff... return NULL \n")
       }
 
       if(isTRUE(OUT.Directional)){
