@@ -1,13 +1,13 @@
 Package: RVA
 Title: RNAseq Visualization Automation
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: 
     person(given = "Xingpeng",
            family = "Li",
            role = c("aut", "cre"),
            email = "xingpeng.li@pfizer.com",
            comment = c(ORCID = "0000-0002-1331-1225"))
-Description: Automate downstream visualization & pathway analysis in RNAseq analysis.
+Description: Automate downstream visualization & pathway analysis in RNAseq analysis. RVA is a collection of functions that efficiently visualize RNAseq differential expression analysis result which in the format of summary statistics tables. It also utilize the fisher's exact test to evaluate gene set or pathway enrichment in a convenient and efficient manner.
 Maintainer: Xingpeng Li <xingpeng.li@pfizer.com>
 URL: https://github.com/THERMOSTATS/RVA
 License: GPL-2

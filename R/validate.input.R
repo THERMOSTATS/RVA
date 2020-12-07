@@ -43,8 +43,7 @@ validate.pathways.db <- function(pathway.db, customized.pathways){
 #' @references Xingpeng Li, Tatiana Gelaf Romer & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
 validate.pvalflag <- function(data, value) {
   if(!inherits(data, 'list')) {
-    options=colnames(data)
-    if(!(value %in% options)) {
+    if(!(value %in% colnames(data))) {
       stop(paste0('\n \n The supplied p-value flag was not found in dataset. If a signle data frame was passed make sure that p.value.flag is one your columns. If a list was passed make sure that p.value.flag is present in all data frames. \n'))
     }
   }else if(inherits(data, 'list')) {
@@ -348,28 +347,28 @@ validate.col.types <- function(datin,
 
 
 #' @title Validate Flag Value Is Valid
-#' @description Enures that the `value` is one of `options` and throws an error
+#' @description Enures that the `value` is one of `Options` and throws an error
 #'         otherwise.
 #' @param value The user-input value for the parameter
-#' @param options A vector of valid values for `value`
+#' @param Options A vector of valid values for `value`
 #' @param name The name of the parameter to be displayed in the error
 #' @references Xingpeng Li, Tatiana Gelaf Romer & Siddhartha Pachhai RVA - RNAseq Visualization Automation tool.
-validate.flag <- function(value, name, options) {
-        if(!(value %in% options)) {
+validate.flag <- function(value, name, Options) {
+        if(!(value %in% Options)) {
                 stop(paste0("Invalid ", name, " value \"", value, "\". ",
                             name, " values must be one of [\"",
-                            str_c(options, collapse = "\", \""), "\"]."))
+                            str_c(Options, collapse = "\", \""), "\"]."))
         }
 
 }
 
 validate.geneid.flag <- function(value, name) {
-        options <-c("ACCNUM", "ALIAS", "ENSEMBL", "ENSEMBLPROT, ENSEMBLTRANS",
+        Options <-c("ACCNUM", "ALIAS", "ENSEMBL", "ENSEMBLPROT, ENSEMBLTRANS",
                     "ENTREZID", "ENZYME", "EVIDENCE", "EVIDENCEALL", "GENENAME",
                     "GO", "GOALL", "IPI", "MAP", "OMIM, ONTOLOGY",
                     "ONTOLOGYALL", "PATH", "PFAM", "PMID", "PROSITE", "REFSEQ",
                     "SYMBOL", "UCSCKG", "UNIGENE", "UNIPROT")
-        validate.flag(value, name, options)
+        validate.flag(value, name, Options)
 }
 
 #' @title Validate Numeric Column
