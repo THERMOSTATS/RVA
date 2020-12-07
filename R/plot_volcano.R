@@ -76,9 +76,9 @@ plot_volcano <- function(data=data,
                          xlab = "log2 Fold Change",
                          ylab = "log10(FDR)"
 ){
-        cat(paste0("\n\n Running plot volcano... Please make sure gene id type(rownames) of `data` consistent to that of `geneset` (if provided). \n\n"))
+        message(paste0("\n\n Running plot volcano... Please make sure gene id type(rownames) of `data` consistent to that of `geneset` (if provided). \n\n"))
 
-        options(warn=-1)
+
         suppressWarnings({
         suppressMessages({
 
@@ -94,7 +94,7 @@ plot_volcano <- function(data=data,
                         rname_colec <- map(data,rownames)
                         common_rnames <- Reduce(intersect,rname_colec)
 
-                        cat(paste0("\n\n Provided input list had a total of ", length(common_rnames),
+                        message(paste0("\n\n Provided input list had a total of ", length(common_rnames),
                                    " in common, non-common gene id will not be considered. \n\n"))
                         highlight.1 <- geneset.genes[geneset.FC.thresh] %>%
                                 as.character %>%
@@ -118,7 +118,7 @@ plot_volcano <- function(data=data,
         if(inherits(data, "list")){
                 #check if same length of the data list names are provided
                 if(!is.null(comp.names) & length(data) != length(comp.names)){
-                        cat("Please make sure the provided summary statistics list 'dat.list' has the same length as 'comp.names'.")
+                        message("Please make sure the provided summary statistics list 'dat.list' has the same length as 'comp.names'.")
                         return(NULL)
                 }
 

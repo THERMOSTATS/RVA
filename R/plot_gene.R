@@ -52,11 +52,11 @@ plot_gene <- function(data = ~dat,
                       treatment = "Treatment",
                       sample.id = "sample_id",
                       time = "day",
-                      log.option = T,
+                      log.option = TRUE,
                       plot.save.to = NULL,
                       input.type = "count") {
 
-        options(warn=-1)
+
         suppressWarnings({
         suppressMessages({
 
@@ -129,7 +129,7 @@ plot_gene <- function(data = ~dat,
 
 
         if(is.null(plot.save.to)){
-                print("Plot file name not specified, a plot in ggplot object will be output to the second object of the return list!")
+                message("Plot file name not specified, a plot in ggplot object will be output to the second object of the return list!")
         }else{
                 ggsave(filename = plot.save.to,
                        plot = pgene,

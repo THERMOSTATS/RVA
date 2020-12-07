@@ -36,7 +36,7 @@ plot_qq <- function(data = data,
                     ci = 0.95,
                     plot.save.to = NULL
 ){
-        options(warn=-1)
+
         suppressWarnings({
         suppressMessages({
         validate.pvalflag(data, p.value.flag)
@@ -57,7 +57,7 @@ plot_qq <- function(data = data,
         if(inherits(data, "list")){
                 #check if same length of the data.list names are provided
                 if(!is.null(comp.names) & length(data) != length(comp.names)){
-                        cat("Please make sure the provided summary statistics list 'dat.list' has the same length as 'comp.names'.")
+                        message("Please make sure the provided summary statistics list 'dat.list' has the same length as 'comp.names'.")
                         return(NULL)
                 }
 

@@ -68,10 +68,10 @@ plot_cutoff <- function(data = data,
                         p.max = 0.2,
                         p.step = 0.01,
                         plot.save.to = NULL,
-                        gen.3d.plot=T,
-                        gen.plot=T){
+                        gen.3d.plot=TRUE,
+                        gen.plot=TRUE){
 
-  options(warn=-1)
+
   suppressWarnings({
     suppressMessages({
 
@@ -85,7 +85,7 @@ plot_cutoff <- function(data = data,
       if(inherits(data, "list")) {
         validate.comp.names(comp.names, data)
 
-        print(paste0("The p.step parameters are",
+        message(paste0("The p.step parameters are",
                      " ignored with list inputs for simplified output."))
 
         pvalues <- c(0.01, 0.05, 0.1, 0.2)
@@ -315,9 +315,9 @@ produce.cutoff.warning <- function(data,
                    " pvalue or FDR of ", min(data[,FDRflag]),
                    ", it is likely there are no DE genes in this",
                    " summary statistics table."))
-    return(T)
+    return(TRUE)
   }
-  F
+  FALSE
 }
 
 #' @title Create a message about fold change and pvalues used to produce the plot.
@@ -340,7 +340,7 @@ produce.cutoff.message <- function(data,
                                    FDRflag, p.min, p.max, p.step) {
 
   if(!produce.cutoff.warning(data, FDRflag)) {
-    cat(paste0("With the fold change from ",FCmin," to ",FCmax,
+    message(paste0("With the fold change from ",FCmin," to ",FCmax,
                " using a step of ", FCstep," and with ", FDRflag,
                " values ranging from ",p.min," to ",p.max,
                " with a step of ", p.step, ", \nIn total,",
