@@ -249,7 +249,7 @@ plot_heatmap.expr <- function(data = ~count,
       colnames(gene.display)[1] = ct.table.id.type
 
       rownames(wide) <- gene.display[,2]
-      set.seed(200) #fix the color scheme
+
       gp <- Heatmap(wide, col = colors, name = "Heatmap",
                     na_col = "black",
                     cluster_columns = FALSE,
