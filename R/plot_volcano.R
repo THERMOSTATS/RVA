@@ -125,8 +125,9 @@ plot_volcano <- function(data=data,
                 data.n <- set_names(data,comp.names)
 
                 data.p <- map(data.n, as_tibble, rownames = "gene") %>%
-                  bind_rows(.id = "Comparisons.ID") %>%
-                  mutate(Comparisons.ID = factor(.data$Comparisons.ID,levels = comp.names))
+                  bind_rows(.id = "Comparisons.ID")
+                
+				data.p$Comparisons.ID = factor(data.p$Comparisons.ID, levels = comp.names)
 
 
         }else{
@@ -145,16 +146,16 @@ plot_volcano <- function(data=data,
 
         p <- ggplot() +
                 geom_point(data=data.p, aes(x = .data$FC, y = -log10(.data$FDR)),color="grey") +
-                geom_point(data=data.p[data.p$gene %in% highlight.1,],
-                           aes(x = .data$FC, y = -log10(.data$FDR)),
-                           color=upcolor,
-                           size=1.5,
-                           shape = 21) +
-                geom_point(data=data.p[data.p$gene %in% highlight.2,],
-                           aes(x = .data$FC, y = -log10(.data$FDR)),
-                           color=downcolor,
-                           size=1.5,
-                           shape = 21) +
+				geom_point(data=data.p[data.p$gene %in% highlight.1,],
+							   aes(x = .data$FC, y = -log10(.data$FDR)),
+							   color=upcolor,
+							   size=1.5,
+							   shape = 21) +
+					geom_point(data=data.p[data.p$gene %in% highlight.2,],
+							   aes(x = .data$FC, y = -log10(.data$FDR)),
+							   color=downcolor,
+							   size=1.5,
+							   shape = 21) +
                 geom_vline(xintercept=-log2(highlight.FC.cutoff), linetype="dashed", colour = "black") +
                 geom_vline(xintercept=log2(highlight.FC.cutoff), linetype="dashed", colour = "black") +
                 geom_hline(yintercept= -log10(highlight.FDR.cutoff),color = "grey") +
@@ -163,8 +164,8 @@ plot_volcano <- function(data=data,
                 ggtitle(title) +
                 xlab(xlab) +
                 ylab(ylab)
-
-
+				
+		
         if(inherits(data, "list")){
                 p <- p + facet_wrap(facets = "Comparisons.ID", nrow = 1)
         }
