@@ -710,10 +710,15 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
       #Get background gene list (from all the genes available for the statistical test)
       #Conversion from ENSEMBL to ENTREZID
       #IMPORTANT!! The background should be the total genelist
-      bkgd.genes.entrez <- rownames(data) %>%
-        word(sep = '\\.') %>%
-        clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db) %>%
-        pull(.data$ENTREZID)
+      if(gene.id.type == "ENTREZID"){
+        bkgd.genes.entrez <- rownames(data)
+      }else{
+        bkgd.genes.entrez <- rownames(data) %>%
+          word(sep = '\\.') %>%
+          clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db) %>%
+          pull(.data$ENTREZID)
+      }
+
 
       data.subset <- data[,c(FCflag, FDRflag)]
       colnames(data.subset) <- c("FC","FDR")
@@ -732,11 +737,18 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
 
         #if this throws an error replacing it with custom error message
         tryCatch({
-          genes.entrez.up <- data %>%
-            filter(.data$FC > 0) %>%
-            pull(.data$gene) %>%
-            word(sep = '\\.') %>%
-            clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db)
+
+          if(gene.id.type == "ENTREZID"){
+            genes.entrez.up <- data %>% filter(.data$FC > 0)
+            genes.entrez.up <- data.frame(gene = genes.entrez.up$gene, ENTREZID = genes.entrez.up$gene)
+          }else{
+            genes.entrez.up <- data %>%
+              filter(.data$FC > 0) %>%
+              pull(.data$gene) %>%
+              word(sep = '\\.') %>%
+              clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db)
+          }
+
 
           ewp.up <- clusterProfiler::enricher(
             genes.entrez.up[[2]],
@@ -768,11 +780,18 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
 
         #If an error is found throw a custom error message
         tryCatch({
-          genes.entrez.dn <- data %>%
-            filter(.data$FC < 0) %>%
-            pull(.data$gene) %>%
-            word(sep = '\\.') %>%
-            clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db)
+
+          if(gene.id.type == "ENTREZID"){
+            genes.entrez.dn <- data %>% filter(.data$FC < 0)
+            genes.entrez.dn <- data.frame(gene = genes.entrez.dn$gene, ENTREZID = genes.entrez.dn$gene)
+          }else{
+            genes.entrez.dn <- data %>%
+              filter(.data$FC < 0) %>%
+              pull(.data$gene) %>%
+              word(sep = '\\.') %>%
+              clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db)
+          }
+
 
           ewp.dn <- clusterProfiler::enricher(
             genes.entrez.dn[[2]],
@@ -841,10 +860,16 @@ cal.pathway.scores <- function(data, pathway.db, gene.id.type, FCflag, FDRflag, 
 
       #3.  Get Enrichment test without direction
       if(nrow(data)!=0){
-        genes.entrez <- data %>%
-          pull(.data$gene) %>%
-          word(sep = '\\.') %>%
-          clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db)
+        if(gene.id.type == "ENTREZID"){
+          genes.entrez <- data %>% filter(.data$FC > 0)
+          genes.entrez <- data.frame(gene = genes.entrez$gene, ENTREZID = genes.entrez$gene)
+        }else{
+          genes.entrez <- data %>%
+            filter(.data$FC > 0) %>%
+            pull(.data$gene) %>%
+            word(sep = '\\.') %>%
+            clusterProfiler::bitr(fromType = gene.id.type, toType = "ENTREZID",OrgDb = org.Hs.eg.db)
+        }
 
         ewp <- clusterProfiler::enricher(
           genes.entrez[[2]],

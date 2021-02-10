@@ -1,4 +1,9 @@
 ---
+output:
+  pdf_document: default
+  html_document: default
+---
+---
 title: 'RVA: An R package for RNASeq result visualization and pathway enrichment analysis'
 tags:
   - R
