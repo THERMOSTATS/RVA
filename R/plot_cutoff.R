@@ -271,6 +271,7 @@ get.cutoff.ggplot <- function(df, FCflag, FDRflag) {
 #' @importFrom haven as_factor
 #' @importFrom purrr map2 set_names map
 #' @importFrom rlang .data
+#' @importFrom stats complete.cases
 
 get.cutoff.df <- function(datin,
                           pvalues,
