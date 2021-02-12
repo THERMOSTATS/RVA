@@ -59,7 +59,7 @@
 plot_pathway <- function(data = ~df,
                          comp.names = NULL,
                          gene.id.type = "ENSEMBL",
-                         FC.cutoff = 1.3,
+                         FC.cutoff = 1.2,
                          FDR.cutoff = 0.05,
                          FCflag = "logFC",
                          FDRflag = "adj.P.Val",
@@ -95,6 +95,8 @@ plot_pathway <- function(data = ~df,
       mutate(Description = factor(.data$Description,levels = unique(.data$Description)))
 
   }else{
+    if(!all(c(FCflag, FDRflag) %in% names(data))){stop(paste0("Please make sure the column names: ",FCflag," and ",FDRflag, " is specified in input dataframe."))}
+
     path.res <- cal.pathway.scores(data, pathway.db, gene.id.type, FCflag, FDRflag, FC.cutoff, FDR.cutoff, OUT.Directional = NULL , IS.list = FALSE, customized.pathways)
     out.d.sig <- path.res[[1]]
     out.nd.sig <- path.res[[2]]

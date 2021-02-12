@@ -283,6 +283,7 @@ get.cutoff.df <- function(datin,
     stats::setNames(c("pvalue","FC"))
 
   datin <- datin[,c(FDRflag,FCflag)] %>% stats::setNames(c("DAT_FDR","DAT_FC"))
+  datin <- datin[complete.cases(datin), ] #only plot complete cases in the result
 
   get.gene.num <- function(FC, pvalue, FCflag, FDRflag){
     num.pass <- datin %>%
