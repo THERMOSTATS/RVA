@@ -8,7 +8,7 @@ plot_pathway(
   data = ~df,
   comp.names = NULL,
   gene.id.type = "ENSEMBL",
-  FC.cutoff = 1.3,
+  FC.cutoff = 1.2,
   FDR.cutoff = 0.05,
   FCflag = "logFC",
   FDRflag = "adj.P.Val",
