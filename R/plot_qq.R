@@ -44,7 +44,7 @@ plot_qq <- function(data = data,
         #validate dataframe or list for data here
         get.value <- function(data){
                 ps <- data[!is.na(data[, p.value.flag]), p.value.flag] #omit NA in the p value calculation
-                n  <- nrow(ps)
+                n  <- nrow(data[!is.na(data[, p.value.flag]), ])
                 df <- data.frame(
                         observed = -log10(sort(ps)),
                         expected = -log10(stats::ppoints(n)),
