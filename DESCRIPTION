@@ -22,7 +22,7 @@ VignetteBuilder: knitr
 biocViews:
 Imports:
   GSVAdata (>= 1.22.0),
-  clusterProfiler (>= 3.14.3),
+  clusterProfiler (>= 3.15.1),
   data.table (>= 1.12.8),
   edgeR (>= 3.28.1),
   org.Hs.eg.db (>= 3.10.0),
